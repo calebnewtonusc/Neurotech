@@ -1,0 +1,12 @@
+{
+  "name": "neurotech",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Summer 2026 Neuralink portfolio execution tracker for Caleb Newton and Mark Lin.",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

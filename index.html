@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Neurotech — Summer 2026 Neuralink Portfolio</title>
+  <meta name="description" content="Caleb Newton & Mark Lin — 13-week Neuralink prep execution tracker." />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --blue: #0066cc; --blue-focus: #0071e3; --blue-dark: #2997ff;
+      --ink: #1d1d1f; --ink80: #333333; --ink48: #7a7a7a;
+      --white: #ffffff; --parchment: #f5f5f7; --pearl: #fafafc;
+      --tile1: #272729; --tile2: #2a2a2c; --tile3: #252527; --black: #000000;
+      --hairline: #e0e0e0; --divider: #f0f0f0; --chip: #d2d2d7;
+    }
+    html { background: var(--white); }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", sans-serif;
+      -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
+      color: var(--ink); font-size: 17px; line-height: 1.47; letter-spacing: -0.374px;
+      padding-top: 44px;
+    }
+    .display { font-family: -apple-system, "SF Pro Display", system-ui, "Inter", sans-serif; }
+
+    /* Type scale (Apple) */
+    .t-hero { font-weight: 600; font-size: clamp(34px, 6vw, 56px); line-height: 1.07; letter-spacing: -0.02em; }
+    .t-display-lg { font-weight: 600; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.01em; }
+    .t-display-md { font-weight: 600; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.18; letter-spacing: -0.374px; }
+    .t-lead { font-weight: 400; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.32; letter-spacing: 0; }
+    .t-tagline { font-weight: 600; font-size: 21px; line-height: 1.19; letter-spacing: 0.01em; }
+    .t-body { font-weight: 400; font-size: 17px; line-height: 1.47; letter-spacing: -0.374px; }
+    .t-body-strong { font-weight: 600; font-size: 17px; line-height: 1.3; letter-spacing: -0.374px; }
+    .t-caption { font-weight: 400; font-size: 14px; line-height: 1.43; letter-spacing: -0.224px; }
+    .t-caption-strong { font-weight: 600; font-size: 14px; line-height: 1.29; letter-spacing: -0.224px; }
+    .t-fine { font-weight: 400; font-size: 12px; line-height: 1.4; letter-spacing: -0.12px; }
+    .t-nav { font-weight: 400; font-size: 12px; line-height: 1; letter-spacing: -0.12px; }
+
+    /* Tiles (full-bleed bands; color change is the divider) */
+    .tile { width: 100%; }
+    .tile-white { background: var(--white); }
+    .tile-parchment { background: var(--parchment); }
+    .tile-dark { background: var(--tile1); color: var(--white); }
+    .container-x { max-width: 1080px; margin: 0 auto; padding-left: 22px; padding-right: 22px; }
+
+    /* Global nav */
+    .appnav { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: var(--black); color: var(--white); z-index: 60; }
+    .appnav a { color: rgba(255,255,255,0.82); }
+    .appnav a:hover { color: #fff; }
+
+    /* Buttons */
+    .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 9999px; padding: 11px 22px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease, background .18s ease; cursor: pointer; border: none; }
+    .pill:hover { background: #005bb8; }
+    .pill:active { transform: scale(0.95); }
+    .pill-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--blue); border: 1px solid var(--blue); border-radius: 9999px; padding: 10px 21px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease; cursor: pointer; }
+    .pill-ghost:active { transform: scale(0.95); }
+    .util-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--ink48); border-radius: 8px; padding: 6px 10px; font-size: 14px; transition: transform .15s ease, color .15s ease; cursor: pointer; background: transparent; border: none; }
+    .util-btn:active { transform: scale(0.95); }
+
+    /* Cards */
+    .card { background: var(--white); border: 1px solid var(--hairline); border-radius: 18px; }
+    .tile-dark .card { background: var(--tile2); border-color: rgba(255,255,255,0.12); color: #fff; }
+    .inset { background: var(--parchment); border: 1px solid var(--hairline); border-radius: 11px; }
+    .hairline { border-color: var(--hairline); }
+
+    /* Chips */
+    .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 9999px; letter-spacing: -0.1px; border: 1px solid var(--hairline); }
+    .chip-blue { color: var(--blue); background: rgba(0,102,204,0.07); border-color: rgba(0,102,204,0.2); }
+    .chip-ink { color: var(--ink); background: rgba(29,29,31,0.05); border-color: var(--hairline); }
+    .chip-muted { color: var(--ink48); background: rgba(122,122,122,0.08); border-color: var(--hairline); }
+    .chip-kind { color: var(--ink48); background: var(--parchment); border-color: var(--hairline); font-weight: 400; }
+    .dot { width: 6px; height: 6px; border-radius: 9999px; }
+
+    /* Accordion */
+    .accordion-body { display: none; }
+    .accordion-body.open { display: block; }
+
+    /* Checkbox -> Apple accent */
+    input[type="checkbox"] { accent-color: var(--blue); width: 18px; height: 18px; border-radius: 5px; cursor: pointer; }
+    .done-text { text-decoration: line-through; color: var(--ink48) !important; }
+
+    /* Progress ring */
+    .ring-track { stroke: var(--hairline); }
+    .ring-fg { stroke: var(--blue); transition: stroke-dashoffset .6s ease; }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar { width: 12px; height: 12px; }
+    ::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 8px; border: 3px solid var(--white); }
+    ::-webkit-scrollbar-thumb:hover { background: #b8b8c0; }
+
+    [id] { scroll-margin-top: 60px; }
+    a.text-link { color: var(--blue); }
+    .tile-dark a.text-link { color: var(--blue-dark); }
+  </style>
+</head>
+<body>
+
+  <!-- Global nav (persistent, true black, 44px) -->
+  <nav class="appnav">
+    <div class="container-x h-full flex items-center justify-between">
+      <a href="#top" class="flex items-center gap-2">
+        <i data-lucide="brain-circuit" class="w-[18px] h-[18px]" style="color:#fff"></i>
+        <span class="t-nav" style="font-weight:600;color:#fff">Neurotech</span>
+      </a>
+      <div class="hidden md:flex items-center gap-6 t-nav">
+        <a href="#dashboard">Dashboard</a>
+        <a href="#weeks">Weeks</a>
+        <a href="#decisions">Decisions</a>
+        <a href="#deliverables">Deliverables</a>
+        <a href="#honesty">Honesty</a>
+      </div>
+      <button id="resetBtn" class="util-btn t-nav" style="color:rgba(255,255,255,0.7)">
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Reset</span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Hero tile (parchment) -->
+  <header id="top" class="tile tile-parchment">
+    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+      <div class="chip chip-blue mb-6">
+        <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i>
+        June 1 — August 28, 2026 · 13 weeks
+      </div>
+      <h1 class="display t-hero" style="max-width:18ch">Summer 2026 Neuralink Portfolio</h1>
+      <p class="t-lead mt-5" style="max-width:60ch;color:var(--ink80)">
+        Caleb Newton and Mark Lin. A disciplined, measurable body of work, built backward from application evidence.
+        From neural representations to closed-loop control.
+      </p>
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="#weeks" class="pill"><i data-lucide="play" class="w-4 h-4"></i> Open this week</a>
+        <a href="#dashboard" class="pill-ghost"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> View dashboard</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dashboard tile (white) -->
+  <section id="dashboard" class="tile tile-white">
+    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        <!-- Progress ring -->
+        <div class="card p-8 flex flex-col items-center justify-center">
+          <div class="relative" style="width:176px;height:176px">
+            <svg class="-rotate-90" width="176" height="176" viewBox="0 0 120 120">
+              <circle class="ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="8" />
+              <circle id="progressRing" class="ring-fg" cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="progressPct" class="display" style="font-size:40px;font-weight:600;letter-spacing:-0.01em">0%</span>
+              <span class="t-caption" style="color:var(--ink48)">complete</span>
+            </div>
+          </div>
+          <p id="progressCount" class="t-caption mt-5" style="color:var(--ink48)">0 / 0 tasks done</p>
+        </div>
+
+        <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <p class="t-caption mb-2" style="color:var(--ink48)">Current focus</p>
+            <p id="currentWeekTitle" class="t-body-strong" style="line-height:1.3">Loading…</p>
+            <p id="currentWeekRange" class="t-caption mt-1" style="color:var(--ink48)"></p>
+          </div>
+          <div class="card p-6">
+            <p class="t-caption mb-2" style="color:var(--ink48)">Next hard decision</p>
+            <p id="nextDecisionTitle" class="t-body-strong" style="line-height:1.3">Loading…</p>
+            <p id="nextDecisionDate" class="t-caption mt-1" style="color:var(--ink48)"></p>
+          </div>
+          <div class="card p-6 sm:col-span-2">
+            <p class="t-caption mb-2" style="color:var(--ink48)">The one-sentence thesis</p>
+            <p id="thesisLine" class="t-body" style="color:var(--ink)"></p>
+          </div>
+        </div>
+      </div>
+
+      <div id="projectCards" class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5"></div>
+    </div>
+  </section>
+
+  <!-- Weeks tile (parchment) -->
+  <section id="weeks" class="tile tile-parchment">
+    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+        <div>
+          <h2 class="display t-display-md">The 13-week calendar</h2>
+          <p class="t-body mt-2" style="color:var(--ink80)">Monday to Friday. Protected weekends. Every Friday ships an artifact.</p>
+        </div>
+        <div class="flex items-center gap-2 t-caption flex-wrap">
+          <span style="color:var(--ink48)" class="mr-1">Filter</span>
+          <button data-filter="all" class="filter-btn"></button>
+          <button data-filter="Caleb" class="filter-btn"></button>
+          <button data-filter="Mark" class="filter-btn"></button>
+          <button data-filter="Together" class="filter-btn"></button>
+        </div>
+      </div>
+      <div id="weekList" class="space-y-3"></div>
+    </div>
+  </section>
+
+  <!-- Decisions tile (white) -->
+  <section id="decisions" class="tile tile-white">
+    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+      <h2 class="display t-display-md mb-2">Non-negotiable decision dates</h2>
+      <p class="t-body mb-8" style="color:var(--ink80)">Hard gates. Kill-switches are marked in ink. No quietly making weekends mandatory.</p>
+      <div id="decisionList" class="space-y-3" style="border-left:1px solid var(--hairline);margin-left:7px"></div>
+    </div>
+  </section>
+
+  <!-- Deliverables tile (parchment) -->
+  <section id="deliverables" class="tile tile-parchment">
+    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+      <h2 class="display t-display-md mb-2">Final deliverables checklist</h2>
+      <p class="t-body mb-8" style="color:var(--ink80)">The summer is not complete until these exist. Tap to track.</p>
+      <div id="deliverableGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
+    </div>
+  </section>
+
+  <!-- Honesty tile (dark) -->
+  <section id="honesty" class="tile tile-dark">
+    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+      <h2 class="display t-display-md mb-3">Non-negotiable honesty rules</h2>
+      <p class="t-body mb-8" style="color:var(--body-muted, #cccccc);max-width:62ch">
+        Applies to every README, demo caption, application bullet, and interview answer.
+        If a claim cannot survive a skeptical interviewer, delete it.
+      </p>
+      <ul id="honestyList" class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3.5"></ul>
+    </div>
+  </section>
+
+  <!-- Footer (parchment) -->
+  <footer class="tile tile-parchment">
+    <div class="container-x flex flex-col sm:flex-row items-center justify-between gap-3" style="padding-top:48px;padding-bottom:48px;border-top:1px solid var(--hairline)">
+      <div class="flex items-center gap-2 t-fine" style="color:var(--ink80)">
+        <i data-lucide="brain-circuit" class="w-4 h-4" style="color:var(--ink48)"></i>
+        Neurotech · Caleb &amp; Mark · progress saved locally on this device
+      </div>
+      <span class="t-fine" style="color:var(--ink48)">Built for the journey. Stay honest, measure everything.</span>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script>
+    const TODAY = new Date("2026-05-31T12:00:00");
+    const store = {
+      get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
+      set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
+    };
+    const KEY = "neurotech_progress_v1";
+    let done = store.get(KEY, {});
+    const saveDone = () => store.set(KEY, done);
+
+    // Single-accent palette: Caleb = Action Blue, Mark = ink, Together = muted
+    const personStyle = {
+      Caleb:    { chip: "chip-blue",  dot: "var(--blue)" },
+      Mark:     { chip: "chip-ink",   dot: "var(--ink)" },
+      Together: { chip: "chip-muted", dot: "var(--ink48)" },
+    };
+    const kindIcon = { Learn: "book-open", Build: "wrench", Write: "pen-line", Decide: "git-fork", Ship: "package-check", Teach: "users" };
+
+    const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
+    const allTaskIds = () => {
+      const ids = [];
+      PLAN.weeks.forEach((w) => w.days.forEach((d, di) => d.tasks.forEach((t, ti) => ids.push(`w${w.num}d${di}t${ti}`))));
+      return ids;
+    };
+
+    function getCurrentWeek() {
+      const start = new Date(PLAN.start + "T00:00:00");
+      if (TODAY < start) return PLAN.weeks[0];
+      for (const w of PLAN.weeks) {
+        const lastDay = new Date(w.days[w.days.length - 1].date + "T23:59:59");
+        if (TODAY <= lastDay) return w;
+      }
+      return PLAN.weeks[PLAN.weeks.length - 1];
+    }
+
+    function updateProgress() {
+      const ids = allTaskIds();
+      const total = ids.length;
+      const completed = ids.filter((id) => done[id]).length;
+      const pct = total ? Math.round((completed / total) * 100) : 0;
+      const C = 2 * Math.PI * 52;
+      document.getElementById("progressRing").style.strokeDashoffset = C - (pct / 100) * C;
+      document.getElementById("progressPct").textContent = pct + "%";
+      document.getElementById("progressCount").textContent = `${completed} / ${total} tasks done`;
+      PLAN.weeks.forEach((w) => {
+        const wIds = [];
+        w.days.forEach((d, di) => d.tasks.forEach((t, ti) => wIds.push(`w${w.num}d${di}t${ti}`)));
+        const wDone = wIds.filter((id) => done[id]).length;
+        const bar = document.getElementById(`wkbar-${w.num}`);
+        const lbl = document.getElementById(`wklbl-${w.num}`);
+        if (bar) bar.style.width = (wIds.length ? (wDone / wIds.length) * 100 : 0) + "%";
+        if (lbl) lbl.textContent = `${wDone}/${wIds.length}`;
+      });
+    }
+
+    function renderDashboard() {
+      const cw = getCurrentWeek();
+      document.getElementById("currentWeekTitle").textContent = `Week ${cw.num} — ${cw.title}`;
+      document.getElementById("currentWeekRange").textContent = cw.range;
+      document.getElementById("thesisLine").textContent = PLAN.thesis;
+
+      const upcoming = PLAN.decisions.find((d) => new Date(d.date + "T23:59:59") >= TODAY) || PLAN.decisions[PLAN.decisions.length - 1];
+      document.getElementById("nextDecisionTitle").textContent = upcoming.title;
+      document.getElementById("nextDecisionDate").textContent = fmtDate(upcoming.date) + ", 2026";
+
+      document.getElementById("projectCards").innerHTML = PLAN.projects.map((p) => `
+        <div class="card p-7">
+          <span class="chip chip-blue mb-3">${p.tag}</span>
+          <h3 class="display t-tagline mt-1">${p.name}</h3>
+          <p class="t-body mt-2" style="color:var(--ink80)">${p.line}</p>
+          <div class="mt-5">
+            <p class="t-caption-strong mb-2" style="color:var(--ink)">What it proves</p>
+            <div class="flex flex-wrap gap-1.5">
+              ${p.proves.map((x) => `<span class="chip chip-muted" style="font-weight:400">${x}</span>`).join("")}
+            </div>
+          </div>
+          <div class="mt-4">
+            <p class="t-caption-strong mb-2" style="color:var(--ink48)">What it does NOT claim</p>
+            <ul class="space-y-1">
+              ${p.notClaim.map((x) => `<li class="t-caption flex items-start gap-2" style="color:var(--ink48)"><span class="dot mt-1.5" style="background:var(--ink48)"></span>${x}</li>`).join("")}
+            </ul>
+          </div>
+        </div>`).join("");
+    }
+
+    let activeFilter = "all";
+    function renderWeeks() {
+      const cw = getCurrentWeek();
+      document.getElementById("weekList").innerHTML = PLAN.weeks.map((w) => {
+        const isCurrent = w.num === cw.num;
+        const ks = w.killSwitch;
+        const headBorder = isCurrent ? "border-color:var(--blue)" : "";
+        return `
+        <div class="card overflow-hidden" style="${headBorder}">
+          <button class="week-head w-full flex items-center gap-4 p-5 text-left" style="background:transparent;border:none;cursor:pointer">
+            <span class="display flex items-center justify-center shrink-0" style="width:46px;height:46px;border-radius:11px;font-weight:600;${isCurrent ? "background:var(--blue);color:#fff" : "background:var(--parchment);color:var(--ink48);border:1px solid var(--hairline)"}">${w.num}</span>
+            <div class="min-w-0 flex-1">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="t-body-strong truncate">${w.title}</h3>
+                ${isCurrent ? '<span class="chip chip-blue">This week</span>' : ""}
+                ${ks ? '<span class="chip chip-ink"><i data-lucide="zap" class="w-3 h-3"></i>Kill-switch</span>' : ""}
+              </div>
+              <p class="t-caption mt-0.5" style="color:var(--ink48)">${w.range}</p>
+            </div>
+            <div class="hidden sm:flex flex-col items-end gap-1.5 shrink-0" style="width:104px">
+              <span id="wklbl-${w.num}" class="t-fine" style="color:var(--ink48)">0/0</span>
+              <div style="width:100%;height:5px;border-radius:9999px;background:var(--hairline);overflow:hidden">
+                <div id="wkbar-${w.num}" style="height:100%;background:var(--blue);width:0%;transition:width .5s ease"></div>
+              </div>
+            </div>
+            <i data-lucide="chevron-down" class="chev w-5 h-5 shrink-0" style="color:var(--ink48);transition:transform .2s ease;${isCurrent ? "transform:rotate(180deg)" : ""}"></i>
+          </button>
+          <div class="accordion-body ${isCurrent ? "open" : ""}" style="border-top:1px solid var(--hairline)">
+            <div class="p-5 space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="inset p-4">
+                  <p class="t-caption-strong mb-1" style="color:var(--blue)">Weekly objective</p>
+                  <p class="t-caption" style="color:var(--ink80)">${w.objective}</p>
+                </div>
+                <div class="inset p-4">
+                  <p class="t-caption-strong mb-1 flex items-center gap-1.5" style="color:var(--ink)"><i data-lucide="flag" class="w-3.5 h-3.5"></i>Exit gate</p>
+                  <p class="t-caption" style="color:var(--ink80)">${w.exit}</p>
+                </div>
+              </div>
+              ${w.days.map((d, di) => renderDay(w, d, di)).join("")}
+            </div>
+          </div>
+        </div>`;
+      }).join("");
+      bindWeekEvents();
+      applyFilter();
+      lucide.createIcons();
+      updateProgress();
+    }
+
+    function renderDay(w, d, di) {
+      const dayName = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday" }[d.day];
+      return `
+      <div class="day-block" style="border:1px solid var(--hairline);border-radius:11px;overflow:hidden">
+        <div class="flex items-center gap-2.5 px-4 py-2.5" style="background:var(--parchment)">
+          <span class="t-caption-strong" style="color:var(--ink)">${dayName}</span>
+          <span class="t-fine" style="color:var(--ink48)">${fmtDate(d.date)}</span>
+          <span class="t-caption truncate" style="color:var(--ink80)">· ${d.theme}</span>
+        </div>
+        <div>
+          ${d.tasks.map((t, ti) => {
+            const id = `w${w.num}d${di}t${ti}`;
+            const ps = personStyle[t.p];
+            const checked = !!done[id];
+            return `
+            <label data-person="${t.p}" class="task-row flex items-start gap-3 px-4 py-3" style="border-top:1px solid var(--divider);cursor:pointer">
+              <input type="checkbox" data-id="${id}" class="task-check mt-0.5 shrink-0" ${checked ? "checked" : ""} />
+              <div class="min-w-0 flex-1">
+                <div class="flex items-center gap-1.5 mb-1 flex-wrap">
+                  <span class="chip ${ps.chip}"><span class="dot" style="background:${ps.dot}"></span>${t.p}</span>
+                  <span class="chip chip-kind"><i data-lucide="${kindIcon[t.k] || 'dot'}" class="w-3 h-3"></i>${t.k}</span>
+                </div>
+                <p class="task-text t-caption ${checked ? "done-text" : ""}" style="color:var(--ink);line-height:1.4">${t.t}</p>
+              </div>
+            </label>`;
+          }).join("")}
+        </div>
+        <div class="px-4 py-2.5 flex items-start gap-2" style="background:var(--pearl);border-top:1px solid var(--hairline)">
+          <i data-lucide="check" class="w-4 h-4 mt-0.5 shrink-0" style="color:var(--blue)"></i>
+          <p class="t-fine" style="color:var(--ink80)"><span style="font-weight:600">Proof by EOD:</span> ${d.proof}</p>
+        </div>
+      </div>`;
+    }
+
+    function bindWeekEvents() {
+      document.querySelectorAll(".week-head").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const body = btn.nextElementSibling;
+          const chev = btn.querySelector(".chev");
+          body.classList.toggle("open");
+          chev.style.transform = body.classList.contains("open") ? "rotate(180deg)" : "rotate(0deg)";
+        });
+      });
+      document.querySelectorAll(".task-check").forEach((cb) => {
+        cb.addEventListener("change", (e) => {
+          e.stopPropagation();
+          const id = cb.dataset.id;
+          if (cb.checked) done[id] = true; else delete done[id];
+          saveDone();
+          cb.closest(".task-row").querySelector(".task-text").classList.toggle("done-text", cb.checked);
+          updateProgress();
+        });
+      });
+    }
+
+    function applyFilter() {
+      document.querySelectorAll(".task-row").forEach((row) => {
+        row.style.display = (activeFilter === "all" || row.dataset.person === activeFilter) ? "" : "none";
+      });
+      document.querySelectorAll(".day-block").forEach((block) => {
+        const anyVisible = [...block.querySelectorAll(".task-row")].some((r) => r.style.display !== "none");
+        block.style.display = anyVisible ? "" : "none";
+      });
+    }
+    function paintFilters() {
+      document.querySelectorAll(".filter-btn").forEach((b) => {
+        const on = b.dataset.filter === activeFilter;
+        b.textContent = b.dataset.filter === "all" ? "All" : b.dataset.filter;
+        b.style.cssText = `padding:6px 12px;border-radius:9999px;cursor:pointer;transition:transform .15s ease;font-size:14px;letter-spacing:-0.224px;${on ? "background:var(--blue);color:#fff;border:1px solid var(--blue)" : "background:var(--white);color:var(--ink48);border:1px solid var(--hairline)"}`;
+      });
+    }
+    document.querySelectorAll(".filter-btn").forEach((btn) => {
+      btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; paintFilters(); applyFilter(); });
+    });
+
+    function renderDecisions() {
+      document.getElementById("decisionList").innerHTML = PLAN.decisions.map((d) => {
+        const isKill = /kill-switch/i.test(d.title);
+        const past = new Date(d.date + "T23:59:59") < TODAY;
+        const nodeColor = isKill ? "var(--ink)" : "var(--blue)";
+        return `
+        <div class="relative" style="padding-left:24px;${past ? "opacity:0.5" : ""}">
+          <span class="absolute" style="left:-7px;top:18px;width:13px;height:13px;border-radius:9999px;background:${nodeColor};box-shadow:0 0 0 4px var(--white)"></span>
+          <div class="card p-5" style="${isKill ? "border-color:var(--ink)" : ""}">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <h3 class="t-body-strong flex items-center gap-2">${isKill ? '<i data-lucide="zap" class="w-4 h-4" style="color:var(--ink)"></i>' : ''}${d.title}</h3>
+              <span class="chip ${isKill ? "chip-ink" : "chip-blue"}">${fmtDate(d.date)}, 2026</span>
+            </div>
+            <p class="t-caption mt-2" style="color:var(--ink80)">${d.detail}</p>
+          </div>
+        </div>`;
+      }).join("");
+    }
+
+    function renderDeliverables() {
+      const cols = [
+        { key: "p1", title: "Project 1 — Control Workstation", icon: "cpu", items: PLAN.deliverables.p1 },
+        { key: "p2", title: "Project 2 — Decoding Lab", icon: "git-branch", items: PLAN.deliverables.p2 },
+        { key: "portfolio", title: "Portfolio & Application", icon: "folder-open", items: PLAN.deliverables.portfolio },
+      ];
+      document.getElementById("deliverableGrid").innerHTML = cols.map((c) => `
+        <div class="card p-6">
+          <div class="flex items-center gap-2.5 mb-4">
+            <span class="flex items-center justify-center" style="width:34px;height:34px;border-radius:8px;background:rgba(0,102,204,0.08);color:var(--blue)"><i data-lucide="${c.icon}" class="w-[18px] h-[18px]"></i></span>
+            <h3 class="t-body-strong">${c.title}</h3>
+          </div>
+          <ul class="space-y-1">
+            ${c.items.map((item, i) => {
+              const id = `del_${c.key}_${i}`;
+              const checked = !!done[id];
+              return `
+              <li>
+                <label class="del-row flex items-start gap-2.5 py-1.5" style="cursor:pointer">
+                  <input type="checkbox" data-id="${id}" class="del-check mt-0.5 shrink-0" ${checked ? "checked" : ""} />
+                  <span class="del-text t-caption ${checked ? "done-text" : ""}" style="color:var(--ink)">${item}</span>
+                </label>
+              </li>`;
+            }).join("")}
+          </ul>
+        </div>`).join("");
+      document.querySelectorAll(".del-check").forEach((cb) => {
+        cb.addEventListener("change", () => {
+          const id = cb.dataset.id;
+          if (cb.checked) done[id] = true; else delete done[id];
+          saveDone();
+          cb.closest(".del-row").querySelector(".del-text").classList.toggle("done-text", cb.checked);
+        });
+      });
+    }
+
+    function renderHonesty() {
+      document.getElementById("honestyList").innerHTML = PLAN.honesty.map((h) => `
+        <li class="flex items-start gap-2.5">
+          <i data-lucide="check" class="w-4 h-4 mt-0.5 shrink-0" style="color:var(--blue-dark)"></i>
+          <span class="t-caption" style="color:#e6e6e6;line-height:1.5">${h}</span>
+        </li>`).join("");
+    }
+
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (confirm("Reset all tracked progress on this device? This cannot be undone.")) {
+        done = {}; saveDone();
+        renderWeeks(); renderDeliverables(); updateProgress(); lucide.createIcons();
+      }
+    });
+
+    // init
+    renderDashboard();
+    paintFilters();
+    renderWeeks();
+    renderDecisions();
+    renderDeliverables();
+    renderHonesty();
+    updateProgress();
+    lucide.createIcons();
+  </script>
+</body>
+</html>
