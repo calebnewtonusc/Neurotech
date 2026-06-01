@@ -55,7 +55,7 @@
     .appnav { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: var(--black); color: var(--white); z-index: 60; }
     .appnav a { color: rgba(255,255,255,0.62); transition: color .15s ease; }
     .appnav a:hover, .appnav a.spy-on { color: #fff; }
-    #scrollbar { position: fixed; top: 44px; left: 0; height: 2px; background: var(--blue); width: 0; z-index: 59; transition: width .1s linear; }
+    #scrollbar { position: fixed; top: 44px; left: 0; height: 2px; background: var(--blue); width: 0; z-index: 59; transition: width .1s linear; pointer-events: none; }
 
     .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 9999px; padding: 11px 22px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease, background .18s ease; cursor: pointer; border: none; }
     .pill:hover { background: #005bb8; }
@@ -167,16 +167,16 @@
           </div>
           <p id="progressCount" class="t-caption mt-4" style="color:var(--ink48)">0 / 0 done</p>
           <div class="flex flex-wrap items-center justify-center gap-2 mt-5">
-            <button id="exportBtn" class="util-btn"><i data-lucide="download" class="w-3.5 h-3.5"></i>Export</button>
-            <button id="importBtn" class="util-btn"><i data-lucide="upload" class="w-3.5 h-3.5"></i>Import</button>
-            <button id="resetBtn" class="util-btn"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>Reset</button>
+            <button type="button" id="exportBtn" class="util-btn"><i data-lucide="download" class="w-3.5 h-3.5"></i>Export</button>
+            <button type="button" id="importBtn" class="util-btn"><i data-lucide="upload" class="w-3.5 h-3.5"></i>Import</button>
+            <button type="button" id="resetBtn" class="util-btn"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>Reset</button>
             <input id="importFile" type="file" accept="application/json,.json" class="hidden" />
           </div>
           <div class="w-full mt-5" style="border-top:1px solid var(--hairline);padding-top:16px">
             <p class="t-caption-strong mb-2 flex items-center justify-center gap-1.5"><i data-lucide="refresh-cw" class="w-3.5 h-3.5" style="color:var(--blue)"></i>Live sync</p>
             <div class="flex gap-2">
               <input id="boardInput" class="search-input" style="padding-left:14px" placeholder="shared board code" aria-label="Shared board code" />
-              <button id="syncBtn" class="util-btn shrink-0">Connect</button>
+              <button type="button" id="syncBtn" class="util-btn shrink-0">Connect</button>
             </div>
             <p id="syncStatus" class="t-fine mt-2 text-center" style="color:var(--ink48)">Local only — not synced</p>
           </div>
@@ -241,8 +241,8 @@
           <p class="t-body mt-2" style="color:var(--ink80)">Monday to Friday. Protected weekends. Every Friday ships an artifact.</p>
         </div>
         <div class="flex items-center gap-2">
-          <button id="expandAll" class="util-btn"><i data-lucide="chevrons-down" class="w-3.5 h-3.5"></i>Expand all</button>
-          <button id="collapseAll" class="util-btn"><i data-lucide="chevrons-up" class="w-3.5 h-3.5"></i>Collapse</button>
+          <button type="button" id="expandAll" class="util-btn"><i data-lucide="chevrons-down" class="w-3.5 h-3.5"></i>Expand all</button>
+          <button type="button" id="collapseAll" class="util-btn"><i data-lucide="chevrons-up" class="w-3.5 h-3.5"></i>Collapse</button>
         </div>
       </div>
       <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
@@ -252,10 +252,10 @@
         </div>
         <div id="filterBar" class="flex items-center gap-2 t-caption flex-wrap">
           <span style="color:var(--ink48)" class="mr-1">Owner</span>
-          <button data-filter="all" class="filter-btn"></button>
-          <button data-filter="Caleb" class="filter-btn"></button>
-          <button data-filter="Mark" class="filter-btn"></button>
-          <button data-filter="Together" class="filter-btn"></button>
+          <button type="button" data-filter="all" class="filter-btn"></button>
+          <button type="button" data-filter="Caleb" class="filter-btn"></button>
+          <button type="button" data-filter="Mark" class="filter-btn"></button>
+          <button type="button" data-filter="Together" class="filter-btn"></button>
         </div>
       </div>
       <p id="searchEmpty" class="t-caption mb-4 hidden" style="color:var(--ink48)"></p>
@@ -416,7 +416,7 @@
         const { total, doneN } = weekStats(w);
         const ratio = total ? doneN / total : 0;
         const isCur = w.num === cwNum;
-        return `<button class="mini-seg ${isCur ? "cur" : ""}" data-goto="${w.num}" title="Week ${w.num}: ${esc(w.title)} (${doneN}/${total})" aria-label="Week ${w.num}, ${doneN} of ${total} done">
+        return `<button type="button" class="mini-seg ${isCur ? "cur" : ""}" data-goto="${w.num}" title="Week ${w.num}: ${esc(w.title)} (${doneN}/${total})" aria-label="Week ${w.num}, ${doneN} of ${total} done">
           <span class="fill" style="transform:scaleY(${ratio})"></span>
           <span class="num" style="color:${ratio > 0.55 ? "#fff" : "var(--ink48)"}">${w.num}</span>
         </button>`;
@@ -455,7 +455,7 @@
         const noteVal = notes[`w${w.num}`] || "";
         return `
         <div class="card overflow-hidden" id="week-${w.num}" data-week="${w.num}" style="${isCurrent ? "border-color:var(--blue)" : ""}">
-          <button class="week-head w-full flex items-center gap-4 p-5 text-left" style="background:transparent;border:none;cursor:pointer" aria-expanded="${isCurrent}">
+          <button type="button" class="week-head w-full flex items-center gap-4 p-5 text-left" style="background:transparent;border:none;cursor:pointer" aria-expanded="${isCurrent}">
             <span class="display flex items-center justify-center shrink-0" style="width:46px;height:46px;border-radius:11px;font-weight:600;${isCurrent ? "background:var(--blue);color:#fff" : "background:var(--parchment);color:var(--ink48);border:1px solid var(--hairline)"}">${w.num}</span>
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
