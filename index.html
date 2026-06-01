@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Neurotech — Summer 2026 Neuralink Portfolio</title>
-  <meta name="description" content="Caleb Newton & Mark Lin — 13-week Neuralink prep execution tracker." />
+  <title>Neurotech — Summer 2026 Research Tracks</title>
+  <meta name="description" content="Caleb Newton — multi-track summer research execution tracker (Neuralink + Zoral continual learning)." />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -21,16 +21,12 @@
     body {
       font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", system-ui, "Inter", sans-serif;
       -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
-      color: var(--ink); font-size: 17px; line-height: 1.47; letter-spacing: -0.374px;
-      padding-top: 44px;
+      color: var(--ink); font-size: 17px; line-height: 1.47; letter-spacing: -0.374px; padding-top: 44px;
     }
     .display { font-family: -apple-system, "SF Pro Display", system-ui, "Inter", sans-serif; }
-
-    /* Type scale (Apple) */
     .t-hero { font-weight: 600; font-size: clamp(34px, 6vw, 56px); line-height: 1.07; letter-spacing: -0.02em; }
-    .t-display-lg { font-weight: 600; font-size: clamp(28px, 4vw, 40px); line-height: 1.1; letter-spacing: -0.01em; }
     .t-display-md { font-weight: 600; font-size: clamp(24px, 3.2vw, 34px); line-height: 1.18; letter-spacing: -0.374px; }
-    .t-lead { font-weight: 400; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.32; letter-spacing: 0; }
+    .t-lead { font-weight: 400; font-size: clamp(19px, 2.4vw, 24px); line-height: 1.32; }
     .t-tagline { font-weight: 600; font-size: 21px; line-height: 1.19; letter-spacing: 0.01em; }
     .t-body { font-weight: 400; font-size: 17px; line-height: 1.47; letter-spacing: -0.374px; }
     .t-body-strong { font-weight: 600; font-size: 17px; line-height: 1.3; letter-spacing: -0.374px; }
@@ -39,34 +35,35 @@
     .t-fine { font-weight: 400; font-size: 12px; line-height: 1.4; letter-spacing: -0.12px; }
     .t-nav { font-weight: 400; font-size: 12px; line-height: 1; letter-spacing: -0.12px; }
 
-    /* Tiles (full-bleed bands; color change is the divider) */
     .tile { width: 100%; }
     .tile-white { background: var(--white); }
     .tile-parchment { background: var(--parchment); }
     .tile-dark { background: var(--tile1); color: var(--white); }
     .container-x { max-width: 1080px; margin: 0 auto; padding-left: 22px; padding-right: 22px; }
+    .pad-sec { padding-top: 80px; padding-bottom: 80px; }
 
-    /* Global nav */
     .appnav { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: var(--black); color: var(--white); z-index: 60; }
     .appnav a { color: rgba(255,255,255,0.82); }
     .appnav a:hover { color: #fff; }
 
-    /* Buttons */
     .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 9999px; padding: 11px 22px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease, background .18s ease; cursor: pointer; border: none; }
     .pill:hover { background: #005bb8; }
     .pill:active { transform: scale(0.95); }
     .pill-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--blue); border: 1px solid var(--blue); border-radius: 9999px; padding: 10px 21px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease; cursor: pointer; }
     .pill-ghost:active { transform: scale(0.95); }
-    .util-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--ink48); border-radius: 8px; padding: 6px 10px; font-size: 14px; transition: transform .15s ease, color .15s ease; cursor: pointer; background: transparent; border: none; }
+    .util-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--ink48); border-radius: 8px; padding: 6px 10px; font-size: 14px; transition: transform .15s ease; cursor: pointer; background: transparent; border: none; }
     .util-btn:active { transform: scale(0.95); }
 
-    /* Cards */
+    /* Segmented track switch */
+    .seg { display: inline-flex; background: #e8e8ed; border-radius: 9999px; padding: 3px; gap: 3px; }
+    .seg-btn { border: none; cursor: pointer; border-radius: 9999px; padding: 7px 16px; font-size: 14px; font-weight: 600; letter-spacing: -0.224px; color: var(--ink48); background: transparent; transition: transform .15s ease; }
+    .seg-btn:active { transform: scale(0.96); }
+    .seg-btn.on { background: var(--white); color: var(--ink); box-shadow: 0 1px 2px rgba(0,0,0,0.08); }
+
     .card { background: var(--white); border: 1px solid var(--hairline); border-radius: 18px; }
     .tile-dark .card { background: var(--tile2); border-color: rgba(255,255,255,0.12); color: #fff; }
     .inset { background: var(--parchment); border: 1px solid var(--hairline); border-radius: 11px; }
-    .hairline { border-color: var(--hairline); }
 
-    /* Chips */
     .chip { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; font-weight: 600; padding: 3px 9px; border-radius: 9999px; letter-spacing: -0.1px; border: 1px solid var(--hairline); }
     .chip-blue { color: var(--blue); background: rgba(0,102,204,0.07); border-color: rgba(0,102,204,0.2); }
     .chip-ink { color: var(--ink); background: rgba(29,29,31,0.05); border-color: var(--hairline); }
@@ -74,31 +71,27 @@
     .chip-kind { color: var(--ink48); background: var(--parchment); border-color: var(--hairline); font-weight: 400; }
     .dot { width: 6px; height: 6px; border-radius: 9999px; }
 
-    /* Accordion */
     .accordion-body { display: none; }
     .accordion-body.open { display: block; }
 
-    /* Checkbox -> Apple accent */
     input[type="checkbox"] { accent-color: var(--blue); width: 18px; height: 18px; border-radius: 5px; cursor: pointer; }
     .done-text { text-decoration: line-through; color: var(--ink48) !important; }
 
-    /* Progress ring */
     .ring-track { stroke: var(--hairline); }
     .ring-fg { stroke: var(--blue); transition: stroke-dashoffset .6s ease; }
 
-    /* Scrollbar */
+    table.ref { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden; }
+    table.ref th, table.ref td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
+    table.ref tr:last-child td { border-bottom: none; }
+    table.ref th { background: var(--parchment); }
+
     ::-webkit-scrollbar { width: 12px; height: 12px; }
     ::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 8px; border: 3px solid var(--white); }
-    ::-webkit-scrollbar-thumb:hover { background: #b8b8c0; }
-
     [id] { scroll-margin-top: 60px; }
-    a.text-link { color: var(--blue); }
-    .tile-dark a.text-link { color: var(--blue-dark); }
   </style>
 </head>
 <body>
 
-  <!-- Global nav (persistent, true black, 44px) -->
   <nav class="appnav">
     <div class="container-x h-full flex items-center justify-between">
       <a href="#top" class="flex items-center gap-2">
@@ -108,28 +101,24 @@
       <div class="hidden md:flex items-center gap-6 t-nav">
         <a href="#dashboard">Dashboard</a>
         <a href="#weeks">Weeks</a>
-        <a href="#decisions">Decisions</a>
-        <a href="#deliverables">Deliverables</a>
-        <a href="#honesty">Honesty</a>
+        <a href="#resources">Resources</a>
       </div>
       <button id="resetBtn" class="util-btn t-nav" style="color:rgba(255,255,255,0.7)">
-        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Reset</span>
+        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Reset track</span>
       </button>
     </div>
   </nav>
 
-  <!-- Hero tile (parchment) -->
+  <!-- Hero -->
   <header id="top" class="tile tile-parchment">
-    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
-      <div class="chip chip-blue mb-6">
-        <i data-lucide="calendar-range" class="w-3.5 h-3.5"></i>
-        June 1 — August 28, 2026 · 13 weeks
+    <div class="container-x pad-sec">
+      <div class="seg mb-7">
+        <button class="seg-btn" data-track="neuralink">Neuralink</button>
+        <button class="seg-btn" data-track="zoral">Zoral</button>
       </div>
-      <h1 class="display t-hero" style="max-width:18ch">Summer 2026 Neuralink Portfolio</h1>
-      <p class="t-lead mt-5" style="max-width:60ch;color:var(--ink80)">
-        Caleb Newton and Mark Lin. A disciplined, measurable body of work, built backward from application evidence.
-        From neural representations to closed-loop control.
-      </p>
+      <div id="heroBadge" class="chip chip-blue mb-6"></div>
+      <h1 id="heroTitle" class="display t-hero" style="max-width:20ch"></h1>
+      <p id="heroSub" class="t-lead mt-5" style="max-width:62ch;color:var(--ink80)"></p>
       <div class="mt-8 flex flex-wrap gap-3">
         <a href="#weeks" class="pill"><i data-lucide="play" class="w-4 h-4"></i> Open this week</a>
         <a href="#dashboard" class="pill-ghost"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> View dashboard</a>
@@ -137,11 +126,10 @@
     </div>
   </header>
 
-  <!-- Dashboard tile (white) -->
+  <!-- Dashboard -->
   <section id="dashboard" class="tile tile-white">
-    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+    <div class="container-x pad-sec">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
-        <!-- Progress ring -->
         <div class="card p-8 flex flex-col items-center justify-center">
           <div class="relative" style="width:176px;height:176px">
             <svg class="-rotate-90" width="176" height="176" viewBox="0 0 120 120">
@@ -153,7 +141,7 @@
               <span class="t-caption" style="color:var(--ink48)">complete</span>
             </div>
           </div>
-          <p id="progressCount" class="t-caption mt-5" style="color:var(--ink48)">0 / 0 tasks done</p>
+          <p id="progressCount" class="t-caption mt-5" style="color:var(--ink48)">0 / 0 done</p>
         </div>
 
         <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -163,30 +151,29 @@
             <p id="currentWeekRange" class="t-caption mt-1" style="color:var(--ink48)"></p>
           </div>
           <div class="card p-6">
-            <p class="t-caption mb-2" style="color:var(--ink48)">Next hard decision</p>
-            <p id="nextDecisionTitle" class="t-body-strong" style="line-height:1.3">Loading…</p>
-            <p id="nextDecisionDate" class="t-caption mt-1" style="color:var(--ink48)"></p>
+            <p id="card2Label" class="t-caption mb-2" style="color:var(--ink48)"></p>
+            <p id="card2Title" class="t-body-strong" style="line-height:1.3"></p>
+            <p id="card2Sub" class="t-caption mt-1" style="color:var(--ink48)"></p>
           </div>
           <div class="card p-6 sm:col-span-2">
-            <p class="t-caption mb-2" style="color:var(--ink48)">The one-sentence thesis</p>
+            <p class="t-caption mb-2" style="color:var(--ink48)">The thesis</p>
             <p id="thesisLine" class="t-body" style="color:var(--ink)"></p>
           </div>
         </div>
       </div>
-
       <div id="projectCards" class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5"></div>
     </div>
   </section>
 
-  <!-- Weeks tile (parchment) -->
+  <!-- Weeks -->
   <section id="weeks" class="tile tile-parchment">
-    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
+    <div class="container-x pad-sec">
       <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
         <div>
-          <h2 class="display t-display-md">The 13-week calendar</h2>
-          <p class="t-body mt-2" style="color:var(--ink80)">Monday to Friday. Protected weekends. Every Friday ships an artifact.</p>
+          <h2 id="weeksHeading" class="display t-display-md">The calendar</h2>
+          <p id="weeksSub" class="t-body mt-2" style="color:var(--ink80)"></p>
         </div>
-        <div class="flex items-center gap-2 t-caption flex-wrap">
+        <div id="filterBar" class="flex items-center gap-2 t-caption flex-wrap">
           <span style="color:var(--ink48)" class="mr-1">Filter</span>
           <button data-filter="all" class="filter-btn"></button>
           <button data-filter="Caleb" class="filter-btn"></button>
@@ -198,44 +185,17 @@
     </div>
   </section>
 
-  <!-- Decisions tile (white) -->
-  <section id="decisions" class="tile tile-white">
-    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
-      <h2 class="display t-display-md mb-2">Non-negotiable decision dates</h2>
-      <p class="t-body mb-8" style="color:var(--ink80)">Hard gates. Kill-switches are marked in ink. No quietly making weekends mandatory.</p>
-      <div id="decisionList" class="space-y-3" style="border-left:1px solid var(--hairline);margin-left:7px"></div>
-    </div>
-  </section>
+  <!-- Reference area (dynamic tiles) -->
+  <div id="resources"></div>
 
-  <!-- Deliverables tile (parchment) -->
-  <section id="deliverables" class="tile tile-parchment">
-    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
-      <h2 class="display t-display-md mb-2">Final deliverables checklist</h2>
-      <p class="t-body mb-8" style="color:var(--ink80)">The summer is not complete until these exist. Tap to track.</p>
-      <div id="deliverableGrid" class="grid grid-cols-1 md:grid-cols-3 gap-5"></div>
-    </div>
-  </section>
-
-  <!-- Honesty tile (dark) -->
-  <section id="honesty" class="tile tile-dark">
-    <div class="container-x" style="padding-top:80px;padding-bottom:80px">
-      <h2 class="display t-display-md mb-3">Non-negotiable honesty rules</h2>
-      <p class="t-body mb-8" style="color:var(--body-muted, #cccccc);max-width:62ch">
-        Applies to every README, demo caption, application bullet, and interview answer.
-        If a claim cannot survive a skeptical interviewer, delete it.
-      </p>
-      <ul id="honestyList" class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3.5"></ul>
-    </div>
-  </section>
-
-  <!-- Footer (parchment) -->
+  <!-- Footer -->
   <footer class="tile tile-parchment">
     <div class="container-x flex flex-col sm:flex-row items-center justify-between gap-3" style="padding-top:48px;padding-bottom:48px;border-top:1px solid var(--hairline)">
       <div class="flex items-center gap-2 t-fine" style="color:var(--ink80)">
         <i data-lucide="brain-circuit" class="w-4 h-4" style="color:var(--ink48)"></i>
-        Neurotech · Caleb &amp; Mark · progress saved locally on this device
+        <span id="footNote">Neurotech · progress saved locally on this device</span>
       </div>
-      <span class="t-fine" style="color:var(--ink48)">Built for the journey. Stay honest, measure everything.</span>
+      <span class="t-fine" style="color:var(--ink48)">Build the experiment. Measure it. Tell the truth about the result.</span>
     </div>
   </footer>
 
@@ -246,108 +206,142 @@
       get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
       set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
     };
-    const KEY = "neurotech_progress_v1";
-    let done = store.get(KEY, {});
-    const saveDone = () => store.set(KEY, done);
+    const KEY = "neurotech_progress_v2";
+    const TRACK_KEY = "neurotech_track";
+    let allDone = store.get(KEY, {});
+    let activeId = store.get(TRACK_KEY, "neuralink");
+    if (!PROGRAMS[activeId]) activeId = "neuralink";
+    const saveDone = () => store.set(KEY, allDone);
+    const prog = () => PROGRAMS[activeId];
+    const doneMap = () => (allDone[activeId] = allDone[activeId] || {});
 
-    // Single-accent palette: Caleb = Action Blue, Mark = ink, Together = muted
     const personStyle = {
       Caleb:    { chip: "chip-blue",  dot: "var(--blue)" },
       Mark:     { chip: "chip-ink",   dot: "var(--ink)" },
       Together: { chip: "chip-muted", dot: "var(--ink48)" },
     };
-    const kindIcon = { Learn: "book-open", Build: "wrench", Write: "pen-line", Decide: "git-fork", Ship: "package-check", Teach: "users" };
-
+    const kindIcon = { Learn: "book-open", Build: "wrench", Write: "pen-line", Decide: "git-fork", Ship: "package-check", Teach: "users", Read: "book-marked", Output: "package-check" };
     const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    const allTaskIds = () => {
-      const ids = [];
-      PLAN.weeks.forEach((w) => w.days.forEach((d, di) => d.tasks.forEach((t, ti) => ids.push(`w${w.num}d${di}t${ti}`))));
-      return ids;
-    };
+    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
 
-    function getCurrentWeek() {
-      const start = new Date(PLAN.start + "T00:00:00");
-      if (TODAY < start) return PLAN.weeks[0];
-      for (const w of PLAN.weeks) {
-        const lastDay = new Date(w.days[w.days.length - 1].date + "T23:59:59");
-        if (TODAY <= lastDay) return w;
+    function currentWeekNum(p) {
+      const start = new Date(p.start + "T00:00:00");
+      if (TODAY < start) return p.weeks[0].num;
+      if (p.kind === "neuralink") {
+        for (const w of p.weeks) {
+          const last = new Date(w.days[w.days.length - 1].date + "T23:59:59");
+          if (TODAY <= last) return w.num;
+        }
+        return p.weeks[p.weeks.length - 1].num;
       }
-      return PLAN.weeks[PLAN.weeks.length - 1];
+      const days = (TODAY - start) / 86400000;
+      const idx = Math.min(p.weeks.length - 1, Math.floor(days / 14));
+      return p.weeks[idx].num;
     }
 
     function updateProgress() {
-      const ids = allTaskIds();
-      const total = ids.length;
-      const completed = ids.filter((id) => done[id]).length;
+      const boxes = [...document.querySelectorAll("input.track-check")];
+      const total = boxes.length;
+      const completed = boxes.filter((b) => b.checked).length;
       const pct = total ? Math.round((completed / total) * 100) : 0;
       const C = 2 * Math.PI * 52;
       document.getElementById("progressRing").style.strokeDashoffset = C - (pct / 100) * C;
       document.getElementById("progressPct").textContent = pct + "%";
-      document.getElementById("progressCount").textContent = `${completed} / ${total} tasks done`;
-      PLAN.weeks.forEach((w) => {
-        const wIds = [];
-        w.days.forEach((d, di) => d.tasks.forEach((t, ti) => wIds.push(`w${w.num}d${di}t${ti}`)));
-        const wDone = wIds.filter((id) => done[id]).length;
-        const bar = document.getElementById(`wkbar-${w.num}`);
-        const lbl = document.getElementById(`wklbl-${w.num}`);
-        if (bar) bar.style.width = (wIds.length ? (wDone / wIds.length) * 100 : 0) + "%";
-        if (lbl) lbl.textContent = `${wDone}/${wIds.length}`;
+      document.getElementById("progressCount").textContent = `${completed} / ${total} done`;
+      document.querySelectorAll("[data-week]").forEach((wEl) => {
+        const wb = [...wEl.querySelectorAll("input.track-check")];
+        const wd = wb.filter((b) => b.checked).length;
+        const bar = wEl.querySelector(".wk-bar");
+        const lbl = wEl.querySelector(".wk-lbl");
+        if (bar) bar.style.width = (wb.length ? (wd / wb.length) * 100 : 0) + "%";
+        if (lbl) lbl.textContent = `${wd}/${wb.length}`;
       });
     }
 
+    function checkbox(id) {
+      const checked = doneMap()[id] ? "checked" : "";
+      return `<input type="checkbox" class="track-check mt-0.5 shrink-0" data-id="${id}" ${checked} />`;
+    }
+    const isDone = (id) => !!doneMap()[id];
+
+    // ---------- HERO + DASHBOARD ----------
+    function renderHero() {
+      const p = prog();
+      document.querySelectorAll(".seg-btn").forEach((b) => b.classList.toggle("on", b.dataset.track === activeId));
+      document.getElementById("heroBadge").innerHTML = `<i data-lucide="calendar-range" class="w-3.5 h-3.5"></i> ${p.dateLabel}`;
+      document.getElementById("heroTitle").textContent = p.kind === "neuralink" ? "Summer 2026 Neuralink Portfolio" : "Brain-Inspired Continual Learning";
+      document.getElementById("heroSub").textContent = p.tagline;
+      document.getElementById("footNote").textContent = `Neurotech · ${p.name} · progress saved locally on this device`;
+    }
+
     function renderDashboard() {
-      const cw = getCurrentWeek();
-      document.getElementById("currentWeekTitle").textContent = `Week ${cw.num} — ${cw.title}`;
+      const p = prog();
+      const cwNum = currentWeekNum(p);
+      const cw = p.weeks.find((w) => w.num === cwNum) || p.weeks[0];
+      document.getElementById("currentWeekTitle").textContent = `${p.kind === "neuralink" ? "Week" : "Block"} ${cw.num} — ${cw.title}`;
       document.getElementById("currentWeekRange").textContent = cw.range;
-      document.getElementById("thesisLine").textContent = PLAN.thesis;
+      document.getElementById("thesisLine").textContent = p.thesis;
 
-      const upcoming = PLAN.decisions.find((d) => new Date(d.date + "T23:59:59") >= TODAY) || PLAN.decisions[PLAN.decisions.length - 1];
-      document.getElementById("nextDecisionTitle").textContent = upcoming.title;
-      document.getElementById("nextDecisionDate").textContent = fmtDate(upcoming.date) + ", 2026";
+      if (p.kind === "neuralink") {
+        const up = p.decisions.find((d) => new Date(d.date + "T23:59:59") >= TODAY) || p.decisions[p.decisions.length - 1];
+        document.getElementById("card2Label").textContent = "Next hard decision";
+        document.getElementById("card2Title").textContent = up.title;
+        document.getElementById("card2Sub").textContent = fmtDate(up.date) + ", 2026";
+      } else {
+        document.getElementById("card2Label").textContent = "The contribution lane";
+        document.getElementById("card2Title").textContent = "Translate the claim, build the experiment, measure it";
+        document.getElementById("card2Sub").textContent = "Capstone: a real result sent to Aryaa, not interest";
+      }
 
-      document.getElementById("projectCards").innerHTML = PLAN.projects.map((p) => `
+      const tagWord = p.kind === "neuralink" ? "What it does NOT claim" : "Honest limits";
+      document.getElementById("projectCards").innerHTML = p.projects.map((pr) => `
         <div class="card p-7">
-          <span class="chip chip-blue mb-3">${p.tag}</span>
-          <h3 class="display t-tagline mt-1">${p.name}</h3>
-          <p class="t-body mt-2" style="color:var(--ink80)">${p.line}</p>
+          <span class="chip chip-blue mb-3">${esc(pr.tag)}</span>
+          <h3 class="display t-tagline mt-1">${esc(pr.name)}</h3>
+          <p class="t-body mt-2" style="color:var(--ink80)">${esc(pr.line)}</p>
           <div class="mt-5">
-            <p class="t-caption-strong mb-2" style="color:var(--ink)">What it proves</p>
-            <div class="flex flex-wrap gap-1.5">
-              ${p.proves.map((x) => `<span class="chip chip-muted" style="font-weight:400">${x}</span>`).join("")}
-            </div>
+            <p class="t-caption-strong mb-2">What it proves</p>
+            <div class="flex flex-wrap gap-1.5">${pr.proves.map((x) => `<span class="chip chip-muted" style="font-weight:400">${esc(x)}</span>`).join("")}</div>
           </div>
-          <div class="mt-4">
-            <p class="t-caption-strong mb-2" style="color:var(--ink48)">What it does NOT claim</p>
-            <ul class="space-y-1">
-              ${p.notClaim.map((x) => `<li class="t-caption flex items-start gap-2" style="color:var(--ink48)"><span class="dot mt-1.5" style="background:var(--ink48)"></span>${x}</li>`).join("")}
-            </ul>
-          </div>
+          ${pr.notClaim && pr.notClaim.length ? `<div class="mt-4">
+            <p class="t-caption-strong mb-2" style="color:var(--ink48)">${tagWord}</p>
+            <ul class="space-y-1">${pr.notClaim.map((x) => `<li class="t-caption flex items-start gap-2" style="color:var(--ink48)"><span class="dot mt-1.5" style="background:var(--ink48)"></span>${esc(x)}</li>`).join("")}</ul>
+          </div>` : ""}
         </div>`).join("");
     }
 
+    // ---------- WEEKS ----------
     let activeFilter = "all";
     function renderWeeks() {
-      const cw = getCurrentWeek();
-      document.getElementById("weekList").innerHTML = PLAN.weeks.map((w) => {
-        const isCurrent = w.num === cw.num;
+      const p = prog();
+      const isNeuro = p.kind === "neuralink";
+      document.getElementById("weeksHeading").textContent = isNeuro ? "The 13-week calendar" : "The 12-week route";
+      document.getElementById("weeksSub").textContent = isNeuro
+        ? "Monday to Friday. Protected weekends. Every Friday ships an artifact."
+        : "Six two-week blocks. Each block ends in shipped output: a repo, a report, a figure set.";
+      document.getElementById("filterBar").style.display = isNeuro ? "" : "none";
+
+      const cwNum = currentWeekNum(p);
+      document.getElementById("weekList").innerHTML = p.weeks.map((w) => {
+        const isCurrent = w.num === cwNum;
         const ks = w.killSwitch;
-        const headBorder = isCurrent ? "border-color:var(--blue)" : "";
+        const unit = isNeuro ? "Week" : "Block";
         return `
-        <div class="card overflow-hidden" style="${headBorder}">
+        <div class="card overflow-hidden" data-week="${w.num}" style="${isCurrent ? "border-color:var(--blue)" : ""}">
           <button class="week-head w-full flex items-center gap-4 p-5 text-left" style="background:transparent;border:none;cursor:pointer">
             <span class="display flex items-center justify-center shrink-0" style="width:46px;height:46px;border-radius:11px;font-weight:600;${isCurrent ? "background:var(--blue);color:#fff" : "background:var(--parchment);color:var(--ink48);border:1px solid var(--hairline)"}">${w.num}</span>
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
-                <h3 class="t-body-strong truncate">${w.title}</h3>
-                ${isCurrent ? '<span class="chip chip-blue">This week</span>' : ""}
+                <h3 class="t-body-strong truncate">${esc(w.title)}</h3>
+                ${isCurrent ? `<span class="chip chip-blue">This ${unit.toLowerCase()}</span>` : ""}
                 ${ks ? '<span class="chip chip-ink"><i data-lucide="zap" class="w-3 h-3"></i>Kill-switch</span>' : ""}
               </div>
-              <p class="t-caption mt-0.5" style="color:var(--ink48)">${w.range}</p>
+              <p class="t-caption mt-0.5" style="color:var(--ink48)">${esc(w.range)}</p>
             </div>
             <div class="hidden sm:flex flex-col items-end gap-1.5 shrink-0" style="width:104px">
-              <span id="wklbl-${w.num}" class="t-fine" style="color:var(--ink48)">0/0</span>
+              <span class="wk-lbl t-fine" style="color:var(--ink48)">0/0</span>
               <div style="width:100%;height:5px;border-radius:9999px;background:var(--hairline);overflow:hidden">
-                <div id="wkbar-${w.num}" style="height:100%;background:var(--blue);width:0%;transition:width .5s ease"></div>
+                <div class="wk-bar" style="height:100%;background:var(--blue);width:0%;transition:width .5s ease"></div>
               </div>
             </div>
             <i data-lucide="chevron-down" class="chev w-5 h-5 shrink-0" style="color:var(--ink48);transition:transform .2s ease;${isCurrent ? "transform:rotate(180deg)" : ""}"></i>
@@ -356,20 +350,19 @@
             <div class="p-5 space-y-4">
               <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div class="inset p-4">
-                  <p class="t-caption-strong mb-1" style="color:var(--blue)">Weekly objective</p>
-                  <p class="t-caption" style="color:var(--ink80)">${w.objective}</p>
+                  <p class="t-caption-strong mb-1" style="color:var(--blue)">Objective</p>
+                  <p class="t-caption" style="color:var(--ink80)">${esc(w.objective)}</p>
                 </div>
                 <div class="inset p-4">
                   <p class="t-caption-strong mb-1 flex items-center gap-1.5" style="color:var(--ink)"><i data-lucide="flag" class="w-3.5 h-3.5"></i>Exit gate</p>
-                  <p class="t-caption" style="color:var(--ink80)">${w.exit}</p>
+                  <p class="t-caption" style="color:var(--ink80)">${esc(w.exit)}</p>
                 </div>
               </div>
-              ${w.days.map((d, di) => renderDay(w, d, di)).join("")}
+              ${isNeuro ? w.days.map((d, di) => renderDay(w, d, di)).join("") : w.groups.map((g, gi) => renderGroup(w, g, gi)).join("")}
             </div>
           </div>
         </div>`;
       }).join("");
-      bindWeekEvents();
       applyFilter();
       lucide.createIcons();
       updateProgress();
@@ -380,65 +373,53 @@
       return `
       <div class="day-block" style="border:1px solid var(--hairline);border-radius:11px;overflow:hidden">
         <div class="flex items-center gap-2.5 px-4 py-2.5" style="background:var(--parchment)">
-          <span class="t-caption-strong" style="color:var(--ink)">${dayName}</span>
+          <span class="t-caption-strong">${dayName}</span>
           <span class="t-fine" style="color:var(--ink48)">${fmtDate(d.date)}</span>
-          <span class="t-caption truncate" style="color:var(--ink80)">· ${d.theme}</span>
+          <span class="t-caption truncate" style="color:var(--ink80)">· ${esc(d.theme)}</span>
         </div>
         <div>
           ${d.tasks.map((t, ti) => {
             const id = `w${w.num}d${di}t${ti}`;
             const ps = personStyle[t.p];
-            const checked = !!done[id];
             return `
             <label data-person="${t.p}" class="task-row flex items-start gap-3 px-4 py-3" style="border-top:1px solid var(--divider);cursor:pointer">
-              <input type="checkbox" data-id="${id}" class="task-check mt-0.5 shrink-0" ${checked ? "checked" : ""} />
+              ${checkbox(id)}
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-1.5 mb-1 flex-wrap">
                   <span class="chip ${ps.chip}"><span class="dot" style="background:${ps.dot}"></span>${t.p}</span>
                   <span class="chip chip-kind"><i data-lucide="${kindIcon[t.k] || 'dot'}" class="w-3 h-3"></i>${t.k}</span>
                 </div>
-                <p class="task-text t-caption ${checked ? "done-text" : ""}" style="color:var(--ink);line-height:1.4">${t.t}</p>
+                <p class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:var(--ink);line-height:1.4">${esc(t.t)}</p>
               </div>
             </label>`;
           }).join("")}
         </div>
         <div class="px-4 py-2.5 flex items-start gap-2" style="background:var(--pearl);border-top:1px solid var(--hairline)">
           <i data-lucide="check" class="w-4 h-4 mt-0.5 shrink-0" style="color:var(--blue)"></i>
-          <p class="t-fine" style="color:var(--ink80)"><span style="font-weight:600">Proof by EOD:</span> ${d.proof}</p>
+          <p class="t-fine" style="color:var(--ink80)"><span style="font-weight:600">Proof by EOD:</span> ${esc(d.proof)}</p>
         </div>
       </div>`;
     }
 
-    function bindWeekEvents() {
-      document.querySelectorAll(".week-head").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const body = btn.nextElementSibling;
-          const chev = btn.querySelector(".chev");
-          body.classList.toggle("open");
-          chev.style.transform = body.classList.contains("open") ? "rotate(180deg)" : "rotate(0deg)";
-        });
-      });
-      document.querySelectorAll(".task-check").forEach((cb) => {
-        cb.addEventListener("change", (e) => {
-          e.stopPropagation();
-          const id = cb.dataset.id;
-          if (cb.checked) done[id] = true; else delete done[id];
-          saveDone();
-          cb.closest(".task-row").querySelector(".task-text").classList.toggle("done-text", cb.checked);
-          updateProgress();
-        });
-      });
+    function renderGroup(w, g, gi) {
+      return `
+      <div class="day-block" style="border:1px solid var(--hairline);border-radius:11px;overflow:hidden">
+        <div class="flex items-center gap-2 px-4 py-2.5" style="background:var(--parchment)">
+          <span class="chip chip-blue"><i data-lucide="${kindIcon[g.label] || 'dot'}" class="w-3 h-3"></i>${esc(g.label)}</span>
+        </div>
+        <div>
+          ${g.items.map((it, ii) => {
+            const id = `zw${w.num}g${gi}i${ii}`;
+            return `
+            <label class="flex items-start gap-3 px-4 py-3" style="border-top:1px solid var(--divider);cursor:pointer">
+              ${checkbox(id)}
+              <p class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:var(--ink);line-height:1.4">${esc(it)}</p>
+            </label>`;
+          }).join("")}
+        </div>
+      </div>`;
     }
 
-    function applyFilter() {
-      document.querySelectorAll(".task-row").forEach((row) => {
-        row.style.display = (activeFilter === "all" || row.dataset.person === activeFilter) ? "" : "none";
-      });
-      document.querySelectorAll(".day-block").forEach((block) => {
-        const anyVisible = [...block.querySelectorAll(".task-row")].some((r) => r.style.display !== "none");
-        block.style.display = anyVisible ? "" : "none";
-      });
-    }
     function paintFilters() {
       document.querySelectorAll(".filter-btn").forEach((b) => {
         const on = b.dataset.filter === activeFilter;
@@ -446,89 +427,183 @@
         b.style.cssText = `padding:6px 12px;border-radius:9999px;cursor:pointer;transition:transform .15s ease;font-size:14px;letter-spacing:-0.224px;${on ? "background:var(--blue);color:#fff;border:1px solid var(--blue)" : "background:var(--white);color:var(--ink48);border:1px solid var(--hairline)"}`;
       });
     }
+    function applyFilter() {
+      if (prog().kind !== "neuralink") return;
+      document.querySelectorAll(".task-row").forEach((row) => {
+        row.style.display = (activeFilter === "all" || row.dataset.person === activeFilter) ? "" : "none";
+      });
+      document.querySelectorAll(".day-block").forEach((block) => {
+        const rows = [...block.querySelectorAll(".task-row")];
+        if (!rows.length) return;
+        block.style.display = rows.some((r) => r.style.display !== "none") ? "" : "none";
+      });
+    }
+
+    // ---------- REFERENCE AREA ----------
+    function renderResources() {
+      const p = prog();
+      const host = document.getElementById("resources");
+      host.innerHTML = p.kind === "neuralink" ? neuralinkResources(p) : zoralResources(p);
+      lucide.createIcons();
+      updateProgress();
+    }
+
+    function tile(inner, variant) { return `<section class="tile tile-${variant}"><div class="container-x pad-sec">${inner}</div></section>`; }
+
+    function neuralinkResources(p) {
+      const decisions = p.decisions.map((d) => {
+        const isKill = /kill-switch/i.test(d.title);
+        const past = new Date(d.date + "T23:59:59") < TODAY;
+        const node = isKill ? "var(--ink)" : "var(--blue)";
+        return `
+        <div class="relative" style="padding-left:24px;${past ? "opacity:0.5" : ""}">
+          <span class="absolute" style="left:-7px;top:18px;width:13px;height:13px;border-radius:9999px;background:${node};box-shadow:0 0 0 4px var(--white)"></span>
+          <div class="card p-5" style="${isKill ? "border-color:var(--ink)" : ""}">
+            <div class="flex items-center justify-between gap-3 flex-wrap">
+              <h3 class="t-body-strong flex items-center gap-2">${isKill ? '<i data-lucide="zap" class="w-4 h-4" style="color:var(--ink)"></i>' : ""}${esc(d.title)}</h3>
+              <span class="chip ${isKill ? "chip-ink" : "chip-blue"}">${fmtDate(d.date)}, 2026</span>
+            </div>
+            <p class="t-caption mt-2" style="color:var(--ink80)">${esc(d.detail)}</p>
+          </div>
+        </div>`;
+      }).join("");
+      const decisionsTile = tile(`
+        <h2 class="display t-display-md mb-2">Non-negotiable decision dates</h2>
+        <p class="t-body mb-8" style="color:var(--ink80)">Hard gates. Kill-switches are marked in ink. No quietly making weekends mandatory.</p>
+        <div class="space-y-3" style="border-left:1px solid var(--hairline);margin-left:7px">${decisions}</div>`, "white");
+
+      const cols = [
+        { key: "p1", title: "Project 1 — Control Workstation", icon: "cpu", items: p.deliverables.p1 },
+        { key: "p2", title: "Project 2 — Decoding Lab", icon: "git-branch", items: p.deliverables.p2 },
+        { key: "portfolio", title: "Portfolio & Application", icon: "folder-open", items: p.deliverables.portfolio },
+      ];
+      const delTile = tile(`
+        <h2 class="display t-display-md mb-2">Final deliverables checklist</h2>
+        <p class="t-body mb-8" style="color:var(--ink80)">The summer is not complete until these exist.</p>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">${cols.map((c) => `
+          <div class="card p-6">
+            <div class="flex items-center gap-2.5 mb-4">
+              <span class="flex items-center justify-center" style="width:34px;height:34px;border-radius:8px;background:rgba(0,102,204,0.08);color:var(--blue)"><i data-lucide="${c.icon}" class="w-[18px] h-[18px]"></i></span>
+              <h3 class="t-body-strong">${c.title}</h3>
+            </div>
+            <ul class="space-y-1">${c.items.map((item, i) => {
+              const id = `del_${c.key}_${i}`;
+              return `<li><label class="flex items-start gap-2.5 py-1.5" style="cursor:pointer">${checkbox(id)}<span class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:var(--ink)">${esc(item)}</span></label></li>`;
+            }).join("")}</ul>
+          </div>`).join("")}</div>`, "parchment");
+
+      const honesty = tile(`
+        <h2 class="display t-display-md mb-3">Non-negotiable honesty rules</h2>
+        <p class="t-body mb-8" style="color:#cccccc;max-width:62ch">Applies to every README, demo caption, application bullet, and interview answer. If a claim cannot survive a skeptical interviewer, delete it.</p>
+        <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3.5">${p.honesty.map((h) => `<li class="flex items-start gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 shrink-0" style="color:var(--blue-dark)"></i><span class="t-caption" style="color:#e6e6e6;line-height:1.5">${esc(h)}</span></li>`).join("")}</ul>`, "dark");
+
+      return decisionsTile + delTile + honesty;
+    }
+
+    function zoralResources(p) {
+      return p.sections.map((s, si) => {
+        const variant = s.type === "qa" ? "dark" : (si % 2 === 0 ? "white" : "parchment");
+        const head = `<h2 class="display t-display-md mb-2">${esc(s.title)}</h2><p class="t-body mb-8" style="color:${variant === "dark" ? "#cccccc" : "var(--ink80)"};max-width:64ch">${esc(s.intro)}</p>`;
+        return tile(head + zoralSectionBody(s, si, variant), variant);
+      }).join("");
+    }
+
+    function zoralSectionBody(s, si, variant) {
+      if (s.type === "tiers") {
+        return `<div class="grid grid-cols-1 md:grid-cols-2 gap-5">${s.items.map((it, ii) => {
+          const id = `s${si}deliv${ii}`;
+          return `
+          <div class="card p-6 flex flex-col">
+            <div class="flex items-center gap-2 mb-2"><span class="chip chip-blue">${esc(it.label || "")}</span><h3 class="t-body-strong">${esc(it.title || "")}</h3></div>
+            <ul class="space-y-1 mb-4 flex-1">${(it.points || []).map((pt) => `<li class="t-caption flex items-start gap-2" style="color:var(--ink80)"><span class="dot mt-1.5 shrink-0" style="background:var(--blue)"></span>${esc(pt)}</li>`).join("")}</ul>
+            ${it.deliverable ? `<label class="flex items-start gap-2.5 pt-3" style="border-top:1px solid var(--hairline);cursor:pointer">${checkbox(id)}<span class="row-text t-caption ${isDone(id) ? "done-text" : ""}"><span class="t-caption-strong" style="color:var(--blue)">Deliverable. </span>${esc(it.deliverable)}</span></label>` : ""}
+          </div>`;
+        }).join("")}</div>`;
+      }
+      if (s.type === "reading") {
+        return `<div class="space-y-2.5">${s.items.map((it, ii) => {
+          const id = `s${si}r${ii}`;
+          return `
+          <label class="card p-5 flex items-start gap-4" style="cursor:pointer">
+            <span class="display flex items-center justify-center shrink-0" style="width:34px;height:34px;border-radius:9999px;background:rgba(0,102,204,0.08);color:var(--blue);font-weight:600">${ii + 1}</span>
+            <div class="min-w-0 flex-1">
+              <p class="row-text t-body-strong ${isDone(id) ? "done-text" : ""}">${esc(it.title || it.name || "")}</p>
+              <p class="t-caption mt-0.5" style="color:var(--ink48)">${esc(it.note || "")}</p>
+            </div>
+            ${checkbox(id)}
+          </label>`;
+        }).join("")}</div>`;
+      }
+      if (s.type === "table") {
+        return `<div style="overflow-x:auto"><table class="ref">
+          <thead><tr>${(s.columns || []).map((c) => `<th class="t-caption-strong">${esc(c)}</th>`).join("")}</tr></thead>
+          <tbody>${(s.rows || []).map((r) => `<tr>${r.map((cell, ci) => `<td class="t-caption" style="color:${ci === 0 ? "var(--ink)" : "var(--ink80)"};${ci === 0 ? "font-weight:600" : ""}">${esc(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
+        </table></div>`;
+      }
+      if (s.type === "qa") {
+        return `<ul class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3">${s.items.map((it, ii) => {
+          const id = `s${si}q${ii}`;
+          return `<li><label class="flex items-start gap-3" style="cursor:pointer">${checkbox(id)}<span class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:#e6e6e6;line-height:1.5">${esc(it.text || it.title || "")}</span></label></li>`;
+        }).join("")}</ul>`;
+      }
+      // list
+      return `<ul class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-2.5">${s.items.map((it) => `<li class="t-caption flex items-start gap-2.5" style="color:var(--ink80)"><span class="dot mt-1.5 shrink-0" style="background:var(--ink48)"></span>${esc(it.text || it.title || "")}</li>`).join("")}</ul>`;
+    }
+
+    // ---------- EVENTS ----------
+    document.addEventListener("change", (e) => {
+      const cb = e.target;
+      if (!cb.classList || !cb.classList.contains("track-check")) return;
+      const id = cb.dataset.id;
+      const m = doneMap();
+      if (cb.checked) m[id] = true; else delete m[id];
+      saveDone();
+      const txt = cb.closest("label")?.querySelector(".row-text");
+      if (txt) txt.classList.toggle("done-text", cb.checked);
+      updateProgress();
+    });
+
+    document.addEventListener("click", (e) => {
+      const head = e.target.closest(".week-head");
+      if (!head) return;
+      const body = head.nextElementSibling;
+      const chev = head.querySelector(".chev");
+      body.classList.toggle("open");
+      if (chev) chev.style.transform = body.classList.contains("open") ? "rotate(180deg)" : "rotate(0deg)";
+    });
+
     document.querySelectorAll(".filter-btn").forEach((btn) => {
       btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; paintFilters(); applyFilter(); });
     });
 
-    function renderDecisions() {
-      document.getElementById("decisionList").innerHTML = PLAN.decisions.map((d) => {
-        const isKill = /kill-switch/i.test(d.title);
-        const past = new Date(d.date + "T23:59:59") < TODAY;
-        const nodeColor = isKill ? "var(--ink)" : "var(--blue)";
-        return `
-        <div class="relative" style="padding-left:24px;${past ? "opacity:0.5" : ""}">
-          <span class="absolute" style="left:-7px;top:18px;width:13px;height:13px;border-radius:9999px;background:${nodeColor};box-shadow:0 0 0 4px var(--white)"></span>
-          <div class="card p-5" style="${isKill ? "border-color:var(--ink)" : ""}">
-            <div class="flex items-center justify-between gap-3 flex-wrap">
-              <h3 class="t-body-strong flex items-center gap-2">${isKill ? '<i data-lucide="zap" class="w-4 h-4" style="color:var(--ink)"></i>' : ''}${d.title}</h3>
-              <span class="chip ${isKill ? "chip-ink" : "chip-blue"}">${fmtDate(d.date)}, 2026</span>
-            </div>
-            <p class="t-caption mt-2" style="color:var(--ink80)">${d.detail}</p>
-          </div>
-        </div>`;
-      }).join("");
-    }
-
-    function renderDeliverables() {
-      const cols = [
-        { key: "p1", title: "Project 1 — Control Workstation", icon: "cpu", items: PLAN.deliverables.p1 },
-        { key: "p2", title: "Project 2 — Decoding Lab", icon: "git-branch", items: PLAN.deliverables.p2 },
-        { key: "portfolio", title: "Portfolio & Application", icon: "folder-open", items: PLAN.deliverables.portfolio },
-      ];
-      document.getElementById("deliverableGrid").innerHTML = cols.map((c) => `
-        <div class="card p-6">
-          <div class="flex items-center gap-2.5 mb-4">
-            <span class="flex items-center justify-center" style="width:34px;height:34px;border-radius:8px;background:rgba(0,102,204,0.08);color:var(--blue)"><i data-lucide="${c.icon}" class="w-[18px] h-[18px]"></i></span>
-            <h3 class="t-body-strong">${c.title}</h3>
-          </div>
-          <ul class="space-y-1">
-            ${c.items.map((item, i) => {
-              const id = `del_${c.key}_${i}`;
-              const checked = !!done[id];
-              return `
-              <li>
-                <label class="del-row flex items-start gap-2.5 py-1.5" style="cursor:pointer">
-                  <input type="checkbox" data-id="${id}" class="del-check mt-0.5 shrink-0" ${checked ? "checked" : ""} />
-                  <span class="del-text t-caption ${checked ? "done-text" : ""}" style="color:var(--ink)">${item}</span>
-                </label>
-              </li>`;
-            }).join("")}
-          </ul>
-        </div>`).join("");
-      document.querySelectorAll(".del-check").forEach((cb) => {
-        cb.addEventListener("change", () => {
-          const id = cb.dataset.id;
-          if (cb.checked) done[id] = true; else delete done[id];
-          saveDone();
-          cb.closest(".del-row").querySelector(".del-text").classList.toggle("done-text", cb.checked);
-        });
+    document.querySelectorAll(".seg-btn").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        if (btn.dataset.track === activeId) return;
+        activeId = btn.dataset.track;
+        store.set(TRACK_KEY, activeId);
+        activeFilter = "all";
+        renderAll();
+        window.scrollTo({ top: 0, behavior: "smooth" });
       });
-    }
-
-    function renderHonesty() {
-      document.getElementById("honestyList").innerHTML = PLAN.honesty.map((h) => `
-        <li class="flex items-start gap-2.5">
-          <i data-lucide="check" class="w-4 h-4 mt-0.5 shrink-0" style="color:var(--blue-dark)"></i>
-          <span class="t-caption" style="color:#e6e6e6;line-height:1.5">${h}</span>
-        </li>`).join("");
-    }
+    });
 
     document.getElementById("resetBtn").addEventListener("click", () => {
-      if (confirm("Reset all tracked progress on this device? This cannot be undone.")) {
-        done = {}; saveDone();
-        renderWeeks(); renderDeliverables(); updateProgress(); lucide.createIcons();
+      if (confirm(`Reset all tracked progress for "${prog().name}" on this device?`)) {
+        allDone[activeId] = {}; saveDone(); renderAll();
       }
     });
 
-    // init
-    renderDashboard();
-    paintFilters();
-    renderWeeks();
-    renderDecisions();
-    renderDeliverables();
-    renderHonesty();
-    updateProgress();
-    lucide.createIcons();
+    function renderAll() {
+      renderHero();
+      renderDashboard();
+      paintFilters();
+      renderWeeks();
+      renderResources();
+      updateProgress();
+      lucide.createIcons();
+    }
+
+    renderAll();
   </script>
 </body>
 </html>

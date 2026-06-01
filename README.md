@@ -1,18 +1,28 @@
 # Neurotech
 
-A clean, Apple-styled execution tracker for the **Summer 2026 Neuralink Portfolio** built by **Caleb Newton** and **Mark Lin**.
+A clean, Apple-styled execution tracker for Caleb Newton's **Summer 2026 research**. Two tracks live in one app; switch between them with the segmented control in the header. Progress for each track is saved independently in your browser (`localStorage`), so each track keeps its own state on your device.
 
-It turns the 13-week, Monday-to-Friday plan into something you can actually run day to day: live "current week" detection, per-day tasks with checkable progress, hard decision dates, kill-switch flags, deliverables, and the non-negotiable honesty rules — all in one page.
+## The two tracks
+
+### Neuralink — Neuroengineering (Caleb + Mark)
+
+The 13-week, Monday-to-Friday Neuralink portfolio plan: live "current week" detection, per-day tasks tagged by owner (Caleb / Mark / Together) and type (Learn / Build / Write / Decide / Ship / Teach), each day with its "proof by end of day," hard decision dates with kill-switch flags, the final deliverables checklist, and the non-negotiable honesty rules. Filter the calendar to view only your tasks.
+
+### Zoral — Continual Learning & Neural Memory (Caleb solo)
+
+The 12-week route to contributing to Aryaa Saravanakumar's Zoral vision: continual learning, neural memory architectures, mechanistic interpretability, and safe-agent evaluation. Organized as six two-week blocks (Learn / Build / Read / Output), plus a reference library:
+
+- **The knowledge stack** — seven tiers from math foundations to autonomous-agent perception, each ending in a concrete deliverable.
+- **Neural memory architectures** — the ordered reading list (Hopfield, fast weights, Gated DeltaNet, Test-Time Training, Titans, delta-mem, HeLa-Mem, Engram).
+- **Biology to ML translation** — turning biological principles into falsifiable mechanisms.
+- **The standard to aim for** — the questions that separate admiring the vision from being able to build it.
+- **What not to learn first** — the supporting context to deprioritize.
 
 ## What is in here
 
-- **Dashboard** — overall progress ring, current focus week, next hard decision, the one-sentence thesis, and both project scopes (what each proves vs what it must never claim).
-- **13-week calendar** — every week expands into Monday-Friday tasks tagged by owner (Caleb / Mark / Together) and type (Learn / Build / Write / Decide / Ship / Teach), each day with its "proof by end of day."
-- **Decision dates** — the non-negotiable gates, with kill-switches called out.
-- **Deliverables** — the final checklist across Project 1, Project 2, and the portfolio.
-- **Honesty rules** — the modality and claim discipline that keeps the work defensible.
-
-Progress is saved locally in your browser (`localStorage`), so each person tracks their own copy on their own device. Use the filter to view only your tasks.
+- **Dashboard** — overall progress ring, current focus week/block, a track-specific second card (next decision for Neuralink, the contribution lane for Zoral), the thesis, and every project scope (what it proves vs its honest limits).
+- **Calendar** — day-based weeks for Neuralink, group-based blocks for Zoral, all with checkable progress and per-week completion bars.
+- **Resources** — the track-specific reference sections described above.
 
 ## Design
 
