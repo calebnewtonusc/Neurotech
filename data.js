@@ -1765,343 +1765,353 @@ const NEURALINK = {
 
 // === Track 2: Zoral — Continual Learning (injected) ===
 const ZORAL = {
-  "id": "zoral",
-  "kind": "zoral",
-  "name": "Zoral — Continual Learning",
-  "short": "Continual Learning & Neural Memory",
-  "tagline": "Becoming the engineer who can take Aryaa's most ambitious claim, translate it into a concrete architecture, build the experiment that tests it, measure whether it actually works, and tell the truth about the result.",
-  "thesis": "Continual learning + neural memory architectures + mechanistic interpretability + evaluation for brain-inspired autonomous agents.",
-  "start": "2026-06-01",
-  "end": "2026-08-21",
-  "dateLabel": "June 1 — August 21, 2026 · 12 weeks",
-  "projects": [
+  id: "zoral",
+  kind: "zoral",
+  name: "Zoral — Continual Learning",
+  short: "Continual Learning & Neural Memory",
+  tagline:
+    "Becoming the engineer who can take Aryaa's most ambitious claim, translate it into a concrete architecture, build the experiment that tests it, measure whether it actually works, and tell the truth about the result.",
+  thesis:
+    "Continual learning + neural memory architectures + mechanistic interpretability + evaluation for brain-inspired autonomous agents.",
+  start: "2026-06-01",
+  end: "2026-08-21",
+  dateLabel: "June 1 — August 21, 2026 · 12 weeks",
+  projects: [
     {
-      "tag": "Project 1",
-      "name": "Continual Learning Benchmark Harness",
-      "line": "A benchmark suite that puts a small language or action model through sequential tasks and measures exactly how it learns and forgets across methods.",
-      "proves": [
+      tag: "Project 1",
+      name: "Continual Learning Benchmark Harness",
+      line: "A benchmark suite that puts a small language or action model through sequential tasks and measures exactly how it learns and forgets across methods.",
+      proves: [
         "Quantifies forgetting rate, forward transfer, and backward transfer on sequential tasks",
         "Tracks the real costs: runtime, parameter growth, and memory usage",
         "Surfaces concrete failure cases rather than just aggregate scores",
         "Compares naive fine-tuning, replay, LoRA updates, adapter memory, and an online memory module head to head",
-        "Establishes the measurement foundation the entire thesis depends on: learning without degradation"
+        "Establishes the measurement foundation the entire thesis depends on: learning without degradation",
       ],
-      "notClaim": [
+      notClaim: [
         "Not a frontier model and makes no SOTA claims",
         "Small-scale by design",
-        "Results describe relative method behavior, not absolute performance ceilings"
-      ]
+        "Results describe relative method behavior, not absolute performance ceilings",
+      ],
     },
     {
-      "tag": "Project 2",
-      "name": "Brain-Inspired Memory Adapter",
-      "line": "A frozen small transformer paired with a trainable online memory module that queries, takes feedback, selectively updates, replays, and consolidates.",
-      "proves": [
+      tag: "Project 2",
+      name: "Brain-Inspired Memory Adapter",
+      line: "A frozen small transformer paired with a trainable online memory module that queries, takes feedback, selectively updates, replays, and consolidates.",
+      proves: [
         "Normal inference (Query) and correction-driven learning (Feedback) coexist in one system",
         "Selective update touches only memory components strongly implicated by a correction",
         "A replay buffer and consolidation cycle work together to retain old knowledge",
         "A forgetting test validates retention after new learning",
-        "A working miniature of the continual-learning core Zoral aims for"
+        "A working miniature of the continual-learning core Zoral aims for",
       ],
-      "notClaim": [
+      notClaim: [
         "Not Zoral itself; a miniature core",
         "Base model is frozen, not trained from scratch",
-        "Not frontier-scale training"
-      ]
+        "Not frontier-scale training",
+      ],
     },
     {
-      "tag": "Project 3",
-      "name": "Sleep Consolidation Ablation Study",
-      "line": "An ablation that tests whether a 'sleep' consolidation step actually helps continual learning, or just adds cost.",
-      "proves": [
+      tag: "Project 3",
+      name: "Sleep Consolidation Ablation Study",
+      line: "An ablation that tests whether a 'sleep' consolidation step actually helps continual learning, or just adds cost.",
+      proves: [
         "Isolates the effect of consolidation by comparing online-only, online+replay, online+pruning, and online+replay+pruning+consolidation",
         "Measures new-task adaptation against old-task retention",
         "Tracks generalization, storage growth, and runtime across configurations",
-        "Produces empirical evidence for or against the consolidation hypothesis instead of assuming it works"
+        "Produces empirical evidence for or against the consolidation hypothesis instead of assuming it works",
       ],
-      "notClaim": [
+      notClaim: [
         "A brain-inspired analogy, not a claim about biological sleep",
         "Empirical ablation only; no neuroscience claim",
-        "Findings are scoped to the tested setup"
-      ]
+        "Findings are scoped to the tested setup",
+      ],
     },
     {
-      "tag": "Project 4",
-      "name": "Memory Interpretability Probe",
-      "line": "After adding new memories, this probe investigates where they live inside the model and whether they distort what was already there.",
-      "proves": [
+      tag: "Project 4",
+      name: "Memory Interpretability Probe",
+      line: "After adding new memories, this probe investigates where they live inside the model and whether they distort what was already there.",
+      proves: [
         "Locates which layers encode newly added information",
         "Tests whether similar memories cluster and whether corrections move representations",
         "Checks whether old concepts get distorted or false associations form",
-        "Combines linear probes, activation similarity, PCA/UMAP, activation patching, and adapter ablations for triangulated evidence"
+        "Combines linear probes, activation similarity, PCA/UMAP, activation patching, and adapter ablations for triangulated evidence",
       ],
-      "notClaim": [
+      notClaim: [
         "Probes are correlational, not causal proof",
         "Not full mechanistic proof",
-        "Requires honest baselines to interpret any signal"
-      ]
+        "Requires honest baselines to interpret any signal",
+      ],
     },
     {
-      "tag": "Project 5",
-      "name": "Safe Continually Learning Desktop Agent",
-      "line": "A narrow desktop agent that watches demonstrations, predicts next steps, accepts corrections, and improves on the same workflow under strict safety gates.",
-      "proves": [
+      tag: "Project 5",
+      name: "Safe Continually Learning Desktop Agent",
+      line: "A narrow desktop agent that watches demonstrations, predicts next steps, accepts corrections, and improves on the same workflow under strict safety gates.",
+      proves: [
         "Learns a workflow from demonstration and improves through human correction",
         "Logs every action and requires human approval for anything risky",
         "Stays inside safe tasks: renaming and sorting files, extracting structured info from local docs, formatting spreadsheet entries, a toy sandbox browser form",
-        "Demonstrates continual learning applied to a real interactive loop without consequential autonomy"
+        "Demonstrates continual learning applied to a real interactive loop without consequential autonomy",
       ],
-      "notClaim": [
+      notClaim: [
         "Not autonomous over consequential actions",
         "Consent-based, sandboxed, and safety-gated",
-        "Explicitly does NOT touch email, accounts, banking, hiring, legal, or identity impersonation"
-      ]
-    }
+        "Explicitly does NOT touch email, accounts, banking, hiring, legal, or identity impersonation",
+      ],
+    },
   ],
-  "weeks": [
+  weeks: [
     {
-      "num": 1,
-      "range": "June 1 - June 12",
-      "title": "Transformer & PyTorch depth",
-      "objective": "Build deep working fluency with PyTorch and transformer internals by implementing them from scratch.",
-      "exit": "A clean repo trains a tiny language model and runs a LoRA adaptation with documented architecture notes and evaluation plots.",
-      "groups": [
+      num: 1,
+      range: "June 1 - June 12",
+      title: "Transformer & PyTorch depth",
+      objective:
+        "Build deep working fluency with PyTorch and transformer internals by implementing them from scratch.",
+      exit: "A clean repo trains a tiny language model and runs a LoRA adaptation with documented architecture notes and evaluation plots.",
+      groups: [
         {
-          "label": "Learn",
-          "items": [
+          label: "Learn",
+          items: [
             "PyTorch training loops",
             "Embeddings",
             "Attention",
             "Transformer blocks",
             "LoRA",
-            "Evaluation"
-          ]
+            "Evaluation",
+          ],
         },
         {
-          "label": "Build",
-          "items": [
+          label: "Build",
+          items: [
             "Small transformer from scratch",
             "Tiny language-model training run",
-            "LoRA adaptation experiment"
-          ]
+            "LoRA adaptation experiment",
+          ],
         },
         {
-          "label": "Read",
-          "items": [
+          label: "Read",
+          items: [
             "Attention Is All You Need",
             "LoRA paper",
-            "A clear transformer implementation walkthrough"
-          ]
+            "A clear transformer implementation walkthrough",
+          ],
         },
         {
-          "label": "Output",
-          "items": [
+          label: "Output",
+          items: [
             "Clean repo",
             "Architecture notes",
-            "Training and evaluation plots"
-          ]
-        }
-      ]
+            "Training and evaluation plots",
+          ],
+        },
+      ],
     },
     {
-      "num": 2,
-      "range": "June 15 - June 26",
-      "title": "Continual learning fundamentals",
-      "objective": "Understand catastrophic forgetting and the core methods that trade off stability against plasticity.",
-      "exit": "Forgetting curves and a failure taxonomy show which method best retains knowledge across a sequential task benchmark.",
-      "groups": [
+      num: 2,
+      range: "June 15 - June 26",
+      title: "Continual learning fundamentals",
+      objective:
+        "Understand catastrophic forgetting and the core methods that trade off stability against plasticity.",
+      exit: "Forgetting curves and a failure taxonomy show which method best retains knowledge across a sequential task benchmark.",
+      groups: [
         {
-          "label": "Learn",
-          "items": [
+          label: "Learn",
+          items: [
             "Catastrophic forgetting",
             "Replay",
             "EWC (Elastic Weight Consolidation)",
             "Sequential evaluation",
-            "Stability vs plasticity"
-          ]
+            "Stability vs plasticity",
+          ],
         },
         {
-          "label": "Build",
-          "items": [
+          label: "Build",
+          items: [
             "Sequential task benchmark",
             "Naive fine-tune baseline",
             "Replay baseline",
-            "Adapter-only baseline"
-          ]
+            "Adapter-only baseline",
+          ],
         },
         {
-          "label": "Output",
-          "items": [
+          label: "Output",
+          items: [
             "Forgetting curves",
             "Written failure taxonomy",
-            "Short report on which method retains knowledge best"
-          ]
-        }
-      ]
+            "Short report on which method retains knowledge best",
+          ],
+        },
+      ],
     },
     {
-      "num": 3,
-      "range": "June 29 - July 10",
-      "title": "Modern memory architectures",
-      "objective": "Implement simplified modern memory architectures and attach an online memory module to a frozen base model.",
-      "exit": "A memory architecture comparison reports performance, forgetting, memory cost, and latency under a fixed memory size.",
-      "groups": [
+      num: 3,
+      range: "June 29 - July 10",
+      title: "Modern memory architectures",
+      objective:
+        "Implement simplified modern memory architectures and attach an online memory module to a frozen base model.",
+      exit: "A memory architecture comparison reports performance, forgetting, memory cost, and latency under a fixed memory size.",
+      groups: [
         {
-          "label": "Learn",
-          "items": [
-            "Read and implement simplified versions of Gated DeltaNet, Test-Time Training layers, Titans, delta-mem, HeLa-Mem, and Engram"
-          ]
+          label: "Learn",
+          items: [
+            "Read and implement simplified versions of Gated DeltaNet, Test-Time Training layers, Titans, delta-mem, HeLa-Mem, and Engram",
+          ],
         },
         {
-          "label": "Build",
-          "items": [
+          label: "Build",
+          items: [
             "Frozen base model plus online memory module",
             "Update mechanism from correction signals",
-            "Fixed-memory-size experiment"
-          ]
+            "Fixed-memory-size experiment",
+          ],
         },
         {
-          "label": "Output",
-          "items": [
+          label: "Output",
+          items: [
             "Memory architecture comparison",
-            "Metrics for performance, forgetting, memory cost, and latency"
-          ]
-        }
-      ]
+            "Metrics for performance, forgetting, memory cost, and latency",
+          ],
+        },
+      ],
     },
     {
-      "num": 4,
-      "range": "July 13 - July 24",
-      "title": "Neuroscience-to-architecture translation",
-      "objective": "Translate brain-inspired memory and consolidation principles into concrete architectural mechanisms.",
-      "exit": "A consolidation experiment and a biology-to-ML design document state clearly which brain-inspired ideas helped and which did not.",
-      "groups": [
+      num: 4,
+      range: "July 13 - July 24",
+      title: "Neuroscience-to-architecture translation",
+      objective:
+        "Translate brain-inspired memory and consolidation principles into concrete architectural mechanisms.",
+      exit: "A consolidation experiment and a biology-to-ML design document state clearly which brain-inspired ideas helped and which did not.",
+      groups: [
         {
-          "label": "Learn",
-          "items": [
+          label: "Learn",
+          items: [
             "Hebbian learning",
             "Synaptic tagging",
             "Reward prediction error",
             "Episodic/semantic/procedural memory",
             "Sleep consolidation",
-            "Predictive processing"
-          ]
+            "Predictive processing",
+          ],
         },
         {
-          "label": "Build",
-          "items": [
+          label: "Build",
+          items: [
             "Selective memory tagging mechanism",
             "Consolidation phase",
-            "Pruning/replay ablation"
-          ]
+            "Pruning/replay ablation",
+          ],
         },
         {
-          "label": "Output",
-          "items": [
-            "\"Biology to ML\" design document",
+          label: "Output",
+          items: [
+            '"Biology to ML" design document',
             "Consolidation experiment results",
-            "Clear statement of which brain-inspired ideas helped and which did not"
-          ]
-        }
-      ]
+            "Clear statement of which brain-inspired ideas helped and which did not",
+          ],
+        },
+      ],
     },
     {
-      "num": 5,
-      "range": "July 27 - August 7",
-      "title": "Mechanistic interpretability",
-      "objective": "Use interpretability tools to locate and characterize where an online-learned memory lives inside a model.",
-      "exit": "An interpretability notebook and report titled \"Where does an online-learned memory live?\" present before/after probes and representation drift.",
-      "groups": [
+      num: 5,
+      range: "July 27 - August 7",
+      title: "Mechanistic interpretability",
+      objective:
+        "Use interpretability tools to locate and characterize where an online-learned memory lives inside a model.",
+      exit: 'An interpretability notebook and report titled "Where does an online-learned memory live?" present before/after probes and representation drift.',
+      groups: [
         {
-          "label": "Learn",
-          "items": [
+          label: "Learn",
+          items: [
             "Residual streams",
             "Linear probes",
             "Activation patching",
             "Sparse autoencoders",
-            "Natural Language Autoencoders"
-          ]
+            "Natural Language Autoencoders",
+          ],
         },
         {
-          "label": "Build",
-          "items": [
+          label: "Build",
+          items: [
             "Activation extraction from a small open model",
             "Layer-by-layer probes",
             "Before/after memory-update comparison",
-            "Representation drift study"
-          ]
+            "Representation drift study",
+          ],
         },
         {
-          "label": "Output",
-          "items": [
+          label: "Output",
+          items: [
             "Visualizations",
             "Interpretability notebook",
-            "Report titled \"Where does an online-learned memory live?\""
-          ]
-        }
-      ]
+            'Report titled "Where does an online-learned memory live?"',
+          ],
+        },
+      ],
     },
     {
-      "num": 6,
-      "range": "August 10 - August 21",
-      "title": "Agent integration",
-      "objective": "Integrate the memory module into a narrow desktop agent with a prediction-and-correction loop and full evaluation.",
-      "exit": "A working demo, repo, video, and writeup ship, plus a concise message to Aryaa describing an actual result rather than mere interest.",
-      "groups": [
+      num: 6,
+      range: "August 10 - August 21",
+      title: "Agent integration",
+      objective:
+        "Integrate the memory module into a narrow desktop agent with a prediction-and-correction loop and full evaluation.",
+      exit: "A working demo, repo, video, and writeup ship, plus a concise message to Aryaa describing an actual result rather than mere interest.",
+      groups: [
         {
-          "label": "Learn",
-          "items": [
+          label: "Learn",
+          items: [
             "Computer-use agents",
             "Screen/event logging",
             "Tool safety",
             "Human approval gates",
-            "Behavioral evaluation"
-          ]
+            "Behavioral evaluation",
+          ],
         },
         {
-          "label": "Build",
-          "items": [
+          label: "Build",
+          items: [
             "Narrow desktop workflow agent",
             "Demonstration capture",
             "Prediction and correction loop",
             "Memory module integration",
-            "Full evaluation suite"
-          ]
+            "Full evaluation suite",
+          ],
         },
         {
-          "label": "Output",
-          "items": [
+          label: "Output",
+          items: [
             "Working demo",
             "GitHub repository",
             "3-5 minute technical video",
             "Technical writeup",
-            "A concise message to Aryaa describing an actual result, not merely interest"
-          ]
-        }
-      ]
-    }
+            "A concise message to Aryaa describing an actual result, not merely interest",
+          ],
+        },
+      ],
+    },
   ],
-  "sections": [
+  sections: [
     {
-      "type": "tiers",
-      "title": "The knowledge stack",
-      "intro": "Seven tiers of capability. Build depth bottom-up; each tier ends in a concrete deliverable.",
-      "items": [
+      type: "tiers",
+      title: "The knowledge stack",
+      intro:
+        "Seven tiers of capability. Build depth bottom-up; each tier ends in a concrete deliverable.",
+      items: [
         {
-          "label": "Tier 1",
-          "title": "Mathematical foundation",
-          "points": [
+          label: "Tier 1",
+          title: "Mathematical foundation",
+          points: [
             "Linear algebra (vectors, matrices, tensor shapes, dot products, eigenvalues, SVD, PCA, low-rank approximations)",
             "Probability & statistics (conditional probability, expectation, variance, MLE, cross-entropy, calibration, confidence intervals, hypothesis testing)",
             "Calculus & optimization (gradients, chain rule, backprop, SGD, Adam, regularization, gradient clipping, stability)",
-            "Information theory (entropy, KL divergence, mutual information, surprise / prediction error)"
+            "Information theory (entropy, KL divergence, mutual information, surprise / prediction error)",
           ],
-          "deliverable": "Implement linear regression, logistic regression, PCA, an MLP, and a tiny attention layer in NumPy before relying on PyTorch."
+          deliverable:
+            "Implement linear regression, logistic regression, PCA, an MLP, and a tiny attention layer in NumPy before relying on PyTorch.",
         },
         {
-          "label": "Tier 2",
-          "title": "Deep learning & transformers",
-          "points": [
+          label: "Tier 2",
+          title: "Deep learning & transformers",
+          points: [
             "PyTorch fluency",
             "backprop & training loops",
             "tokenization & embeddings",
@@ -2111,14 +2121,15 @@ const ZORAL = {
             "residual streams",
             "LayerNorm & RMSNorm",
             "fine-tuning & LoRA",
-            "sequence evaluation & ablations"
+            "sequence evaluation & ablations",
           ],
-          "deliverable": "Build a small transformer LM from scratch, train it, then add LoRA adapters and compare adaptation behavior."
+          deliverable:
+            "Build a small transformer LM from scratch, train it, then add LoRA adapters and compare adaptation behavior.",
         },
         {
-          "label": "Tier 3",
-          "title": "Continual learning",
-          "points": [
+          label: "Tier 3",
+          title: "Continual learning",
+          points: [
             "catastrophic forgetting",
             "replay-based learning",
             "regularization-based learning",
@@ -2128,14 +2139,15 @@ const ZORAL = {
             "online learning",
             "continual evaluation metrics",
             "stability-plasticity tradeoffs",
-            "sequential-task benchmarking"
+            "sequential-task benchmarking",
           ],
-          "deliverable": "Train on sequential tasks comparing naive fine-tune, replay, EWC, LoRA-only, and an expandable memory module; report forgetting curves, transfer, runtime, memory cost, failure analysis."
+          deliverable:
+            "Train on sequential tasks comparing naive fine-tune, replay, EWC, LoRA-only, and an expandable memory module; report forgetting curves, transfer, runtime, memory cost, failure analysis.",
         },
         {
-          "label": "Tier 4",
-          "title": "Neural memory architectures",
-          "points": [
+          label: "Tier 4",
+          title: "Neural memory architectures",
+          points: [
             "associative memory & Hopfield networks",
             "fast weights & delta-rule memory",
             "Gated DeltaNet",
@@ -2143,14 +2155,15 @@ const ZORAL = {
             "Titans",
             "delta-mem",
             "HeLa-Mem",
-            "DeepSeek Engram"
+            "DeepSeek Engram",
           ],
-          "deliverable": "Reproduce one small memory architecture, then implement your own hybrid memory block on top of a small frozen transformer."
+          deliverable:
+            "Reproduce one small memory architecture, then implement your own hybrid memory block on top of a small frozen transformer.",
         },
         {
-          "label": "Tier 5",
-          "title": "Neuroscience for the vision",
-          "points": [
+          label: "Tier 5",
+          title: "Neuroscience for the vision",
+          points: [
             "neuron & synapse basics",
             "Hebbian learning",
             "LTP & LTD",
@@ -2160,14 +2173,15 @@ const ZORAL = {
             "episodic vs semantic vs procedural memory",
             "hippocampal replay",
             "sleep consolidation",
-            "predictive processing & free-energy"
+            "predictive processing & free-energy",
           ],
-          "deliverable": "Write a design doc mapping each biological mechanism to: the biological claim, the computational interpretation, an ML implementation idea, and the experiment that could disprove it."
+          deliverable:
+            "Write a design doc mapping each biological mechanism to: the biological claim, the computational interpretation, an ML implementation idea, and the experiment that could disprove it.",
         },
         {
-          "label": "Tier 6",
-          "title": "Mechanistic interpretability",
-          "points": [
+          label: "Tier 6",
+          title: "Mechanistic interpretability",
+          points: [
             "hidden activations & residual streams",
             "linear probing",
             "activation patching",
@@ -2175,14 +2189,15 @@ const ZORAL = {
             "sparse autoencoders",
             "Natural Language Autoencoders",
             "representation similarity & clustering",
-            "causal intervention experiments"
+            "causal intervention experiments",
           ],
-          "deliverable": "Reproduce a simplified residual-stream investigation: extract activations, train linear probes for several concepts, inject knowledge via LoRA/adapter, test where it becomes detectable, and whether new memory interferes with old concepts."
+          deliverable:
+            "Reproduce a simplified residual-stream investigation: extract activations, train linear probes for several concepts, inject knowledge via LoRA/adapter, test where it becomes detectable, and whether new memory interferes with old concepts.",
         },
         {
-          "label": "Tier 7",
-          "title": "Autonomous-agent perception & execution",
-          "points": [
+          label: "Tier 7",
+          title: "Autonomous-agent perception & execution",
+          points: [
             "screen capture",
             "OCR",
             "UI element detection",
@@ -2192,146 +2207,167 @@ const ZORAL = {
             "tool calling",
             "event logging",
             "human feedback capture",
-            "safety gates & approval workflows"
+            "safety gates & approval workflows",
           ],
-          "deliverable": "Build a consent-based desktop task learner for one narrow workflow that observes demos, predicts next actions, records errors, accepts correction, improves over repetitions, and requires approval before consequential actions."
-        }
-      ]
-    },
-    {
-      "type": "reading",
-      "title": "Neural memory architectures",
-      "intro": "Study in this order. Each is a different answer to: how does memory live inside computation?",
-      "items": [
-        {
-          "title": "Associative memory & Hopfield networks",
-          "note": "Foundation for storing and retrieving patterns."
+          deliverable:
+            "Build a consent-based desktop task learner for one narrow workflow that observes demos, predicts next actions, records errors, accepts correction, improves over repetitions, and requires approval before consequential actions.",
         },
-        {
-          "title": "Fast weights & delta-rule memory",
-          "note": "Foundation for rapidly updated internal state."
-        },
-        {
-          "title": "Gated DeltaNet",
-          "note": "Modern learned writing and forgetting mechanisms (improves Mamba2 with the delta rule)."
-        },
-        {
-          "title": "Test-Time Training layers",
-          "note": "Hidden state becomes a small model updated during inference."
-        },
-        {
-          "title": "Titans",
-          "note": "Neural long-term memory module that learns to memorize at test time while attention handles current context."
-        },
-        {
-          "title": "delta-mem",
-          "note": "Compact online associative state producing low-rank corrections to a frozen model's attention."
-        },
-        {
-          "title": "HeLa-Mem",
-          "note": "Hebbian-inspired associative memory with episodic-to-semantic organization for LLM agents."
-        },
-        {
-          "title": "DeepSeek Engram",
-          "note": "Conditional memory lookup integrated with large-model computation; treats memory and reasoning as complementary, challenging the strong 'inseparable' claim."
-        }
-      ]
-    },
-    {
-      "type": "table",
-      "title": "Biology to ML translation",
-      "intro": "The goal is not brain vocabulary. It is turning biological principles into falsifiable ML mechanisms.",
-      "columns": [
-        "Biology concept",
-        "ML translation",
-        "Test"
       ],
-      "rows": [
+    },
+    {
+      type: "reading",
+      title: "Neural memory architectures",
+      intro:
+        "Study in this order. Each is a different answer to: how does memory live inside computation?",
+      items: [
+        {
+          title: "Associative memory & Hopfield networks",
+          note: "Foundation for storing and retrieving patterns.",
+        },
+        {
+          title: "Fast weights & delta-rule memory",
+          note: "Foundation for rapidly updated internal state.",
+        },
+        {
+          title: "Gated DeltaNet",
+          note: "Modern learned writing and forgetting mechanisms (improves Mamba2 with the delta rule).",
+        },
+        {
+          title: "Test-Time Training layers",
+          note: "Hidden state becomes a small model updated during inference.",
+        },
+        {
+          title: "Titans",
+          note: "Neural long-term memory module that learns to memorize at test time while attention handles current context.",
+        },
+        {
+          title: "delta-mem",
+          note: "Compact online associative state producing low-rank corrections to a frozen model's attention.",
+        },
+        {
+          title: "HeLa-Mem",
+          note: "Hebbian-inspired associative memory with episodic-to-semantic organization for LLM agents.",
+        },
+        {
+          title: "DeepSeek Engram",
+          note: "Conditional memory lookup integrated with large-model computation; treats memory and reasoning as complementary, challenging the strong 'inseparable' claim.",
+        },
+      ],
+    },
+    {
+      type: "table",
+      title: "Biology to ML translation",
+      intro:
+        "The goal is not brain vocabulary. It is turning biological principles into falsifiable ML mechanisms.",
+      columns: ["Biology concept", "ML translation", "Test"],
+      rows: [
         [
           "Synaptic tagging",
           "Only update adapters that contributed strongly to a corrected prediction",
-          "Compare selective updates vs global LoRA updates"
+          "Compare selective updates vs global LoRA updates",
         ],
         [
           "Dopamine-like feedback",
           "Scalar reward or correction signal",
-          "Measure learning speed and unintended drift"
+          "Measure learning speed and unintended drift",
         ],
         [
           "Sleep consolidation",
           "Offline replay, pruning, regularization, distillation",
-          "Compare retention before and after consolidation"
+          "Compare retention before and after consolidation",
         ],
         [
           "Episodic to semantic memory",
           "Extract repeated patterns from event history into compressed rules",
-          "Test generalization to unseen task variants"
-        ]
-      ]
+          "Test generalization to unseen task variants",
+        ],
+      ],
     },
     {
-      "type": "qa",
-      "title": "The standard to aim for",
-      "intro": "Be able to sit with Aryaa and genuinely discuss these. This is the line between admiring the vision and being able to build it.",
-      "items": [
+      type: "qa",
+      title: "The standard to aim for",
+      intro:
+        "Be able to sit with Aryaa and genuinely discuss these. This is the line between admiring the vision and being able to build it.",
+      items: [
         {
-          "text": "Why should memory live in weights rather than an external store?"
+          text: "Why should memory live in weights rather than an external store?",
         },
         {
-          "text": "How do you update online memory without catastrophic forgetting?"
+          text: "How do you update online memory without catastrophic forgetting?",
         },
         {
-          "text": "How do you distinguish new learning from overfitting?"
+          text: "How do you distinguish new learning from overfitting?",
         },
         {
-          "text": "What benchmark shows a model became better over time?"
+          text: "What benchmark shows a model became better over time?",
         },
         {
-          "text": "What is the correct baseline against a RAG or graph-memory system?"
+          text: "What is the correct baseline against a RAG or graph-memory system?",
         },
         {
-          "text": "Does synaptic tagging offer anything beyond sparse adapter updates?"
+          text: "Does synaptic tagging offer anything beyond sparse adapter updates?",
         },
         {
-          "text": "Does offline consolidation improve retention?"
+          text: "Does offline consolidation improve retention?",
         },
         {
-          "text": "Can interpretability detect harmful memory interference?"
+          text: "Can interpretability detect harmful memory interference?",
         },
         {
-          "text": "What safety gates are necessary for an agent acting through human tools?"
+          text: "What safety gates are necessary for an agent acting through human tools?",
         },
         {
-          "text": "What experiment would falsify the architecture?"
-        }
-      ]
+          text: "What experiment would falsify the architecture?",
+        },
+      ],
     },
     {
-      "type": "list",
-      "title": "What not to learn first",
-      "intro": "Supporting context, not the bottleneck. Understand they exist, then spend effort on the research core.",
-      "items": [
+      type: "list",
+      title: "What not to learn first",
+      intro:
+        "Supporting context, not the bottleneck. Understand they exist, then spend effort on the research core.",
+      items: [
         {
-          "text": "Breeze's iOS keyboard implementation"
+          text: "Breeze's iOS keyboard implementation",
         },
         {
-          "text": "RSVP reading interfaces"
+          text: "RSVP reading interfaces",
         },
         {
-          "text": "Full quant trading theory"
+          text: "Full quant trading theory",
         },
         {
-          "text": "Startup fundraising / YC narratives"
+          text: "Startup fundraising / YC narratives",
         },
         {
-          "text": "Desktop app polish"
+          text: "Desktop app polish",
         },
         {
-          "text": "Marketing content"
-        }
-      ]
-    }
-  ]
+          text: "Marketing content",
+        },
+      ],
+    },
+  ],
 };
 
-const PROGRAMS = { neuralink: NEURALINK, zoral: ZORAL };
+// === Single unified track: Caleb + Mark ===
+// The Neuralink neuroengineering plan and the Zoral continual-learning plan
+// overlap heavily (transformers, decoding, interpretability, neuroscience),
+// so they live as ONE program: the 13-week dated calendar is the execution
+// spine; the Zoral projects + research library fold in as the research half.
+ZORAL.projects.forEach((p, i) => {
+  p.tag = "Research " + (i + 1);
+});
+
+const PLAN = Object.assign({}, NEURALINK, {
+  name: "Summer 2026 — Neuroengineering & Continual Learning",
+  short:
+    "Closed-loop control, neural decoding & brain-inspired continual learning",
+  owners: "Caleb Newton & Mark Lin",
+  tagline:
+    "Caleb Newton and Mark Lin. One summer across the neural-interface stack: closed-loop control, neural decoding, and brain-inspired continual learning, built backward from measured evidence.",
+  thesis:
+    "From neural representations to closed-loop control, and from continual learning to neural memory: a measured summer across the neural-interface and brain-inspired ML stack.",
+  projects: NEURALINK.projects.concat(ZORAL.projects),
+  sections: ZORAL.sections,
+});
