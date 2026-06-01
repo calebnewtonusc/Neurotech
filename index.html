@@ -172,6 +172,14 @@
             <button id="resetBtn" class="util-btn"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>Reset</button>
             <input id="importFile" type="file" accept="application/json,.json" class="hidden" />
           </div>
+          <div class="w-full mt-5" style="border-top:1px solid var(--hairline);padding-top:16px">
+            <p class="t-caption-strong mb-2 flex items-center justify-center gap-1.5"><i data-lucide="refresh-cw" class="w-3.5 h-3.5" style="color:var(--blue)"></i>Live sync</p>
+            <div class="flex gap-2">
+              <input id="boardInput" class="search-input" style="padding-left:14px" placeholder="shared board code" aria-label="Shared board code" />
+              <button id="syncBtn" class="util-btn shrink-0">Connect</button>
+            </div>
+            <p id="syncStatus" class="t-fine mt-2 text-center" style="color:var(--ink48)">Local only — not synced</p>
+          </div>
         </div>
 
         <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -289,6 +297,21 @@
     const saveDone = () => store.set(KEY, done);
     const saveNotes = () => store.set(NOTES_KEY, notes);
     const isDone = (id) => !!done[id];
+
+    // ---------- sync state (shared boards) ----------
+    const TS_KEY = "neurotech_ts_v1", SYNC_KEY = "neurotech_sync_v1", OUTBOX_KEY = "neurotech_outbox_v1";
+    let localTs = store.get(TS_KEY, { progress: {}, notes: {} });
+    localTs.progress = localTs.progress || {};
+    localTs.notes = localTs.notes || {};
+    let sync = store.get(SYNC_KEY, { enabled: false, board: "" });
+    let outbox = store.get(OUTBOX_KEY, []);
+    const saveTs = () => store.set(TS_KEY, localTs);
+    const saveSync = () => store.set(SYNC_KEY, sync);
+    const saveOutbox = () => store.set(OUTBOX_KEY, outbox);
+    // Backfill timestamps for pre-existing local data so it can sync up later.
+    Object.keys(done).forEach((id) => { if (localTs.progress[id] == null) localTs.progress[id] = 1; });
+    Object.keys(notes).forEach((w) => { if (localTs.notes[w] == null) localTs.notes[w] = 1; });
+    saveTs();
 
     const personStyle = {
       Caleb:    { chip: "chip-blue",  dot: "var(--blue)" },
@@ -688,6 +711,8 @@
       const id = cb.dataset.id;
       if (cb.checked) done[id] = true; else delete done[id];
       saveDone();
+      const t = Date.now(); localTs.progress[id] = t; saveTs();
+      queuePatch("progress", id, cb.checked, t);
       // The paired text is in the same <label>; for reading rows the checkbox
       // sits in its own label, so fall back to the single row-text in its card.
       const lbl = cb.closest("label");
@@ -698,7 +723,10 @@
     });
     document.addEventListener("input", (e) => {
       if (e.target.classList && e.target.classList.contains("notes-area")) {
-        notes[e.target.dataset.note] = e.target.value; saveNotes();
+        const w = e.target.dataset.note;
+        notes[w] = e.target.value; saveNotes();
+        const t = Date.now(); localTs.notes[w] = t; saveTs();
+        queuePatch("note", w, e.target.value, t);
       }
     });
 
@@ -756,7 +784,12 @@
           if (confirm("Merge imported progress into this device? (Checked items combine; notes are overwritten where present.)")) {
             done = Object.assign({}, done, data.progress);
             if (data.notes) notes = Object.assign({}, notes, data.notes);
-            saveDone(); saveNotes(); renderAll();
+            saveDone(); saveNotes();
+            const t = Date.now();
+            Object.keys(done).forEach((id) => { localTs.progress[id] = t; });
+            Object.keys(notes).forEach((w) => { localTs.notes[w] = t; });
+            saveTs(); renderAll();
+            if (sync.enabled) syncFull();
           }
         } catch { alert("That file is not a valid Neurotech export."); }
       };
@@ -786,6 +819,122 @@
       ["dashboard", "projects", "weeks", "resources"].forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
     }
 
+    // ---------- live sync (shared boards) ----------
+    const API = (board) => `/api/board/${encodeURIComponent(board)}`;
+    let flushing = false;
+
+    function setStatus(state) {
+      const el = document.getElementById("syncStatus");
+      if (!el) return;
+      if (!sync.enabled) { el.textContent = "Local only — not synced"; el.style.color = "var(--ink48)"; return; }
+      const time = new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+      const map = {
+        syncing: ["Syncing…", "var(--ink48)"],
+        synced: [`Synced ✓ · ${time}`, "var(--blue)"],
+        offline: [`Offline — ${outbox.length} change${outbox.length === 1 ? "" : "s"} queued`, "var(--ink)"],
+      };
+      const [txt, col] = map[state] || map.synced;
+      el.textContent = txt; el.style.color = col;
+    }
+    async function apiPatch(p) {
+      try {
+        const r = await fetch(API(sync.board), { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(p) });
+        return r.ok;
+      } catch { return false; }
+    }
+    async function apiGet() {
+      try { const r = await fetch(API(sync.board)); return r.ok ? await r.json() : null; } catch { return null; }
+    }
+    function queuePatch(kind, key, value, t) {
+      if (!sync.enabled) return;
+      outbox.push({ kind, key, value, t }); saveOutbox(); flushOutbox();
+    }
+    async function flushOutbox() {
+      if (!sync.enabled || flushing) return;
+      if (!outbox.length) { setStatus("synced"); return; }
+      flushing = true; setStatus("syncing");
+      while (outbox.length) {
+        const ok = await apiPatch(outbox[0]);
+        if (!ok) { flushing = false; setStatus("offline"); return; }
+        outbox.shift(); saveOutbox();
+      }
+      flushing = false; setStatus("synced");
+    }
+    function setCheckboxDOM(id, val) {
+      const cb = document.querySelector(`input.track-check[data-id="${id}"]`);
+      if (!cb) return;
+      cb.checked = val;
+      const lbl = cb.closest("label");
+      let txt = lbl ? lbl.querySelector(".row-text") : null;
+      if (!txt) txt = cb.closest(".card, .day-block")?.querySelector(".row-text");
+      if (txt) txt.classList.toggle("done-text", val);
+    }
+    function setNoteDOM(w, val) {
+      const ta = document.querySelector(`textarea[data-note="${w}"]`);
+      if (ta && document.activeElement !== ta) ta.value = val;
+    }
+    function applyServerState(s) {
+      if (!s) return false;
+      let changed = false;
+      const sp = (s.ts && s.ts.progress) || {}, sn = (s.ts && s.ts.notes) || {};
+      Object.keys(sp).forEach((id) => {
+        if ((sp[id] || 0) > (localTs.progress[id] || 0)) {
+          const val = !!(s.progress && s.progress[id]);
+          if (val) done[id] = true; else delete done[id];
+          localTs.progress[id] = sp[id]; changed = true; setCheckboxDOM(id, val);
+        }
+      });
+      Object.keys(sn).forEach((w) => {
+        if ((sn[w] || 0) > (localTs.notes[w] || 0)) {
+          const val = (s.notes && s.notes[w]) || "";
+          if (val) notes[w] = val; else delete notes[w];
+          localTs.notes[w] = sn[w]; changed = true; setNoteDOM(w, val);
+        }
+      });
+      if (changed) { saveDone(); saveNotes(); saveTs(); updateProgress(); }
+      return changed;
+    }
+    function pushLocalNewer(s) {
+      const sp = (s && s.ts && s.ts.progress) || {}, sn = (s && s.ts && s.ts.notes) || {};
+      Object.keys(localTs.progress).forEach((id) => {
+        if ((localTs.progress[id] || 0) > (sp[id] || 0)) queuePatch("progress", id, !!done[id], localTs.progress[id]);
+      });
+      Object.keys(localTs.notes).forEach((w) => {
+        if ((localTs.notes[w] || 0) > (sn[w] || 0)) queuePatch("note", w, notes[w] || "", localTs.notes[w]);
+      });
+    }
+    async function syncFull() {
+      if (!sync.enabled) return;
+      setStatus("syncing");
+      const s = await apiGet();
+      if (!s) { setStatus("offline"); return; }
+      applyServerState(s);
+      pushLocalNewer(s);
+      await flushOutbox();
+    }
+    function initSync() {
+      const input = document.getElementById("boardInput");
+      const btn = document.getElementById("syncBtn");
+      input.value = sync.board || "caleb-mark";
+      const refreshBtn = () => { btn.textContent = sync.enabled ? "Disconnect" : "Connect"; input.disabled = sync.enabled; };
+      refreshBtn(); setStatus(sync.enabled ? "synced" : null);
+      btn.addEventListener("click", async () => {
+        if (sync.enabled) { sync.enabled = false; saveSync(); refreshBtn(); setStatus(); return; }
+        const board = (input.value || "").trim();
+        if (!/^[A-Za-z0-9_-]{1,64}$/.test(board)) { alert("Board code: letters, numbers, and dashes only (max 64)."); return; }
+        sync.board = board; sync.enabled = true; saveSync(); refreshBtn();
+        await syncFull();
+      });
+      if (sync.enabled) syncFull();
+      setInterval(() => {
+        if (sync.enabled && document.visibilityState === "visible") {
+          apiGet().then((s) => { if (s) { applyServerState(s); flushOutbox(); } else setStatus("offline"); });
+        }
+      }, 15000);
+      window.addEventListener("online", () => { if (sync.enabled) flushOutbox(); });
+      document.addEventListener("visibilitychange", () => { if (sync.enabled && document.visibilityState === "visible") syncFull(); });
+    }
+
     function renderAll() {
       renderHero();
       renderDashboard();
@@ -799,6 +948,7 @@
     }
 
     renderAll();
+    initSync();
 
     // deep link to a week
     if (/^#week-\d+$/.test(location.hash)) {
