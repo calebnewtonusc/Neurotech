@@ -2482,3 +2482,70 @@ PLAN.references = [
     ],
   },
 ];
+
+// ---- Digestibility & ambiguity layer (orientation, recommended defaults, glossary) ----
+PLAN.orientation = {
+  recommendedFocus:
+    "Recommended: treat Zoral (continual learning + memory + interpretability) as the PRIMARY target, and Neuralink as the stretch the same skills serve. The shared core — transformers, representation learning, interpretability, and evaluation discipline — advances both. Weight effort toward the research projects and the neural-decoding bridge first; use the EMG closed-loop as the systems showcase.",
+  howToUse: [
+    "Open this week from the top. The current week auto-expands; check tasks as you finish them.",
+    "Every Friday ships ONE artifact — a figure, table, memo, or demo. That is the unit of progress, not hours spent.",
+    "Connect the same board code as your partner so progress syncs live between both of you.",
+    "Use Search to find any task across the 13 weeks, and 'This week only' to silence the firehose.",
+  ],
+  reality: [
+    "Be honest about the odds. The Neuralink neuroengineer internship is extraordinarily competitive and pedigree-sensitive; a strong summer improves your odds and gives you real evidence, but it is a stretch, not a sure thing.",
+    "Zoral is the more reachable near-term target: a small team where a genuine, measured result plus a clear message can earn a real conversation.",
+    "The durable win is not an offer. It is becoming genuinely capable and producing artifacts you can defend. Those compound no matter who says yes.",
+    "Do not overclaim. A skeptical reviewer respects measured, honest work far more than a flashy demo with no baseline.",
+  ],
+  minimumViable: [
+    "One reproducible neural-decoding repo (public data) with 3 baselines, one stronger model, and a clean latent/manifold figure.",
+    "One continual-learning benchmark with forgetting curves comparing naive fine-tune vs replay vs LoRA vs a memory module.",
+    "One small brain-inspired memory adapter that learns online from corrections without catastrophic forgetting, with a forgetting test.",
+    "One closed-loop control demo with real metrics (latency, input count, error rate) vs a no-prediction baseline — real EMG or honestly-labeled simulated input.",
+    "One honest written report, a 3-5 minute demo, and quantitative resume bullets — and both of you able to explain every result.",
+  ],
+  cadence:
+    "Plan for ~15-25 focused hours per week each. Protect weekends. If a week slips, cut or roll a task — never quietly make the weekend mandatory.",
+  twoPerson:
+    "No single-owner knowledge. If only Caleb can run the code or only Mark can explain the science, the portfolio is fragile. Mark spends weeks 1-2 on a focused PyTorch ramp in parallel; pair-program; swap roles at the week-7 crossover.",
+};
+
+PLAN.defaults = [
+  { q: "Primary target", pick: "Zoral-first, Neuralink-as-stretch", why: "A responsive small team rewards a real measured result; the internship is a pedigree-heavy long shot. The shared ML/interpretability core serves both.", alt: "If a Neuralink referral or strong fit emerges, reweight toward the neural-decoding + closed-loop evidence.", url: "https://zoral.ai/" },
+  { q: "Project 1 input (hardware)", pick: "Build the closed loop on SIMULATED low-bandwidth input first, then swap in open EMG (MyoWare 2.0, or OpenBCI for cleaner signal).", why: "De-risks the whole project: the harness, logging, and metrics exist by week 1-2 regardless of hardware. Real EMG then drops in without blocking the summer.", alt: "Meta Neural Band only if real programmatic dev access materializes — do not bet the summer on it.", url: "https://docs.openbci.com/" },
+  { q: "Project 2 dataset", pick: "Neural Latents Benchmark — MC_Maze (monkey reaching) via nlb_tools on DANDI.", why: "Canonical, well-documented, clear behavior (reach direction/velocity), and great visuals: rasters, trajectories, latent manifolds.", alt: "MC_RTT or Area2_Bump for a second condition; NSD fMRI only as a stretch once the primary track is reproducible.", url: "https://github.com/neurallatents/nlb_tools" },
+  { q: "Project 2 stronger model", pick: "Ridge + GRU baselines, then ONE learned-latent model (a small sequential autoencoder, LFADS-lite).", why: "Shows simple-vs-learned-representation cleanly without drowning in architectures. One stronger model per the plan.", alt: "A small Transformer over binned spikes if the autoencoder underperforms.", url: "https://arxiv.org/abs/1608.06315" },
+  { q: "Continual-learning base model", pick: "A small open model, frozen: Pythia-160M/410M or Qwen2.5-0.5B.", why: "Open weights, runs on one free GPU, well-supported for probing and adapters.", alt: "Gemma-2-2B if you have more VRAM and want a stronger base.", url: "https://huggingface.co/EleutherAI/pythia-410m" },
+  { q: "Memory architecture to reproduce", pick: "A delta-rule / fast-weight associative memory, or a Test-Time-Training-lite layer, on a frozen tiny transformer; validate on associative recall first.", why: "Simplest correct way to show online update without forgetting; directly mirrors Zoral's 'trainable memory on a frozen base'.", alt: "A minimal Titans-style test-time memory if TTT-lite works and time allows; avoid full Titans/Engram reproductions.", url: "https://arxiv.org/abs/2407.04620" },
+  { q: "Compute", pick: "Google Colab (Pro) or Kaggle (free T4/P100, ~30 hr/wk) for GPU; local for dev.", why: "Small models and continual-learning runs fit comfortably on a single T4. Do not over-invest in infra.", alt: "A cheap cloud A10/L4 only if a run genuinely needs it.", url: "https://www.kaggle.com/docs/notebooks" },
+  { q: "Mark's ramp", pick: "Weeks 1-2: Karpathy 'Neural Networks: Zero to Hero' (micrograd to makemore) + the PyTorch 60-min blitz, in parallel with team setup.", why: "Fastest path from zero to genuinely editing models and reading metrics; sets up the week-7 crossover.", alt: "fast.ai Part 1 if Mark prefers a top-down path.", url: "https://karpathy.ai/zero-to-hero.html" },
+];
+
+PLAN.glossary = [
+  { term: "EMG / sEMG", def: "Surface electromyography: electrical signals from muscle activation at the skin. NOT brain activity — the honest framing for Project 1." },
+  { term: "fMRI", def: "Functional MRI: indirect neural activity via blood-oxygen (BOLD) signal. Not single-neuron recording." },
+  { term: "Spiking / electrophysiology", def: "Direct recording of neuron action potentials (e.g., implanted electrodes). The Neural Latents data is this kind." },
+  { term: "BCI", def: "Brain-computer interface. A closed-loop assistive demo can be BCI-inspired but is not an implanted BCI." },
+  { term: "Closed-loop", def: "The system observes input, acts, and uses the result/feedback to adapt in real time." },
+  { term: "Continual learning", def: "Learning new things over time after deployment, without retraining from scratch." },
+  { term: "Catastrophic forgetting", def: "When learning something new destroys previously learned capability. The central failure mode to measure." },
+  { term: "Stability vs plasticity", def: "The tension between retaining old knowledge (stability) and absorbing new (plasticity)." },
+  { term: "Replay", def: "Re-training on stored past examples to fight forgetting." },
+  { term: "EWC", def: "Elastic Weight Consolidation: penalize changes to weights important for old tasks." },
+  { term: "LoRA / adapter", def: "Small trainable add-ons to a frozen model; a cheap way to adapt without touching base weights." },
+  { term: "Fast weights / delta rule", def: "A rapidly-updated memory state written via simple associative updates; foundation for online memory." },
+  { term: "Associative memory / Hopfield", def: "Store and retrieve patterns by association; a classic memory model." },
+  { term: "Test-Time Training (TTT)", def: "The hidden state itself becomes a small model that updates during inference." },
+  { term: "Manifold / latent space", def: "A low-dimensional structure that high-dimensional neural activity (or model activations) lives on." },
+  { term: "Residual stream", def: "The running vector a transformer reads from and writes to across layers; where information flows." },
+  { term: "Linear probe", def: "A simple linear classifier trained on activations to test what information is present." },
+  { term: "Activation patching", def: "Swapping activations between runs to test which components causally matter." },
+  { term: "Sparse autoencoder", def: "Decomposes activations into sparse, more interpretable features." },
+  { term: "Ablation", def: "Removing or disabling a component to measure its contribution." },
+  { term: "Baseline", def: "The simple comparison your fancy method must beat to mean anything." },
+  { term: "Forward / backward transfer", def: "Whether learning task A helps task B (forward), or how new learning affects old tasks (backward)." },
+  { term: "Leakage", def: "Information from the test set sneaking into training, inflating results. Always check for it." },
+  { term: "R2 / calibration", def: "R2: fraction of variance a regression explains. Calibration: whether predicted confidences match reality." },
+];

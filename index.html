@@ -127,6 +127,7 @@
         <a href="#dashboard" data-spy="dashboard">Dashboard</a>
         <a href="#projects" data-spy="projects">Projects</a>
         <a href="#weeks" data-spy="weeks">Calendar</a>
+        <a href="#orientation">Start here</a>
         <a href="#resources" data-spy="resources">Resources</a>
       </div>
       <a href="#weeks" class="t-nav" style="color:rgba(255,255,255,0.62)" id="todayChip">Today</a>
@@ -240,7 +241,8 @@
           <h2 class="display t-display-md">The 13-week calendar</h2>
           <p class="t-body mt-2" style="color:var(--ink80)">Monday to Friday. Protected weekends. Every Friday ships an artifact.</p>
         </div>
-        <div class="flex items-center gap-2">
+        <div class="flex items-center gap-2 flex-wrap">
+          <button type="button" id="focusWeek" class="util-btn"><i data-lucide="crosshair" class="w-3.5 h-3.5"></i>This week only</button>
           <button type="button" id="expandAll" class="util-btn"><i data-lucide="chevrons-down" class="w-3.5 h-3.5"></i>Expand all</button>
           <button type="button" id="collapseAll" class="util-btn"><i data-lucide="chevrons-up" class="w-3.5 h-3.5"></i>Collapse</button>
         </div>
@@ -447,6 +449,7 @@
     // ---------- calendar ----------
     let activeFilter = "all";
     let searchQuery = "";
+    let focusMode = false;
     function renderWeeks() {
       const cwNum = currentWeekNum();
       document.getElementById("weekList").innerHTML = PLAN.weeks.map((w) => {
@@ -558,16 +561,17 @@
       });
       const cwNum = currentWeekNum();
       document.querySelectorAll("[data-week]").forEach((wEl) => {
+        const wkNum = Number(wEl.dataset.week);
+        if (focusMode && wkNum !== cwNum) { wEl.style.display = "none"; return; }
         const visibleRows = [...wEl.querySelectorAll(".task-row")].some((r) => r.style.display !== "none");
         const filtering = q || activeFilter !== "all";
         wEl.style.display = filtering && !visibleRows ? "none" : "";
         const body = wEl.querySelector(".accordion-body");
         const chev = wEl.querySelector(".chev");
-        if (filtering) {
-          // open matching weeks while filtering
-          if (visibleRows) { body.classList.add("open"); if (chev) chev.style.transform = "rotate(180deg)"; }
+        if (filtering || (focusMode && wkNum === cwNum)) {
+          if (visibleRows || focusMode) { body.classList.add("open"); if (chev) chev.style.transform = "rotate(180deg)"; }
         } else {
-          const cur = Number(wEl.dataset.week) === cwNum;
+          const cur = wkNum === cwNum;
           body.classList.toggle("open", cur);
           if (chev) chev.style.transform = cur ? "rotate(180deg)" : "rotate(0deg)";
         }
@@ -580,7 +584,7 @@
     // ---------- resources ----------
     function tile(inner, variant) { return `<section class="tile tile-${variant}"><div class="container-x pad-sec">${inner}</div></section>`; }
 
-    function decisionsTile() {
+    function decisionsTile(variant) {
       const items = PLAN.decisions.map((d) => {
         const isKill = /kill-switch/i.test(d.title);
         const past = dayEnd(d.date) < NOW;
@@ -600,10 +604,10 @@
       return tile(`
         <h2 class="display t-display-md mb-2">Non-negotiable decision dates</h2>
         <p class="t-body mb-8" style="color:var(--ink80)">Hard gates. Kill-switches are marked in ink. No quietly making weekends mandatory.</p>
-        <div class="space-y-3" style="border-left:1px solid var(--hairline);margin-left:7px">${items}</div>`, "white");
+        <div class="space-y-3" style="border-left:1px solid var(--hairline);margin-left:7px">${items}</div>`, variant);
     }
 
-    function deliverablesTile() {
+    function deliverablesTile(variant) {
       const cols = [
         { key: "p1", title: "Project 1 — Control Workstation", icon: "cpu", items: PLAN.deliverables.p1 },
         { key: "p2", title: "Project 2 — Decoding Lab", icon: "git-branch", items: PLAN.deliverables.p2 },
@@ -622,7 +626,65 @@
               const id = `del_${c.key}_${i}`;
               return `<li><label class="flex items-start gap-2.5 py-1.5" style="cursor:pointer">${checkbox(id)}<span class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:var(--ink)">${esc(item)}</span></label></li>`;
             }).join("")}</ul>
-          </div>`).join("")}</div>`, "parchment");
+          </div>`).join("")}</div>`, variant);
+    }
+
+    function orientationTile(variant) {
+      const o = PLAN.orientation;
+      const how = o.howToUse.map((x) => `<li class="t-caption flex items-start gap-2.5" style="color:var(--ink80)"><i data-lucide="check" class="w-3.5 h-3.5 mt-0.5 shrink-0" style="color:var(--blue)"></i>${esc(x)}</li>`).join("");
+      const real = o.reality.map((x) => `<li class="t-caption flex items-start gap-2.5" style="color:var(--ink80)"><span class="dot mt-1.5 shrink-0" style="background:var(--ink48)"></span>${esc(x)}</li>`).join("");
+      const mv = o.minimumViable.map((m, i) => { const id = `mv${i}`; return `<label class="flex items-start gap-2.5 py-1.5" style="cursor:pointer">${checkbox(id)}<span class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:var(--ink)">${esc(m)}</span></label>`; }).join("");
+      const inner = `
+        <h2 class="display t-display-md mb-2" id="orientation">Start here</h2>
+        <p class="t-body mb-6" style="color:var(--ink80);max-width:66ch">How to actually run this summer — and an honest read on what it can and cannot do.</p>
+        <div class="card p-6 mb-5" style="border-color:rgba(0,102,204,0.3);background:rgba(0,102,204,0.03)">
+          <p class="t-caption-strong mb-1" style="color:var(--blue)">Recommended focus</p>
+          <p class="t-body" style="color:var(--ink)">${esc(o.recommendedFocus)}</p>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+          <div class="card p-6">
+            <p class="t-caption-strong mb-3 flex items-center gap-1.5"><i data-lucide="compass" class="w-4 h-4" style="color:var(--blue)"></i>How to use this</p>
+            <ul class="space-y-2">${how}</ul>
+          </div>
+          <div class="card p-6">
+            <p class="t-caption-strong mb-3 flex items-center gap-1.5"><i data-lucide="alert-triangle" class="w-4 h-4" style="color:var(--ink)"></i>Reality check</p>
+            <ul class="space-y-2">${real}</ul>
+          </div>
+        </div>
+        <div class="card p-6 mt-5">
+          <p class="t-caption-strong mb-1 flex items-center gap-1.5" style="color:var(--blue)"><i data-lucide="target" class="w-4 h-4"></i>Minimum viable summer</p>
+          <p class="t-caption mb-3" style="color:var(--ink48)">If you finish only these, the summer succeeded. Track them here.</p>
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-x-6">${mv}</div>
+        </div>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 mt-5">
+          <div class="inset p-5"><p class="t-caption-strong mb-1" style="color:var(--ink)">Time budget</p><p class="t-caption" style="color:var(--ink80)">${esc(o.cadence)}</p></div>
+          <div class="inset p-5"><p class="t-caption-strong mb-1" style="color:var(--ink)">The two-person rule</p><p class="t-caption" style="color:var(--ink80)">${esc(o.twoPerson)}</p></div>
+        </div>`;
+      return tile(inner, variant);
+    }
+
+    function defaultsTile(variant) {
+      const inner = `
+        <h2 class="display t-display-md mb-2">Key decisions, resolved</h2>
+        <p class="t-body mb-8" style="color:var(--ink80);max-width:66ch">The plan left several choices open. These are sensible defaults to start from — override with evidence, but do not stall on them.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">${PLAN.defaults.map((d) => `
+          <div class="card p-6 flex flex-col">
+            <span class="chip chip-blue mb-2" style="align-self:flex-start">${esc(d.q)}</span>
+            <p class="t-body-strong" style="color:var(--ink)">${esc(d.pick)}</p>
+            <p class="t-caption mt-2" style="color:var(--ink80)">${esc(d.why)}</p>
+            <p class="t-caption mt-2 flex-1" style="color:var(--ink48)"><span style="font-weight:600">If not: </span>${esc(d.alt)}</p>
+            ${d.url ? `<a class="lnk t-caption mt-3" href="${esc(d.url)}" target="_blank" rel="noopener noreferrer" style="align-self:flex-start">Reference →</a>` : ""}
+          </div>`).join("")}</div>`;
+      return tile(inner, variant);
+    }
+
+    function glossaryTile(variant) {
+      const inner = `
+        <h2 class="display t-display-md mb-2">Glossary</h2>
+        <p class="t-body mb-8" style="color:var(--ink80);max-width:66ch">Plain-English definitions for the jargon — and the modality distinctions that keep your claims honest.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4">${PLAN.glossary.map((g) => `
+          <div><p class="t-body-strong" style="color:var(--ink)">${esc(g.term)}</p><p class="t-caption mt-0.5" style="color:var(--ink80)">${esc(g.def)}</p></div>`).join("")}</div>`;
+      return tile(inner, variant);
     }
 
     function honestyTile() {
@@ -696,10 +758,24 @@
     }
 
     function renderResources() {
-      const sectionVariants = { tiers: "white", reading: "parchment", table: "white", qa: "dark", list: "parchment" };
-      const sectionTiles = PLAN.sections.map((s, si) => sectionTile(s, si, sectionVariants[s.type] || (si % 2 ? "parchment" : "white"))).join("");
-      document.getElementById("resources").innerHTML =
-        decisionsTile() + deliverablesTile() + honestyTile() + sectionTiles + referencesTile();
+      const S = (type) => PLAN.sections.find((s) => s.type === type);
+      const I = (type) => PLAN.sections.indexOf(S(type)); // stable index keeps checkbox ids consistent
+      const sec = (type, variant) => { const s = S(type); return s ? sectionTile(s, I(type), variant) : ""; };
+      const tiles = [
+        orientationTile("parchment"),
+        defaultsTile("white"),
+        decisionsTile("parchment"),
+        deliverablesTile("white"),
+        honestyTile(),
+        sec("tiers", "white"),
+        sec("reading", "parchment"),
+        glossaryTile("white"),
+        sec("table", "parchment"),
+        sec("qa", "dark"),
+        sec("list", "parchment"),
+        referencesTile(),
+      ];
+      document.getElementById("resources").innerHTML = tiles.join("");
       lucide.createIcons();
       updateProgress();
     }
@@ -755,7 +831,15 @@
       btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; paintFilters(); filterCalendar(); });
     });
     document.getElementById("search").addEventListener("input", (e) => { searchQuery = e.target.value; filterCalendar(); });
+    document.getElementById("focusWeek").addEventListener("click", () => {
+      focusMode = !focusMode;
+      const b = document.getElementById("focusWeek");
+      b.style.borderColor = focusMode ? "var(--blue)" : "";
+      b.style.color = focusMode ? "var(--blue)" : "";
+      filterCalendar();
+    });
     document.getElementById("expandAll").addEventListener("click", () => {
+      if (focusMode) return;
       document.querySelectorAll("#weekList .accordion-body").forEach((b) => b.classList.add("open"));
       document.querySelectorAll("#weekList .chev").forEach((c) => c.style.transform = "rotate(180deg)");
     });
