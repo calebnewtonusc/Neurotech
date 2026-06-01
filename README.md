@@ -34,13 +34,18 @@ Neurotech is an installable, offline-first PWA:
 - **Offline** — a service worker caches the app shell and assets, so it works with no signal.
 - **Live dates** — the current week, today highlight, and countdown track the real calendar automatically through the summer.
 
-## Sharing progress between Caleb & Mark
+## Live sync between Caleb & Mark
 
-Progress lives in your browser's `localStorage` (per device). To sync or back up:
+Live at **https://neurotech-production.up.railway.app**
 
-- **Export** downloads a `neurotech-progress-*.json` of your checked items and notes.
-- **Import** merges someone else's export into your copy (checked items combine; notes overwrite where present).
-- **Reset** clears this device after an optional export.
+The app is local-first but backed by a real server so progress syncs across devices and people:
+
+- On the dashboard, enter a shared **board code** (default `caleb-mark`) and hit **Connect**. Both people on the same code share one board.
+- Checking a task or editing a week note pushes instantly; the app polls every 15s and on focus to pull the other person's changes.
+- Edits merge with **per-item last-write-wins**, so checks, unchecks, and note edits from either person all reconcile correctly, no clobbering.
+- It works **offline**: changes queue locally and flush automatically when you reconnect (the status line shows synced / syncing / offline-queued).
+
+`localStorage` is still the local cache, so you can also **Export** / **Import** a `neurotech-progress-*.json` as a manual backup, and **Reset** clears this device.
 
 ## Design
 
@@ -53,24 +58,39 @@ npm start
 # then open http://localhost:3000
 ```
 
-No build step and no dependencies — it is a static page served by a tiny zero-dependency Node server (`server.js`).
+No build step and no dependencies — `server.js` is a tiny zero-dependency Node server that hosts the static app **and** the sync API.
+
+By default it persists to `./.data/boards.json`; set `DATA_DIR` (or run on Railway with a volume) to point it at durable storage.
+
+## Backend / API
+
+`server.js` exposes a small JSON API alongside the static files:
+
+- `GET /api/health` — status + the active data directory.
+- `GET /api/board/:id` — the shared board state (`progress`, `notes`, per-key `ts`).
+- `PATCH /api/board/:id` — apply one change `{ kind: "progress" | "note", key, value, t }` with last-write-wins.
+- `PUT /api/board/:id/import` — merge a full export into a board.
+
+State persists to a JSON file with atomic writes and a flush on shutdown.
 
 ## Deploy to Railway
 
-This repo is Railway-ready out of the box.
+Lives in the **Learning tech** project as the **Neurotech** service, with a volume mounted at `/data` for durable storage. Deployed with the Railway CLI:
 
-1. Push to GitHub.
-2. In Railway, **New Project → Deploy from GitHub repo** and pick this repo.
-3. Railway auto-detects Node via Nixpacks, runs `npm start`, and binds to its injected `PORT`.
-4. Open the generated domain. Done.
+```bash
+railway link -p <project> -e production -s Neurotech
+railway volume add -m /data          # durable persistence
+railway up --ci                      # build (Nixpacks) + deploy
+```
 
-`railway.json` pins the builder and start command; `server.js` reads `process.env.PORT` and listens on `0.0.0.0`.
+`server.js` reads `PORT` and `RAILWAY_VOLUME_MOUNT_PATH` automatically, so the board store survives redeploys. Pushing to GitHub also redeploys if the service is repo-connected.
 
 ## Files
 
-- `index.html` — the full tracker UI.
+- `index.html` — the full tracker UI (local-first + live sync client).
 - `data.js` — the entire plan as structured data (edit here to update tasks, dates, or deliverables).
-- `server.js` — zero-dependency static server for Railway.
+- `server.js` — zero-dependency static host **+** sync API with file persistence.
+- `manifest.webmanifest`, `sw.js`, `icon*.png/svg` — the installable, offline PWA.
 - `DESIGN.md` — the Apple design reference the UI is built against.
 
 All glory to God! ✝️❤️
