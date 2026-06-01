@@ -27,6 +27,7 @@ The **resources** library carries the reference material both halves draw on:
 - **Start here** — how to run the summer, an honest reality check on the odds, a checkable "minimum viable summer," the time budget, and the two-person rule.
 - **Key decisions, resolved** — concrete recommended defaults for the plan's open choices (primary target, EMG hardware, the exact dataset, the stronger model, base model, memory architecture, compute, Mark's ramp), each with a why and a link.
 - **Glossary** — plain-English definitions for the jargon and the modality distinctions that keep claims honest.
+- **Neuralink fit** — the role-alignment page: Project 2's three mandatory sub-studies (human fMRI / NSD, NHP intracortical finger-movement decoding under drift, human intracortical speech decoding with LLM-assisted correction), the mandatory deliverables, a full qualification matrix (requirement → artifact), and the external-validation lane for the 2+-years gap that can't be manufactured.
 - **Focus mode** — "This week only" collapses the 13-week firehose to just what's in front of you.
 - **Resources** — decision dates, deliverables, honesty rules, the knowledge stack, the neural-memory reading list (with paper links), the biology→ML table, the standard Q&A, what-not-to-learn, and a **References & sources** library.
 

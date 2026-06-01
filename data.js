@@ -20,45 +20,46 @@ const NEURALINK = {
     {
       id: "p1",
       tag: "Project 1",
-      name: "Neuroadaptive Control Workstation",
-      line: "A closed-loop assistive-control system that pairs low-bandwidth neuromotor input with predictive context modeling to reduce the effort of operating a digital environment.",
+      name: "Neuroadaptive Assistive Workstation",
+      line: "A closed-loop assistive-control system: a MindRove forearm EMG armband (or simulated low-bandwidth input) plus predictive context modeling lets a user operate a computer with minimal movement, measured rigorously against gesture-only control.",
       proves: [
-        "Real-time system design",
-        "Closed-loop interaction",
-        "Low-bandwidth intent decoding",
-        "Human task design",
-        "Latency measurement",
-        "Calibration & adaptation",
-        "Baseline comparison",
+        "Real-time closed-loop system design",
+        "Low-bandwidth EMG intent decoding",
+        "Pre-registered hypotheses per experiment",
+        "Repeated sessions across days",
+        "Calibration vs no-calibration",
+        "Prediction-assisted vs gesture-only",
+        "Latency, accuracy, correction rate, completion time",
         "User-burden reduction",
       ],
       notClaim: [
-        "Does NOT read brain activity",
-        "Is NOT an implanted BCI",
-        "Is NOT a medical device",
+        "EMG measures muscle activity, NOT brain activity",
+        "Is NOT an implanted BCI or a medical device",
         "Is NOT Neuralink hardware",
+        "Simulated input is labeled as such, never as neural data",
       ],
     },
     {
       id: "p2",
       tag: "Project 2",
-      name: "Neural Representation & State Decoding Lab",
-      line: "A reproducible public-neural-data benchmark for decoding behavior/state, visualizing latent neural trajectories, and testing generalization across trials, sessions, subjects, or conditions.",
+      name: "Neural Decoding & Brain-State Modeling Lab",
+      line: "Three mandatory public-data sub-studies that hit the qualifications Neuralink names directly: human fMRI experimental design + decoding (NSD), NHP intracortical finger-movement decoding under neural drift, and human intracortical speech decoding with LLM-assisted correction.",
       proves: [
-        "Python neural-data analysis",
-        "Dataset ingestion & QC",
-        "Baseline-first ML",
-        "Neural decoding",
-        "Representation learning",
-        "Manifold analysis",
-        "Cross-session generalization",
-        "Scientific interpretation",
+        "Human fMRI: experimental-design reconstruction + decoding",
+        "NHP awake-behaving electrophysiology analysis",
+        "Movement decoding robust to cross-session drift",
+        "Speech decoding: phonemes, words, sentences",
+        "LLM-assisted decoding + hallucination/failure analysis",
+        "Manifold analysis & representation geometry",
+        "Recalibration & manifold alignment across days",
+        "Baseline-first ML with honest interpretation",
       ],
       notClaim: [
-        "No hands-on invasive recording",
-        "No private thought decoding",
-        "No clinical deployment",
-        "Does NOT conflate fMRI & spiking activity",
+        "No hands-on invasive recording — public data only",
+        "Analyzed (not collected) NHP / human intracortical data",
+        "No real scanner access — fMRI design is a reconstruction + protocol",
+        "Does NOT conflate fMRI (BOLD) with spiking activity",
+        "LLM correction must not hide the neural decoder's real errors",
       ],
     },
   ],
@@ -2513,39 +2514,281 @@ PLAN.orientation = {
 };
 
 PLAN.defaults = [
-  { q: "Primary target", pick: "Zoral-first, Neuralink-as-stretch", why: "A responsive small team rewards a real measured result; the internship is a pedigree-heavy long shot. The shared ML/interpretability core serves both.", alt: "If a Neuralink referral or strong fit emerges, reweight toward the neural-decoding + closed-loop evidence.", url: "https://zoral.ai/" },
-  { q: "Project 1 input (hardware)", pick: "Build the closed loop on SIMULATED low-bandwidth input first, then swap in open EMG (MyoWare 2.0, or OpenBCI for cleaner signal).", why: "De-risks the whole project: the harness, logging, and metrics exist by week 1-2 regardless of hardware. Real EMG then drops in without blocking the summer.", alt: "Meta Neural Band only if real programmatic dev access materializes — do not bet the summer on it.", url: "https://docs.openbci.com/" },
-  { q: "Project 2 dataset", pick: "Neural Latents Benchmark — MC_Maze (monkey reaching) via nlb_tools on DANDI.", why: "Canonical, well-documented, clear behavior (reach direction/velocity), and great visuals: rasters, trajectories, latent manifolds.", alt: "MC_RTT or Area2_Bump for a second condition; NSD fMRI only as a stretch once the primary track is reproducible.", url: "https://github.com/neurallatents/nlb_tools" },
-  { q: "Project 2 stronger model", pick: "Ridge + GRU baselines, then ONE learned-latent model (a small sequential autoencoder, LFADS-lite).", why: "Shows simple-vs-learned-representation cleanly without drowning in architectures. One stronger model per the plan.", alt: "A small Transformer over binned spikes if the autoencoder underperforms.", url: "https://arxiv.org/abs/1608.06315" },
-  { q: "Continual-learning base model", pick: "A small open model, frozen: Pythia-160M/410M or Qwen2.5-0.5B.", why: "Open weights, runs on one free GPU, well-supported for probing and adapters.", alt: "Gemma-2-2B if you have more VRAM and want a stronger base.", url: "https://huggingface.co/EleutherAI/pythia-410m" },
-  { q: "Memory architecture to reproduce", pick: "A delta-rule / fast-weight associative memory, or a Test-Time-Training-lite layer, on a frozen tiny transformer; validate on associative recall first.", why: "Simplest correct way to show online update without forgetting; directly mirrors Zoral's 'trainable memory on a frozen base'.", alt: "A minimal Titans-style test-time memory if TTT-lite works and time allows; avoid full Titans/Engram reproductions.", url: "https://arxiv.org/abs/2407.04620" },
-  { q: "Compute", pick: "Google Colab (Pro) or Kaggle (free T4/P100, ~30 hr/wk) for GPU; local for dev.", why: "Small models and continual-learning runs fit comfortably on a single T4. Do not over-invest in infra.", alt: "A cheap cloud A10/L4 only if a run genuinely needs it.", url: "https://www.kaggle.com/docs/notebooks" },
-  { q: "Mark's ramp", pick: "Weeks 1-2: Karpathy 'Neural Networks: Zero to Hero' (micrograd to makemore) + the PyTorch 60-min blitz, in parallel with team setup.", why: "Fastest path from zero to genuinely editing models and reading metrics; sets up the week-7 crossover.", alt: "fast.ai Part 1 if Mark prefers a top-down path.", url: "https://karpathy.ai/zero-to-hero.html" },
+  {
+    q: "Primary target",
+    pick: "Zoral-first, Neuralink-as-stretch",
+    why: "A responsive small team rewards a real measured result; the internship is a pedigree-heavy long shot. The shared ML/interpretability core serves both.",
+    alt: "If a Neuralink referral or strong fit emerges, reweight toward the neural-decoding + closed-loop evidence.",
+    url: "https://zoral.ai/",
+  },
+  {
+    q: "Project 1 input (hardware)",
+    pick: "Build the closed loop on SIMULATED low-bandwidth input first, then swap in open EMG (MyoWare 2.0, or OpenBCI for cleaner signal).",
+    why: "De-risks the whole project: the harness, logging, and metrics exist by week 1-2 regardless of hardware. Real EMG then drops in without blocking the summer.",
+    alt: "Meta Neural Band only if real programmatic dev access materializes — do not bet the summer on it.",
+    url: "https://docs.openbci.com/",
+  },
+  {
+    q: "Project 2 dataset",
+    pick: "Neural Latents Benchmark — MC_Maze (monkey reaching) via nlb_tools on DANDI.",
+    why: "Canonical, well-documented, clear behavior (reach direction/velocity), and great visuals: rasters, trajectories, latent manifolds.",
+    alt: "MC_RTT or Area2_Bump for a second condition; NSD fMRI only as a stretch once the primary track is reproducible.",
+    url: "https://github.com/neurallatents/nlb_tools",
+  },
+  {
+    q: "Project 2 stronger model",
+    pick: "Ridge + GRU baselines, then ONE learned-latent model (a small sequential autoencoder, LFADS-lite).",
+    why: "Shows simple-vs-learned-representation cleanly without drowning in architectures. One stronger model per the plan.",
+    alt: "A small Transformer over binned spikes if the autoencoder underperforms.",
+    url: "https://arxiv.org/abs/1608.06315",
+  },
+  {
+    q: "Continual-learning base model",
+    pick: "A small open model, frozen: Pythia-160M/410M or Qwen2.5-0.5B.",
+    why: "Open weights, runs on one free GPU, well-supported for probing and adapters.",
+    alt: "Gemma-2-2B if you have more VRAM and want a stronger base.",
+    url: "https://huggingface.co/EleutherAI/pythia-410m",
+  },
+  {
+    q: "Memory architecture to reproduce",
+    pick: "A delta-rule / fast-weight associative memory, or a Test-Time-Training-lite layer, on a frozen tiny transformer; validate on associative recall first.",
+    why: "Simplest correct way to show online update without forgetting; directly mirrors Zoral's 'trainable memory on a frozen base'.",
+    alt: "A minimal Titans-style test-time memory if TTT-lite works and time allows; avoid full Titans/Engram reproductions.",
+    url: "https://arxiv.org/abs/2407.04620",
+  },
+  {
+    q: "Compute",
+    pick: "Google Colab (Pro) or Kaggle (free T4/P100, ~30 hr/wk) for GPU; local for dev.",
+    why: "Small models and continual-learning runs fit comfortably on a single T4. Do not over-invest in infra.",
+    alt: "A cheap cloud A10/L4 only if a run genuinely needs it.",
+    url: "https://www.kaggle.com/docs/notebooks",
+  },
+  {
+    q: "Mark's ramp",
+    pick: "Weeks 1-2: Karpathy 'Neural Networks: Zero to Hero' (micrograd to makemore) + the PyTorch 60-min blitz, in parallel with team setup.",
+    why: "Fastest path from zero to genuinely editing models and reading metrics; sets up the week-7 crossover.",
+    alt: "fast.ai Part 1 if Mark prefers a top-down path.",
+    url: "https://karpathy.ai/zero-to-hero.html",
+  },
 ];
 
 PLAN.glossary = [
-  { term: "EMG / sEMG", def: "Surface electromyography: electrical signals from muscle activation at the skin. NOT brain activity — the honest framing for Project 1." },
-  { term: "fMRI", def: "Functional MRI: indirect neural activity via blood-oxygen (BOLD) signal. Not single-neuron recording." },
-  { term: "Spiking / electrophysiology", def: "Direct recording of neuron action potentials (e.g., implanted electrodes). The Neural Latents data is this kind." },
-  { term: "BCI", def: "Brain-computer interface. A closed-loop assistive demo can be BCI-inspired but is not an implanted BCI." },
-  { term: "Closed-loop", def: "The system observes input, acts, and uses the result/feedback to adapt in real time." },
-  { term: "Continual learning", def: "Learning new things over time after deployment, without retraining from scratch." },
-  { term: "Catastrophic forgetting", def: "When learning something new destroys previously learned capability. The central failure mode to measure." },
-  { term: "Stability vs plasticity", def: "The tension between retaining old knowledge (stability) and absorbing new (plasticity)." },
-  { term: "Replay", def: "Re-training on stored past examples to fight forgetting." },
-  { term: "EWC", def: "Elastic Weight Consolidation: penalize changes to weights important for old tasks." },
-  { term: "LoRA / adapter", def: "Small trainable add-ons to a frozen model; a cheap way to adapt without touching base weights." },
-  { term: "Fast weights / delta rule", def: "A rapidly-updated memory state written via simple associative updates; foundation for online memory." },
-  { term: "Associative memory / Hopfield", def: "Store and retrieve patterns by association; a classic memory model." },
-  { term: "Test-Time Training (TTT)", def: "The hidden state itself becomes a small model that updates during inference." },
-  { term: "Manifold / latent space", def: "A low-dimensional structure that high-dimensional neural activity (or model activations) lives on." },
-  { term: "Residual stream", def: "The running vector a transformer reads from and writes to across layers; where information flows." },
-  { term: "Linear probe", def: "A simple linear classifier trained on activations to test what information is present." },
-  { term: "Activation patching", def: "Swapping activations between runs to test which components causally matter." },
-  { term: "Sparse autoencoder", def: "Decomposes activations into sparse, more interpretable features." },
-  { term: "Ablation", def: "Removing or disabling a component to measure its contribution." },
-  { term: "Baseline", def: "The simple comparison your fancy method must beat to mean anything." },
-  { term: "Forward / backward transfer", def: "Whether learning task A helps task B (forward), or how new learning affects old tasks (backward)." },
-  { term: "Leakage", def: "Information from the test set sneaking into training, inflating results. Always check for it." },
-  { term: "R2 / calibration", def: "R2: fraction of variance a regression explains. Calibration: whether predicted confidences match reality." },
+  {
+    term: "EMG / sEMG",
+    def: "Surface electromyography: electrical signals from muscle activation at the skin. NOT brain activity — the honest framing for Project 1.",
+  },
+  {
+    term: "fMRI",
+    def: "Functional MRI: indirect neural activity via blood-oxygen (BOLD) signal. Not single-neuron recording.",
+  },
+  {
+    term: "Spiking / electrophysiology",
+    def: "Direct recording of neuron action potentials (e.g., implanted electrodes). The Neural Latents data is this kind.",
+  },
+  {
+    term: "BCI",
+    def: "Brain-computer interface. A closed-loop assistive demo can be BCI-inspired but is not an implanted BCI.",
+  },
+  {
+    term: "Closed-loop",
+    def: "The system observes input, acts, and uses the result/feedback to adapt in real time.",
+  },
+  {
+    term: "Continual learning",
+    def: "Learning new things over time after deployment, without retraining from scratch.",
+  },
+  {
+    term: "Catastrophic forgetting",
+    def: "When learning something new destroys previously learned capability. The central failure mode to measure.",
+  },
+  {
+    term: "Stability vs plasticity",
+    def: "The tension between retaining old knowledge (stability) and absorbing new (plasticity).",
+  },
+  {
+    term: "Replay",
+    def: "Re-training on stored past examples to fight forgetting.",
+  },
+  {
+    term: "EWC",
+    def: "Elastic Weight Consolidation: penalize changes to weights important for old tasks.",
+  },
+  {
+    term: "LoRA / adapter",
+    def: "Small trainable add-ons to a frozen model; a cheap way to adapt without touching base weights.",
+  },
+  {
+    term: "Fast weights / delta rule",
+    def: "A rapidly-updated memory state written via simple associative updates; foundation for online memory.",
+  },
+  {
+    term: "Associative memory / Hopfield",
+    def: "Store and retrieve patterns by association; a classic memory model.",
+  },
+  {
+    term: "Test-Time Training (TTT)",
+    def: "The hidden state itself becomes a small model that updates during inference.",
+  },
+  {
+    term: "Manifold / latent space",
+    def: "A low-dimensional structure that high-dimensional neural activity (or model activations) lives on.",
+  },
+  {
+    term: "Residual stream",
+    def: "The running vector a transformer reads from and writes to across layers; where information flows.",
+  },
+  {
+    term: "Linear probe",
+    def: "A simple linear classifier trained on activations to test what information is present.",
+  },
+  {
+    term: "Activation patching",
+    def: "Swapping activations between runs to test which components causally matter.",
+  },
+  {
+    term: "Sparse autoencoder",
+    def: "Decomposes activations into sparse, more interpretable features.",
+  },
+  {
+    term: "Ablation",
+    def: "Removing or disabling a component to measure its contribution.",
+  },
+  {
+    term: "Baseline",
+    def: "The simple comparison your fancy method must beat to mean anything.",
+  },
+  {
+    term: "Forward / backward transfer",
+    def: "Whether learning task A helps task B (forward), or how new learning affects old tasks (backward).",
+  },
+  {
+    term: "Leakage",
+    def: "Information from the test set sneaking into training, inflating results. Always check for it.",
+  },
+  {
+    term: "R2 / calibration",
+    def: "R2: fraction of variance a regression explains. Calibration: whether predicted confidences match reality.",
+  },
+];
+
+// ---- Neuralink-alignment expansion (Project 2 -> three mandatory sub-studies) ----
+PLAN.subStudies = [
+  {
+    title: "Human fMRI — experimental design + neural representation",
+    dataset: "Natural Scenes Dataset (NSD): 7T fMRI, 8 subjects, thousands of natural images.",
+    datasetUrl: "https://naturalscenesdataset.org/",
+    build: [
+      "Reconstruct the experiment: stimuli, timing, task, train/test split, expected ROIs, confounds.",
+      "Implement a small behavioral mock of the visual-recognition task yourselves.",
+      "Write an fMRI-ready protocol for an extension study you would run in a scanner.",
+      "Encoding + decoding models on voxel/ROI responses; manifold visualizations.",
+    ],
+    qualifies: "Human fMRI · experimental design, execution & analysis",
+    deliverable: "Report: Human fMRI Experimental Design and Neural Representation Analysis",
+  },
+  {
+    title: "NHP electrophysiology — finger-movement decoding under drift",
+    dataset: "Longitudinal intracortical NHP finger dataset (awake-behaving, 2-DOF, hundreds of sessions over years) via FALCON / DANDI.",
+    datasetUrl: "https://snel-repo.github.io/falcon/",
+    build: [
+      "Decode finger kinematics from intracortical spiking activity.",
+      "Measure decode-accuracy decline across distant sessions.",
+      "Test recalibration benefit and manifold alignment across days.",
+      "Quantify robustness to neural signal drift.",
+    ],
+    qualifies: "In-vivo electrophysiology (awake-behaving NHP) · movement decoding",
+    deliverable: "Report: Long-Term NHP Movement Decoding Under Neural Signal Drift",
+  },
+  {
+    title: "Human speech decoding — phonemes to sentences, LLM-assisted",
+    dataset: "Public intracortical speech BCI data (participant with anarthria; phoneme/word/sentence, open- and closed-loop) via FALCON H1 / DANDI.",
+    datasetUrl: "https://snel-repo.github.io/falcon/",
+    build: [
+      "Decode phonemes, words, and short sentences from neural activity.",
+      "Add a language model to rerank / correct candidate sentences.",
+      "Measure accuracy before vs after LLM assistance.",
+      "Hallucination + phoneme-confusion analysis: reading the signal, or guessing plausible language?",
+    ],
+    qualifies: "Speech decoding · modern ML / LLMs, LLM interpretability, generative models",
+    deliverable: "Report: Language-Model-Assisted Neural Speech Decoding and Failure Analysis",
+  },
+];
+
+PLAN.qualMatrix = {
+  columns: ["Neuralink requirement", "Evidence you create", "Where"],
+  rows: [
+    ["Movement or speech decoding", "Finger-movement decoder (NHP) + phoneme/sentence speech decoder", "P2 · NHP + Speech"],
+    ["Human fMRI", "NSD design reconstruction, behavioral mock, protocol, encoding/decoding", "P2 · fMRI"],
+    ["In-vivo electrophysiology (awake NHP)", "Longitudinal intracortical analysis + drift-robust decoders", "P2 · NHP"],
+    ["Modern ML: LLMs, interpretability, generative", "LLM-assisted speech decoding + hallucination/failure analysis", "P2 · Speech"],
+    ["Neural population dynamics & manifold analysis", "Latent trajectories, manifold alignment across sessions", "P2 · all three"],
+    ["Closed-loop BCI-related work", "EMG closed-loop assistive workstation with online correction", "P1"],
+    ["Experimental design & communication", "Pre-registered hypotheses, baselines, ablations, reports, demos", "Both"],
+    ["Python fluency", "Loaders, preprocessing, modeling, figure pipelines", "Both"],
+    ["Exceptional ability", "Two hard systems, measured results, reports, demos, public repos", "Both"],
+  ],
+};
+
+PLAN.gaps = {
+  validationLane: [
+    "Find a neuroscience / BCI / ML mentor to review the work before final packaging.",
+    "Try to collaborate with a real lab during or after the summer.",
+    "Produce a polished technical report or preprint-style write-up.",
+    "Submit a poster, a benchmark entry (e.g. FALCON), a research showcase, or an open-source contribution.",
+    "Get one credible expert who can speak to the quality of the work.",
+  ],
+  experienceCaveat:
+    "The role asks for 2+ years of academic or industry experience. You cannot honestly manufacture that this summer, and this plan does not erase the gap. What it can do is make the application hard to dismiss: exceptional, measured, well-communicated work plus credible external validation. State your real level honestly and let the artifacts carry the weight.",
+};
+
+PLAN.mandatory = [
+  "Human intracortical speech-decoding benchmark (public data).",
+  "LLM-assisted speech decoder with hallucination + error analysis.",
+  "NHP intracortical finger-movement decoding benchmark.",
+  "Longitudinal neural-drift + recalibration analysis across NHP sessions.",
+  "Formal fMRI experimental protocol based on the Natural Scenes Dataset.",
+  "Behavioral mock implementation of the fMRI task design.",
+  "External research review / mentor feedback before final packaging.",
+  "Final qualification matrix mapping each artifact to a Neuralink requirement.",
+];
+
+// Tighten the honesty rules for the new tracks.
+PLAN.honesty.push(
+  "Speech/movement decoding uses PUBLIC intracortical data you analyzed, not data you recorded. Say 'analyzed', never 'recorded' or 'implanted'.",
+  "NHP work is analysis of awake-behaving recordings, not hands-on primate surgery or recording experience.",
+  "The fMRI study is a design reconstruction + protocol + analysis of public data, not real scanner execution. Do not claim you ran a scan.",
+  "When a language model cleans up decoder output, always report decoder-only accuracy too. Never let the LLM mask what the neural decoder actually got wrong.",
+);
+
+// Datasets that ground the Neuralink-aligned sub-studies.
+PLAN.references.push({
+  group: "Neuralink-aligned datasets",
+  items: [
+    { label: "FALCON benchmark", note: "Cross-session NHP motor + human intracortical speech; drift-robust decoding.", url: "https://snel-repo.github.io/falcon/" },
+    { label: "Intracortical speech neuroprosthesis", note: "High-performance speech-to-text BCI (anarthria participant).", url: "https://www.nature.com/articles/s41586-023-06377-x" },
+    { label: "DANDI Archive", note: "Home of the public NHP + human intracortical datasets.", url: "https://dandiarchive.org/" },
+  ],
+});
+
+// Update / extend the recommended defaults for the new tracks.
+const _dsDefault = PLAN.defaults.find((d) => d.q === "Project 2 dataset");
+if (_dsDefault) {
+  _dsDefault.pick = "Three mandatory tracks: NSD (fMRI), longitudinal NHP finger (FALCON/DANDI), human intracortical speech (FALCON H1).";
+  _dsDefault.why = "Each maps to a qualification Neuralink names directly; together they cover fMRI, NHP electrophysiology, and movement + speech decoding.";
+  _dsDefault.alt = "If time is short, ship NHP movement first (cleanest signal), then speech, then the fMRI design study.";
+  _dsDefault.url = "https://snel-repo.github.io/falcon/";
+}
+PLAN.defaults.push(
+  { q: "Speech decoder stack", pick: "Linear baseline → RNN/Transformer phoneme decoder → LLM rerank/correct; always report decoder-only vs LLM-assisted.", why: "Hits speech decoding + LLMs/generative + interpretability in one honest pipeline.", alt: "A CTC phoneme model if seq2seq training is unstable.", url: "https://snel-repo.github.io/falcon/" },
+  { q: "External validation", pick: "Line up a mentor or lab to review before packaging; aim for a poster, a FALCON entry, or a preprint.", why: "You cannot manufacture the 2+ year experience requirement; credible external review makes the work hard to dismiss.", alt: "At minimum, one expert who can vouch for the quality.", url: "https://snel-repo.github.io/falcon/" },
+);
+
+// Refresh the minimum-viable summer to reflect the mandatory sub-studies.
+PLAN.orientation.minimumViable = [
+  "NHP finger-movement decoder on longitudinal intracortical data, with a drift + recalibration analysis.",
+  "Human intracortical speech decoder (phonemes → sentences) with an LLM-assisted pass and honest hallucination analysis.",
+  "Human fMRI (NSD) experimental-design reconstruction + behavioral mock + encoding/decoding analysis.",
+  "Project 1: EMG closed-loop assistive workstation with metrics vs a gesture-only baseline across repeated sessions.",
+  "One continual-learning + memory artifact for the Zoral side (forgetting curves + a small online-memory adapter).",
+  "Honest report + 3-5 min demo + a qualification matrix + external review, and both of you able to explain every result.",
 ];

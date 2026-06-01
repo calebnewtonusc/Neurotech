@@ -132,6 +132,7 @@
         <a href="#/start" data-page="start" class="shrink-0">Start here</a>
         <a href="#/projects" data-page="projects" class="shrink-0">Projects</a>
         <a href="#/calendar" data-page="calendar" class="shrink-0">Calendar</a>
+        <a href="#/neuralink" data-page="neuralink" class="shrink-0">Neuralink fit</a>
         <a href="#/resources" data-page="resources" class="shrink-0">Resources</a>
       </div>
       <span class="t-nav hidden sm:inline shrink-0 ml-auto" id="todayChip" style="color:rgba(255,255,255,0.62)">Today</span>
@@ -281,6 +282,11 @@
     </div>
   </section>
   </div><!-- /page calendar -->
+
+  <!-- Page: Neuralink fit -->
+  <div class="page" data-page="neuralink">
+    <div id="neuralinkPage"></div>
+  </div>
 
   <!-- Page: Resources -->
   <div class="page" data-page="resources">
@@ -784,6 +790,55 @@
       updateProgress();
     }
 
+    function renderNeuralink() {
+      const intro = tile(`
+        <h2 class="display t-display-md mb-2">Neuralink fit</h2>
+        <p class="t-body" style="color:var(--ink80);max-width:68ch">The role names specific qualifications. Project 2 is built as three mandatory sub-studies that hit them directly — human fMRI, awake-behaving NHP electrophysiology, and human speech decoding with an LLM — plus Project 1's closed-loop work. Everything here is public-data analysis, stated honestly.</p>`, "parchment");
+
+      const subs = tile(`
+        <h2 class="display t-display-md mb-2">Project 2 — three mandatory sub-studies</h2>
+        <p class="t-body mb-8" style="color:var(--ink80)">Not optional. Each maps to a qualification Neuralink names.</p>
+        <div class="space-y-5">${PLAN.subStudies.map((s) => `
+          <div class="card p-6">
+            <div class="flex items-start justify-between gap-3 flex-wrap mb-2">
+              <h3 class="t-body-strong" style="max-width:42ch">${esc(s.title)}</h3>
+              <span class="chip chip-blue" style="max-width:100%">${esc(s.qualifies)}</span>
+            </div>
+            <p class="t-caption mb-3" style="color:var(--ink48)"><span style="font-weight:600">Dataset. </span>${esc(s.dataset)} <a class="lnk" href="${esc(s.datasetUrl)}" target="_blank" rel="noopener noreferrer">link →</a></p>
+            <ul class="space-y-1 mb-3">${s.build.map((b) => `<li class="t-caption flex items-start gap-2" style="color:var(--ink80)"><span class="dot mt-1.5 shrink-0" style="background:var(--blue)"></span>${esc(b)}</li>`).join("")}</ul>
+            <p class="t-caption" style="color:var(--ink)"><span class="t-caption-strong" style="color:var(--blue)">Deliverable. </span>${esc(s.deliverable)}</p>
+          </div>`).join("")}</div>`, "white");
+
+      const mandatory = tile(`
+        <h2 class="display t-display-md mb-2">Mandatory deliverables</h2>
+        <p class="t-body mb-6" style="color:var(--ink80)">These move from "nice to have" to required. Track them here.</p>
+        <div class="card p-6"><div class="grid grid-cols-1 md:grid-cols-2 gap-x-8">${PLAN.mandatory.map((m, i) => {
+          const id = `nq${i}`;
+          return `<label class="flex items-start gap-2.5 py-1.5" style="cursor:pointer">${checkbox(id)}<span class="row-text t-caption ${isDone(id) ? "done-text" : ""}" style="color:var(--ink)">${esc(m)}</span></label>`;
+        }).join("")}</div></div>`, "parchment");
+
+      const m = PLAN.qualMatrix;
+      const matrix = tile(`
+        <h2 class="display t-display-md mb-2">Qualification matrix</h2>
+        <p class="t-body mb-8" style="color:#cccccc;max-width:66ch">Every requirement Neuralink lists, mapped to the exact artifact that supports it.</p>
+        <div style="overflow-x:auto"><table class="ref" style="background:var(--white)">
+          <thead><tr>${m.columns.map((c) => `<th class="t-caption-strong">${esc(c)}</th>`).join("")}</tr></thead>
+          <tbody>${m.rows.map((r) => `<tr>${r.map((cell, ci) => `<td class="t-caption" style="color:${ci === 0 ? "var(--ink)" : "var(--ink80)"};${ci === 0 ? "font-weight:600" : ""}">${esc(cell)}</td>`).join("")}</tr>`).join("")}</tbody>
+        </table></div>`, "dark");
+
+      const gaps = tile(`
+        <h2 class="display t-display-md mb-2">Closing the gaps</h2>
+        <p class="t-body mb-6" style="color:var(--ink80);max-width:68ch">${esc(PLAN.gaps.experienceCaveat)}</p>
+        <div class="card p-6">
+          <p class="t-caption-strong mb-3 flex items-center gap-1.5" style="color:var(--blue)"><i data-lucide="shield-check" class="w-4 h-4"></i>External validation lane</p>
+          <ul class="space-y-2">${PLAN.gaps.validationLane.map((g) => `<li class="t-caption flex items-start gap-2.5" style="color:var(--ink80)"><i data-lucide="check" class="w-3.5 h-3.5 mt-0.5 shrink-0" style="color:var(--blue)"></i>${esc(g)}</li>`).join("")}</ul>
+        </div>`, "white");
+
+      document.getElementById("neuralinkPage").innerHTML = intro + subs + mandatory + matrix + gaps;
+      lucide.createIcons();
+      updateProgress();
+    }
+
     function renderResources() {
       const S = (type) => PLAN.sections.find((s) => s.type === type);
       const I = (type) => PLAN.sections.indexOf(S(type)); // stable index keeps checkbox ids consistent
@@ -914,7 +969,7 @@
     window.addEventListener("scroll", onScroll, { passive: true });
 
     // ---------- hash router (pages) ----------
-    const PAGES = ["dashboard", "start", "projects", "calendar", "resources"];
+    const PAGES = ["dashboard", "start", "projects", "calendar", "neuralink", "resources"];
     function parseHash() {
       const m = location.hash.match(/^#\/([a-z]+)(?:\/([\w-]+))?$/);
       return m ? { page: m[1], sub: m[2] } : { page: "dashboard" };
@@ -1062,6 +1117,7 @@
       renderDashboard();
       renderProjects();
       renderStart();
+      renderNeuralink();
       paintFilters();
       renderWeeks();
       renderResources();
