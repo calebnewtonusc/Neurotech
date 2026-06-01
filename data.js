@@ -2371,3 +2371,114 @@ const PLAN = Object.assign({}, NEURALINK, {
   projects: NEURALINK.projects.concat(ZORAL.projects),
   sections: ZORAL.sections,
 });
+
+// Attach source links to the neural-memory reading list.
+const READING_LINKS = {
+  "Gated DeltaNet": "https://arxiv.org/abs/2412.06464",
+  "Test-Time Training layers": "https://arxiv.org/abs/2407.04620",
+  Titans: "https://arxiv.org/abs/2501.00663",
+  "delta-mem": "https://arxiv.org/pdf/2605.12357",
+  "HeLa-Mem": "https://arxiv.org/abs/2604.16839",
+  "DeepSeek Engram": "https://arxiv.org/abs/2601.07372",
+};
+const _reading = PLAN.sections.find((s) => s.type === "reading");
+if (_reading) {
+  _reading.items.forEach((it) => {
+    const k = it.title || it.name;
+    if (READING_LINKS[k]) it.url = READING_LINKS[k];
+  });
+}
+
+// References & sources library (grounding, not inflated claims).
+PLAN.references = [
+  {
+    group: "ML foundations",
+    items: [
+      {
+        label: "Attention Is All You Need",
+        note: "The transformer.",
+        url: "https://arxiv.org/abs/1706.03762",
+      },
+      {
+        label: "LoRA: Low-Rank Adaptation",
+        note: "Parameter-efficient adaptation.",
+        url: "https://arxiv.org/abs/2106.09685",
+      },
+      {
+        label: "Continual Learning in LLMs (survey)",
+        note: "Methods, challenges, metrics.",
+        url: "https://arxiv.org/abs/2603.12658",
+      },
+      {
+        label: "Natural Language Autoencoders",
+        note: "Interpreting activations (Anthropic).",
+        url: "https://transformer-circuits.pub/2026/nla/",
+      },
+    ],
+  },
+  {
+    group: "Neuroscience",
+    items: [
+      {
+        label: "Synaptic tagging & LTP",
+        note: "Frey & Morris.",
+        url: "https://pubmed.ncbi.nlm.nih.gov/9020359/",
+      },
+      {
+        label: "Sleep and the price of plasticity",
+        note: "Tononi & Cirelli, SHY.",
+        url: "https://pmc.ncbi.nlm.nih.gov/articles/PMC3921176/",
+      },
+      {
+        label: "The free-energy principle",
+        note: "Friston, a unified brain theory.",
+        url: "https://www.nature.com/articles/nrn2787",
+      },
+    ],
+  },
+  {
+    group: "Neural datasets & models",
+    items: [
+      {
+        label: "Neural Latents Benchmark",
+        note: "Public spiking datasets.",
+        url: "https://neurallatents.github.io/",
+      },
+      {
+        label: "Natural Scenes Dataset",
+        note: "7T fMRI, 8 subjects.",
+        url: "https://naturalscenesdataset.org/",
+      },
+      {
+        label: "DANDI Archive",
+        note: "Public neurophysiology.",
+        url: "https://about.dandiarchive.org/",
+      },
+      {
+        label: "Meta TRIBE v2",
+        note: "Brain-predictive foundation model.",
+        url: "https://ai.meta.com/blog/tribe-v2-brain-predictive-foundation-model/",
+      },
+    ],
+  },
+  {
+    group: "Hardware & context",
+    items: [
+      {
+        label: "Meta EMG wearable",
+        note: "Wrist EMG to digital commands.",
+        url: "https://www.meta.com/emerging-tech/emg-wearable-technology/",
+      },
+      {
+        label: "Meta Wearables Device Access Toolkit",
+        note: "Developer tooling.",
+        url: "https://developers.meta.com/blog/introducing-meta-wearables-device-access-toolkit/",
+      },
+      {
+        label: "Zoral",
+        note: "Aryaa Saravanakumar's continual-learning vision.",
+        url: "https://zoral.ai/",
+      },
+    ],
+  },
+];

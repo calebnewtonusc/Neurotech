@@ -2,9 +2,19 @@
 <html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Neurotech — Summer 2026 Research Plan</title>
   <meta name="description" content="Caleb Newton & Mark Lin — Summer 2026 neuroengineering + continual-learning execution tracker." />
+  <meta name="theme-color" content="#000000" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  <meta name="apple-mobile-web-app-title" content="Neurotech" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="format-detection" content="telephone=no" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" type="image/svg+xml" href="icon.svg" />
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png" />
+  <link rel="apple-touch-icon" href="apple-touch-icon.png" />
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet" />
@@ -43,16 +53,18 @@
     .pad-sec { padding-top: 80px; padding-bottom: 80px; }
 
     .appnav { position: fixed; top: 0; left: 0; right: 0; height: 44px; background: var(--black); color: var(--white); z-index: 60; }
-    .appnav a { color: rgba(255,255,255,0.82); }
-    .appnav a:hover { color: #fff; }
+    .appnav a { color: rgba(255,255,255,0.62); transition: color .15s ease; }
+    .appnav a:hover, .appnav a.spy-on { color: #fff; }
+    #scrollbar { position: fixed; top: 44px; left: 0; height: 2px; background: var(--blue); width: 0; z-index: 59; transition: width .1s linear; }
 
     .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 9999px; padding: 11px 22px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease, background .18s ease; cursor: pointer; border: none; }
     .pill:hover { background: #005bb8; }
     .pill:active { transform: scale(0.95); }
     .pill-ghost { display: inline-flex; align-items: center; gap: 8px; background: transparent; color: var(--blue); border: 1px solid var(--blue); border-radius: 9999px; padding: 10px 21px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease; cursor: pointer; }
     .pill-ghost:active { transform: scale(0.95); }
-    .util-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--ink48); border-radius: 8px; padding: 6px 10px; font-size: 14px; transition: transform .15s ease; cursor: pointer; background: transparent; border: none; }
-    .util-btn:active { transform: scale(0.95); }
+    .util-btn { display: inline-flex; align-items: center; gap: 6px; color: var(--ink48); border: 1px solid var(--hairline); background: var(--white); border-radius: 8px; padding: 6px 12px; font-size: 13px; transition: transform .15s ease, border-color .15s ease, color .15s ease; cursor: pointer; }
+    .util-btn:hover { border-color: var(--ink48); color: var(--ink); }
+    .util-btn:active { transform: scale(0.96); }
 
     .card { background: var(--white); border: 1px solid var(--hairline); border-radius: 18px; }
     .tile-dark .card { background: var(--tile2); border-color: rgba(255,255,255,0.12); color: #fff; }
@@ -70,48 +82,69 @@
 
     input[type="checkbox"] { accent-color: var(--blue); width: 18px; height: 18px; border-radius: 5px; cursor: pointer; }
     .done-text { text-decoration: line-through; color: var(--ink48) !important; }
+    a.lnk { color: var(--blue); text-decoration: none; border-bottom: 1px solid rgba(0,102,204,0.25); }
+    a.lnk:hover { border-bottom-color: var(--blue); }
+
+    .search-input { width: 100%; background: var(--white); border: 1px solid var(--hairline); border-radius: 9999px; padding: 9px 16px 9px 38px; font-size: 14px; color: var(--ink); letter-spacing: -0.224px; }
+    .search-input:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.12); }
+
+    .mini-seg { flex: 1; height: 28px; border-radius: 6px; border: 1px solid var(--hairline); background: var(--parchment); position: relative; overflow: hidden; cursor: pointer; transition: transform .12s ease; }
+    .mini-seg:hover { transform: translateY(-2px); }
+    .mini-seg .fill { position: absolute; inset: 0; background: var(--blue); opacity: 0.85; transform-origin: bottom; }
+    .mini-seg.cur { border-color: var(--blue); box-shadow: 0 0 0 2px rgba(0,102,204,0.18); }
+    .mini-seg .num { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 600; }
 
     .ring-track { stroke: var(--hairline); }
     .ring-fg { stroke: var(--blue); transition: stroke-dashoffset .6s ease; }
+
+    .notes-area { width: 100%; min-height: 64px; resize: vertical; background: var(--pearl); border: 1px solid var(--hairline); border-radius: 11px; padding: 10px 12px; font-size: 14px; line-height: 1.5; color: var(--ink); font-family: inherit; }
+    .notes-area:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(0,102,204,0.1); }
 
     table.ref { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--hairline); border-radius: 14px; overflow: hidden; }
     table.ref th, table.ref td { text-align: left; padding: 12px 14px; border-bottom: 1px solid var(--hairline); vertical-align: top; }
     table.ref tr:last-child td { border-bottom: none; }
     table.ref th { background: var(--parchment); }
 
+    :focus-visible { outline: 2px solid var(--blue-focus); outline-offset: 2px; border-radius: 6px; }
     ::-webkit-scrollbar { width: 12px; height: 12px; }
     ::-webkit-scrollbar-thumb { background: #d2d2d7; border-radius: 8px; border: 3px solid var(--white); }
     [id] { scroll-margin-top: 60px; }
+    @media (prefers-reduced-motion: reduce) {
+      html { scroll-behavior: auto; }
+      * { transition: none !important; animation: none !important; }
+    }
   </style>
 </head>
 <body>
 
   <nav class="appnav">
     <div class="container-x h-full flex items-center justify-between">
-      <a href="#top" class="flex items-center gap-2">
+      <a href="#top" class="flex items-center gap-2" style="color:#fff" aria-label="Neurotech home">
         <i data-lucide="brain-circuit" class="w-[18px] h-[18px]" style="color:#fff"></i>
         <span class="t-nav" style="font-weight:600;color:#fff">Neurotech</span>
       </a>
       <div class="hidden md:flex items-center gap-6 t-nav">
-        <a href="#dashboard">Dashboard</a>
-        <a href="#weeks">Calendar</a>
-        <a href="#projects">Projects</a>
-        <a href="#resources">Resources</a>
+        <a href="#dashboard" data-spy="dashboard">Dashboard</a>
+        <a href="#projects" data-spy="projects">Projects</a>
+        <a href="#weeks" data-spy="weeks">Calendar</a>
+        <a href="#resources" data-spy="resources">Resources</a>
       </div>
-      <button id="resetBtn" class="util-btn t-nav" style="color:rgba(255,255,255,0.7)">
-        <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i><span class="hidden sm:inline">Reset</span>
-      </button>
+      <a href="#weeks" class="t-nav" style="color:rgba(255,255,255,0.62)" id="todayChip">Today</a>
     </div>
   </nav>
+  <div id="scrollbar"></div>
 
   <!-- Hero -->
   <header id="top" class="tile tile-parchment">
     <div class="container-x pad-sec">
-      <div id="heroBadge" class="chip chip-blue mb-6"></div>
+      <div class="flex flex-wrap items-center gap-2 mb-6">
+        <div id="heroBadge" class="chip chip-blue"></div>
+        <div id="countdownBadge" class="chip chip-ink"></div>
+      </div>
       <h1 class="display t-hero" style="max-width:20ch">Summer 2026 Research Plan</h1>
       <p id="heroSub" class="t-lead mt-5" style="max-width:64ch;color:var(--ink80)"></p>
       <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#weeks" class="pill"><i data-lucide="play" class="w-4 h-4"></i> Open this week</a>
+        <a href="#weeks" id="openWeekBtn" class="pill"><i data-lucide="play" class="w-4 h-4"></i> Open this week</a>
         <a href="#dashboard" class="pill-ghost"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> View dashboard</a>
       </div>
     </div>
@@ -122,17 +155,23 @@
     <div class="container-x pad-sec">
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
         <div class="card p-8 flex flex-col items-center justify-center">
-          <div class="relative" style="width:176px;height:176px">
-            <svg class="-rotate-90" width="176" height="176" viewBox="0 0 120 120">
+          <div class="relative" style="width:168px;height:168px">
+            <svg class="-rotate-90" width="168" height="168" viewBox="0 0 120 120">
               <circle class="ring-track" cx="60" cy="60" r="52" fill="none" stroke-width="8" />
               <circle id="progressRing" class="ring-fg" cx="60" cy="60" r="52" fill="none" stroke-width="8" stroke-linecap="round" stroke-dasharray="326.7" stroke-dashoffset="326.7" />
             </svg>
             <div class="absolute inset-0 flex flex-col items-center justify-center">
-              <span id="progressPct" class="display" style="font-size:40px;font-weight:600;letter-spacing:-0.01em">0%</span>
+              <span id="progressPct" class="display" style="font-size:38px;font-weight:600;letter-spacing:-0.01em">0%</span>
               <span class="t-caption" style="color:var(--ink48)">complete</span>
             </div>
           </div>
-          <p id="progressCount" class="t-caption mt-5" style="color:var(--ink48)">0 / 0 done</p>
+          <p id="progressCount" class="t-caption mt-4" style="color:var(--ink48)">0 / 0 done</p>
+          <div class="flex flex-wrap items-center justify-center gap-2 mt-5">
+            <button id="exportBtn" class="util-btn"><i data-lucide="download" class="w-3.5 h-3.5"></i>Export</button>
+            <button id="importBtn" class="util-btn"><i data-lucide="upload" class="w-3.5 h-3.5"></i>Import</button>
+            <button id="resetBtn" class="util-btn"><i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i>Reset</button>
+            <input id="importFile" type="file" accept="application/json,.json" class="hidden" />
+          </div>
         </div>
 
         <div class="lg:col-span-2 grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -147,10 +186,24 @@
             <p id="card2Sub" class="t-caption mt-1" style="color:var(--ink48)"></p>
           </div>
           <div class="card p-6 sm:col-span-2">
-            <p class="t-caption mb-2" style="color:var(--ink48)">The thesis</p>
-            <p id="thesisLine" class="t-body" style="color:var(--ink)"></p>
+            <p class="t-caption mb-3" style="color:var(--ink48)">Split of the work</p>
+            <div id="personStats" class="grid grid-cols-3 gap-4"></div>
           </div>
         </div>
+      </div>
+
+      <!-- Week mini-map -->
+      <div class="card p-5 mt-5">
+        <div class="flex items-center justify-between mb-3">
+          <p class="t-caption-strong">13-week map</p>
+          <p class="t-fine" style="color:var(--ink48)">Tap a week to jump</p>
+        </div>
+        <div id="miniMap" class="flex gap-1.5"></div>
+      </div>
+
+      <div class="card p-6 mt-5">
+        <p class="t-caption mb-2" style="color:var(--ink48)">The thesis</p>
+        <p id="thesisLine" class="t-body" style="color:var(--ink)"></p>
       </div>
     </div>
   </section>
@@ -160,11 +213,11 @@
     <div class="container-x pad-sec">
       <h2 class="display t-display-md mb-2">The body of work</h2>
       <p class="t-body mb-8" style="color:var(--ink80)">Two flagship build projects and five research projects. Every one states what it proves and its honest limits.</p>
-      <div id="flagshipWrap" class="mb-8">
+      <div class="mb-8">
         <p class="t-caption-strong mb-3" style="color:var(--blue)">Flagship build projects</p>
         <div id="flagshipCards" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
       </div>
-      <div id="researchWrap">
+      <div>
         <p class="t-caption-strong mb-3" style="color:var(--blue)">Research projects</p>
         <div id="researchCards" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
       </div>
@@ -174,24 +227,35 @@
   <!-- Calendar -->
   <section id="weeks" class="tile tile-white">
     <div class="container-x pad-sec">
-      <div class="flex flex-wrap items-end justify-between gap-4 mb-8">
+      <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
         <div>
           <h2 class="display t-display-md">The 13-week calendar</h2>
           <p class="t-body mt-2" style="color:var(--ink80)">Monday to Friday. Protected weekends. Every Friday ships an artifact.</p>
         </div>
+        <div class="flex items-center gap-2">
+          <button id="expandAll" class="util-btn"><i data-lucide="chevrons-down" class="w-3.5 h-3.5"></i>Expand all</button>
+          <button id="collapseAll" class="util-btn"><i data-lucide="chevrons-up" class="w-3.5 h-3.5"></i>Collapse</button>
+        </div>
+      </div>
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3 mb-6">
+        <div class="relative flex-1">
+          <i data-lucide="search" class="w-4 h-4" style="position:absolute;left:13px;top:50%;transform:translateY(-50%);color:var(--ink48)"></i>
+          <input id="search" class="search-input" type="search" placeholder="Search tasks across all 13 weeks…" aria-label="Search tasks" />
+        </div>
         <div id="filterBar" class="flex items-center gap-2 t-caption flex-wrap">
-          <span style="color:var(--ink48)" class="mr-1">Filter</span>
+          <span style="color:var(--ink48)" class="mr-1">Owner</span>
           <button data-filter="all" class="filter-btn"></button>
           <button data-filter="Caleb" class="filter-btn"></button>
           <button data-filter="Mark" class="filter-btn"></button>
           <button data-filter="Together" class="filter-btn"></button>
         </div>
       </div>
+      <p id="searchEmpty" class="t-caption mb-4 hidden" style="color:var(--ink48)"></p>
       <div id="weekList" class="space-y-3"></div>
     </div>
   </section>
 
-  <!-- Resources (dynamic tiles) -->
+  <!-- Resources -->
   <div id="resources"></div>
 
   <!-- Footer -->
@@ -199,7 +263,7 @@
     <div class="container-x flex flex-col sm:flex-row items-center justify-between gap-3" style="padding-top:48px;padding-bottom:48px;border-top:1px solid var(--hairline)">
       <div class="flex items-center gap-2 t-fine" style="color:var(--ink80)">
         <i data-lucide="brain-circuit" class="w-4 h-4" style="color:var(--ink48)"></i>
-        <span>Neurotech · Caleb &amp; Mark · progress saved locally on this device</span>
+        <span>Neurotech · Caleb &amp; Mark · works offline · progress saved on this device</span>
       </div>
       <span class="t-fine" style="color:var(--ink48)">Build the experiment. Measure it. Tell the truth about the result.</span>
     </div>
@@ -207,14 +271,23 @@
 
   <script src="data.js"></script>
   <script>
-    const TODAY = new Date("2026-05-31T12:00:00");
+    // ---------- date (live) ----------
+    const NOW = new Date();
+    const pad = (n) => String(n).padStart(2, "0");
+    const todayISO = `${NOW.getFullYear()}-${pad(NOW.getMonth() + 1)}-${pad(NOW.getDate())}`;
+    const dayEnd = (iso) => new Date(iso + "T23:59:59");
+    const dayStart = (iso) => new Date(iso + "T00:00:00");
+
     const store = {
       get(k, d) { try { return JSON.parse(localStorage.getItem(k)) ?? d; } catch { return d; } },
       set(k, v) { localStorage.setItem(k, JSON.stringify(v)); },
     };
     const KEY = "neurotech_progress_v3";
+    const NOTES_KEY = "neurotech_notes_v1";
     let done = store.get(KEY, {});
+    let notes = store.get(NOTES_KEY, {});
     const saveDone = () => store.set(KEY, done);
+    const saveNotes = () => store.set(NOTES_KEY, notes);
     const isDone = (id) => !!done[id];
 
     const personStyle = {
@@ -224,20 +297,25 @@
     };
     const kindIcon = { Learn: "book-open", Build: "wrench", Write: "pen-line", Decide: "git-fork", Ship: "package-check", Teach: "users", Read: "book-marked", Output: "package-check" };
     const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" });
-    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    const esc = (s) => String(s).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 
     function checkbox(id) {
-      return `<input type="checkbox" class="track-check mt-0.5 shrink-0" data-id="${id}" ${isDone(id) ? "checked" : ""} />`;
+      return `<input type="checkbox" class="track-check mt-0.5 shrink-0" data-id="${id}" ${isDone(id) ? "checked" : ""} aria-label="mark done" />`;
     }
 
     function currentWeekNum() {
-      const start = new Date(PLAN.start + "T00:00:00");
-      if (TODAY < start) return PLAN.weeks[0].num;
+      const start = dayStart(PLAN.start);
+      if (NOW < start) return PLAN.weeks[0].num;
       for (const w of PLAN.weeks) {
-        const last = new Date(w.days[w.days.length - 1].date + "T23:59:59");
-        if (TODAY <= last) return w.num;
+        if (NOW <= dayEnd(w.days[w.days.length - 1].date)) return w.num;
       }
       return PLAN.weeks[PLAN.weeks.length - 1].num;
+    }
+
+    function weekStats(w) {
+      let total = 0, doneN = 0;
+      w.days.forEach((d, di) => d.tasks.forEach((t, ti) => { total++; if (isDone(`w${w.num}d${di}t${ti}`)) doneN++; }));
+      return { total, doneN };
     }
 
     function updateProgress() {
@@ -257,12 +335,27 @@
         if (bar) bar.style.width = (wb.length ? (wd / wb.length) * 100 : 0) + "%";
         if (lbl) lbl.textContent = `${wd}/${wb.length}`;
       });
+      renderPersonStats();
+      renderMiniMap();
     }
 
-    // ---------- HERO + DASHBOARD ----------
+    // ---------- hero / countdown ----------
     function renderHero() {
       document.getElementById("heroBadge").innerHTML = `<i data-lucide="calendar-range" class="w-3.5 h-3.5"></i> ${PLAN.dateLabel}`;
       document.getElementById("heroSub").textContent = PLAN.tagline;
+      const start = dayStart(PLAN.start), end = dayEnd(PLAN.end);
+      const cb = document.getElementById("countdownBadge");
+      const oneDay = 86400000;
+      if (NOW < start) {
+        const days = Math.ceil((start - NOW) / oneDay);
+        cb.innerHTML = `<i data-lucide="hourglass" class="w-3.5 h-3.5"></i> Starts in ${days} day${days === 1 ? "" : "s"}`;
+      } else if (NOW > end) {
+        cb.innerHTML = `<i data-lucide="flag" class="w-3.5 h-3.5"></i> Summer complete`;
+      } else {
+        const left = Math.ceil((end - NOW) / oneDay);
+        cb.innerHTML = `<i data-lucide="hourglass" class="w-3.5 h-3.5"></i> ${left} day${left === 1 ? "" : "s"} left`;
+      }
+      document.getElementById("todayChip").textContent = NOW.toLocaleDateString("en-US", { weekday: "short", month: "short", day: "numeric" });
     }
 
     function renderDashboard() {
@@ -271,10 +364,40 @@
       document.getElementById("currentWeekTitle").textContent = `Week ${cw.num} — ${cw.title}`;
       document.getElementById("currentWeekRange").textContent = cw.range;
       document.getElementById("thesisLine").textContent = PLAN.thesis;
-
-      const up = PLAN.decisions.find((d) => new Date(d.date + "T23:59:59") >= TODAY) || PLAN.decisions[PLAN.decisions.length - 1];
+      const up = PLAN.decisions.find((d) => dayEnd(d.date) >= NOW) || PLAN.decisions[PLAN.decisions.length - 1];
+      const dleft = Math.ceil((dayEnd(up.date) - NOW) / 86400000);
       document.getElementById("card2Title").textContent = up.title;
-      document.getElementById("card2Sub").textContent = fmtDate(up.date) + ", 2026";
+      document.getElementById("card2Sub").textContent = `${fmtDate(up.date)}, 2026${dleft >= 0 ? ` · ${dleft} day${dleft === 1 ? "" : "s"} away` : ""}`;
+    }
+
+    function renderPersonStats() {
+      const s = { Caleb: [0, 0], Mark: [0, 0], Together: [0, 0] };
+      PLAN.weeks.forEach((w) => w.days.forEach((d, di) => d.tasks.forEach((t, ti) => {
+        if (!s[t.p]) return; s[t.p][1]++; if (isDone(`w${w.num}d${di}t${ti}`)) s[t.p][0]++;
+      })));
+      document.getElementById("personStats").innerHTML = ["Caleb", "Mark", "Together"].map((p) => {
+        const [d2, t2] = s[p]; const pct = t2 ? Math.round((d2 / t2) * 100) : 0;
+        const col = personStyle[p].dot;
+        return `
+        <div>
+          <div class="flex items-center gap-1.5 mb-1.5"><span class="dot" style="background:${col}"></span><span class="t-fine" style="font-weight:600">${p}</span></div>
+          <div style="height:5px;border-radius:9999px;background:var(--hairline);overflow:hidden"><div style="height:100%;width:${pct}%;background:${col};transition:width .4s ease"></div></div>
+          <p class="t-fine mt-1" style="color:var(--ink48)">${d2}/${t2} · ${pct}%</p>
+        </div>`;
+      }).join("");
+    }
+
+    function renderMiniMap() {
+      const cwNum = currentWeekNum();
+      document.getElementById("miniMap").innerHTML = PLAN.weeks.map((w) => {
+        const { total, doneN } = weekStats(w);
+        const ratio = total ? doneN / total : 0;
+        const isCur = w.num === cwNum;
+        return `<button class="mini-seg ${isCur ? "cur" : ""}" data-goto="${w.num}" title="Week ${w.num}: ${esc(w.title)} (${doneN}/${total})" aria-label="Week ${w.num}, ${doneN} of ${total} done">
+          <span class="fill" style="transform:scaleY(${ratio})"></span>
+          <span class="num" style="color:${ratio > 0.55 ? "#fff" : "var(--ink48)"}">${w.num}</span>
+        </button>`;
+      }).join("");
     }
 
     function projectCard(pr) {
@@ -294,22 +417,22 @@
         </div>`;
     }
     function renderProjects() {
-      const flagship = PLAN.projects.filter((p) => /^Project/i.test(p.tag));
-      const research = PLAN.projects.filter((p) => /^Research/i.test(p.tag));
-      document.getElementById("flagshipCards").innerHTML = flagship.map(projectCard).join("");
-      document.getElementById("researchCards").innerHTML = research.map(projectCard).join("");
+      document.getElementById("flagshipCards").innerHTML = PLAN.projects.filter((p) => /^Project/i.test(p.tag)).map(projectCard).join("");
+      document.getElementById("researchCards").innerHTML = PLAN.projects.filter((p) => /^Research/i.test(p.tag)).map(projectCard).join("");
     }
 
-    // ---------- CALENDAR ----------
+    // ---------- calendar ----------
     let activeFilter = "all";
+    let searchQuery = "";
     function renderWeeks() {
       const cwNum = currentWeekNum();
       document.getElementById("weekList").innerHTML = PLAN.weeks.map((w) => {
         const isCurrent = w.num === cwNum;
         const ks = w.killSwitch;
+        const noteVal = notes[`w${w.num}`] || "";
         return `
-        <div class="card overflow-hidden" data-week="${w.num}" style="${isCurrent ? "border-color:var(--blue)" : ""}">
-          <button class="week-head w-full flex items-center gap-4 p-5 text-left" style="background:transparent;border:none;cursor:pointer">
+        <div class="card overflow-hidden" id="week-${w.num}" data-week="${w.num}" style="${isCurrent ? "border-color:var(--blue)" : ""}">
+          <button class="week-head w-full flex items-center gap-4 p-5 text-left" style="background:transparent;border:none;cursor:pointer" aria-expanded="${isCurrent}">
             <span class="display flex items-center justify-center shrink-0" style="width:46px;height:46px;border-radius:11px;font-weight:600;${isCurrent ? "background:var(--blue);color:#fff" : "background:var(--parchment);color:var(--ink48);border:1px solid var(--hairline)"}">${w.num}</span>
             <div class="min-w-0 flex-1">
               <div class="flex items-center gap-2 flex-wrap">
@@ -340,22 +463,28 @@
                 </div>
               </div>
               ${w.days.map((d, di) => renderDay(w, d, di)).join("")}
+              <div>
+                <p class="t-caption-strong mb-2 flex items-center gap-1.5" style="color:var(--ink48)"><i data-lucide="sticky-note" class="w-3.5 h-3.5"></i>Week notes</p>
+                <textarea class="notes-area" data-note="w${w.num}" placeholder="Friday report, blockers, what shipped…">${esc(noteVal)}</textarea>
+              </div>
             </div>
           </div>
         </div>`;
       }).join("");
-      applyFilter();
+      filterCalendar();
       lucide.createIcons();
       updateProgress();
     }
 
     function renderDay(w, d, di) {
       const dayName = { Mon: "Monday", Tue: "Tuesday", Wed: "Wednesday", Thu: "Thursday", Fri: "Friday" }[d.day];
+      const isToday = d.date === todayISO;
       return `
-      <div class="day-block" style="border:1px solid var(--hairline);border-radius:11px;overflow:hidden">
-        <div class="flex items-center gap-2.5 px-4 py-2.5" style="background:var(--parchment)">
+      <div class="day-block" style="border:1px solid ${isToday ? "var(--blue)" : "var(--hairline)"};border-radius:11px;overflow:hidden">
+        <div class="flex items-center gap-2.5 px-4 py-2.5" style="background:${isToday ? "rgba(0,102,204,0.06)" : "var(--parchment)"}">
           <span class="t-caption-strong">${dayName}</span>
           <span class="t-fine" style="color:var(--ink48)">${fmtDate(d.date)}</span>
+          ${isToday ? '<span class="chip chip-blue">Today</span>' : ""}
           <span class="t-caption truncate" style="color:var(--ink80)">· ${esc(d.theme)}</span>
         </div>
         <div>
@@ -363,7 +492,7 @@
             const id = `w${w.num}d${di}t${ti}`;
             const ps = personStyle[t.p];
             return `
-            <label data-person="${t.p}" class="task-row flex items-start gap-3 px-4 py-3" style="border-top:1px solid var(--divider);cursor:pointer">
+            <label data-person="${t.p}" data-text="${esc((t.t + " " + t.k + " " + t.p).toLowerCase())}" class="task-row flex items-start gap-3 px-4 py-3" style="border-top:1px solid var(--divider);cursor:pointer">
               ${checkbox(id)}
               <div class="min-w-0 flex-1">
                 <div class="flex items-center gap-1.5 mb-1 flex-wrap">
@@ -389,24 +518,49 @@
         b.style.cssText = `padding:6px 12px;border-radius:9999px;cursor:pointer;transition:transform .15s ease;font-size:14px;letter-spacing:-0.224px;${on ? "background:var(--blue);color:#fff;border:1px solid var(--blue)" : "background:var(--white);color:var(--ink48);border:1px solid var(--hairline)"}`;
       });
     }
-    function applyFilter() {
+    function filterCalendar() {
+      const q = searchQuery.trim().toLowerCase();
+      let anyMatch = false;
       document.querySelectorAll(".task-row").forEach((row) => {
-        row.style.display = (activeFilter === "all" || row.dataset.person === activeFilter) ? "" : "none";
+        const okPerson = activeFilter === "all" || row.dataset.person === activeFilter;
+        const okQuery = !q || (row.dataset.text || "").includes(q);
+        const show = okPerson && okQuery;
+        row.style.display = show ? "" : "none";
+        if (show) anyMatch = true;
       });
       document.querySelectorAll(".day-block").forEach((block) => {
         const rows = [...block.querySelectorAll(".task-row")];
         if (!rows.length) return;
         block.style.display = rows.some((r) => r.style.display !== "none") ? "" : "none";
       });
+      const cwNum = currentWeekNum();
+      document.querySelectorAll("[data-week]").forEach((wEl) => {
+        const visibleRows = [...wEl.querySelectorAll(".task-row")].some((r) => r.style.display !== "none");
+        const filtering = q || activeFilter !== "all";
+        wEl.style.display = filtering && !visibleRows ? "none" : "";
+        const body = wEl.querySelector(".accordion-body");
+        const chev = wEl.querySelector(".chev");
+        if (filtering) {
+          // open matching weeks while filtering
+          if (visibleRows) { body.classList.add("open"); if (chev) chev.style.transform = "rotate(180deg)"; }
+        } else {
+          const cur = Number(wEl.dataset.week) === cwNum;
+          body.classList.toggle("open", cur);
+          if (chev) chev.style.transform = cur ? "rotate(180deg)" : "rotate(0deg)";
+        }
+      });
+      const empty = document.getElementById("searchEmpty");
+      if (q && !anyMatch) { empty.textContent = `No tasks match "${searchQuery}".`; empty.classList.remove("hidden"); }
+      else empty.classList.add("hidden");
     }
 
-    // ---------- RESOURCES ----------
+    // ---------- resources ----------
     function tile(inner, variant) { return `<section class="tile tile-${variant}"><div class="container-x pad-sec">${inner}</div></section>`; }
 
     function decisionsTile() {
       const items = PLAN.decisions.map((d) => {
         const isKill = /kill-switch/i.test(d.title);
-        const past = new Date(d.date + "T23:59:59") < TODAY;
+        const past = dayEnd(d.date) < NOW;
         const node = isKill ? "var(--ink)" : "var(--blue)";
         return `
         <div class="relative" style="padding-left:24px;${past ? "opacity:0.5" : ""}">
@@ -455,11 +609,26 @@
         <ul class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-3.5">${PLAN.honesty.map((h) => `<li class="flex items-start gap-2.5"><i data-lucide="check" class="w-4 h-4 mt-0.5 shrink-0" style="color:var(--blue-dark)"></i><span class="t-caption" style="color:#e6e6e6;line-height:1.5">${esc(h)}</span></li>`).join("")}</ul>`, "dark");
     }
 
+    function referencesTile() {
+      if (!PLAN.references) return "";
+      return tile(`
+        <h2 class="display t-display-md mb-2">References &amp; sources</h2>
+        <p class="t-body mb-8" style="color:var(--ink80)">Grounding, not inflated claims. Open in a new tab.</p>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">${PLAN.references.map((g) => `
+          <div class="card p-6">
+            <p class="t-caption-strong mb-3" style="color:var(--blue)">${esc(g.group)}</p>
+            <ul class="space-y-2.5">${g.items.map((it) => `
+              <li>
+                <a class="t-body-strong lnk" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${esc(it.label)}</a>
+                ${it.note ? `<span class="t-caption" style="color:var(--ink48)"> — ${esc(it.note)}</span>` : ""}
+              </li>`).join("")}</ul>
+          </div>`).join("")}</div>`, "white");
+    }
+
     function sectionTile(s, si, variant) {
       const head = `<h2 class="display t-display-md mb-2">${esc(s.title)}</h2><p class="t-body mb-8" style="color:${variant === "dark" ? "#cccccc" : "var(--ink80)"};max-width:64ch">${esc(s.intro)}</p>`;
       return tile(head + sectionBody(s, si, variant), variant);
     }
-
     function sectionBody(s, si, variant) {
       if (s.type === "tiers") {
         return `<div class="grid grid-cols-1 md:grid-cols-2 gap-5">${s.items.map((it, ii) => {
@@ -475,15 +644,17 @@
       if (s.type === "reading") {
         return `<div class="space-y-2.5">${s.items.map((it, ii) => {
           const id = `s${si}r${ii}`;
+          const title = it.title || it.name || "";
+          const titleHtml = it.url ? `<a class="lnk t-body-strong" href="${esc(it.url)}" target="_blank" rel="noopener noreferrer">${esc(title)}</a>` : `<span class="t-body-strong">${esc(title)}</span>`;
           return `
-          <label class="card p-5 flex items-start gap-4" style="cursor:pointer">
+          <div class="card p-5 flex items-start gap-4">
             <span class="display flex items-center justify-center shrink-0" style="width:34px;height:34px;border-radius:9999px;background:rgba(0,102,204,0.08);color:var(--blue);font-weight:600">${ii + 1}</span>
             <div class="min-w-0 flex-1">
-              <p class="row-text t-body-strong ${isDone(id) ? "done-text" : ""}">${esc(it.title || it.name || "")}</p>
+              <p class="row-text ${isDone(id) ? "done-text" : ""}">${titleHtml}</p>
               <p class="t-caption mt-0.5" style="color:var(--ink48)">${esc(it.note || "")}</p>
             </div>
-            ${checkbox(id)}
-          </label>`;
+            <label class="flex items-center gap-1.5 shrink-0" style="cursor:pointer" title="Mark studied">${checkbox(id)}</label>
+          </div>`;
         }).join("")}</div>`;
       }
       if (s.type === "table") {
@@ -502,43 +673,118 @@
     }
 
     function renderResources() {
-      // Variant per Zoral section, kept off-rhythm from the dark honesty tile above.
       const sectionVariants = { tiers: "white", reading: "parchment", table: "white", qa: "dark", list: "parchment" };
       const sectionTiles = PLAN.sections.map((s, si) => sectionTile(s, si, sectionVariants[s.type] || (si % 2 ? "parchment" : "white"))).join("");
       document.getElementById("resources").innerHTML =
-        decisionsTile() + deliverablesTile() + honestyTile() + sectionTiles;
+        decisionsTile() + deliverablesTile() + honestyTile() + sectionTiles + referencesTile();
       lucide.createIcons();
       updateProgress();
     }
 
-    // ---------- EVENTS ----------
+    // ---------- events ----------
     document.addEventListener("change", (e) => {
       const cb = e.target;
       if (!cb.classList || !cb.classList.contains("track-check")) return;
       const id = cb.dataset.id;
       if (cb.checked) done[id] = true; else delete done[id];
       saveDone();
-      const txt = cb.closest("label")?.querySelector(".row-text");
+      // The paired text is in the same <label>; for reading rows the checkbox
+      // sits in its own label, so fall back to the single row-text in its card.
+      const lbl = cb.closest("label");
+      let txt = lbl ? lbl.querySelector(".row-text") : null;
+      if (!txt) txt = cb.closest(".card, .day-block")?.querySelector(".row-text");
       if (txt) txt.classList.toggle("done-text", cb.checked);
       updateProgress();
+    });
+    document.addEventListener("input", (e) => {
+      if (e.target.classList && e.target.classList.contains("notes-area")) {
+        notes[e.target.dataset.note] = e.target.value; saveNotes();
+      }
     });
 
     document.addEventListener("click", (e) => {
       const head = e.target.closest(".week-head");
-      if (!head) return;
-      const body = head.nextElementSibling;
-      const chev = head.querySelector(".chev");
-      body.classList.toggle("open");
-      if (chev) chev.style.transform = body.classList.contains("open") ? "rotate(180deg)" : "rotate(0deg)";
+      if (head) {
+        const body = head.nextElementSibling;
+        const chev = head.querySelector(".chev");
+        const open = body.classList.toggle("open");
+        head.setAttribute("aria-expanded", open);
+        if (chev) chev.style.transform = open ? "rotate(180deg)" : "rotate(0deg)";
+        return;
+      }
+      const seg = e.target.closest("[data-goto]");
+      if (seg) {
+        const n = seg.dataset.goto;
+        const el = document.getElementById(`week-${n}`);
+        const body = el.querySelector(".accordion-body");
+        const chev = el.querySelector(".chev");
+        body.classList.add("open"); if (chev) chev.style.transform = "rotate(180deg)";
+        el.scrollIntoView({ behavior: "smooth", block: "start" });
+      }
     });
 
     document.querySelectorAll(".filter-btn").forEach((btn) => {
-      btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; paintFilters(); applyFilter(); });
+      btn.addEventListener("click", () => { activeFilter = btn.dataset.filter; paintFilters(); filterCalendar(); });
+    });
+    document.getElementById("search").addEventListener("input", (e) => { searchQuery = e.target.value; filterCalendar(); });
+    document.getElementById("expandAll").addEventListener("click", () => {
+      document.querySelectorAll("#weekList .accordion-body").forEach((b) => b.classList.add("open"));
+      document.querySelectorAll("#weekList .chev").forEach((c) => c.style.transform = "rotate(180deg)");
+    });
+    document.getElementById("collapseAll").addEventListener("click", () => {
+      document.querySelectorAll("#weekList .accordion-body").forEach((b) => b.classList.remove("open"));
+      document.querySelectorAll("#weekList .chev").forEach((c) => c.style.transform = "rotate(0deg)");
     });
 
-    document.getElementById("resetBtn").addEventListener("click", () => {
-      if (confirm("Reset all tracked progress on this device?")) { done = {}; saveDone(); renderAll(); }
+    // export / import / reset
+    document.getElementById("exportBtn").addEventListener("click", () => {
+      const blob = new Blob([JSON.stringify({ app: "neurotech", version: 1, exportedAt: new Date().toISOString(), progress: done, notes }, null, 2)], { type: "application/json" });
+      const a = document.createElement("a");
+      a.href = URL.createObjectURL(blob);
+      a.download = `neurotech-progress-${todayISO}.json`;
+      a.click();
+      URL.revokeObjectURL(a.href);
     });
+    document.getElementById("importBtn").addEventListener("click", () => document.getElementById("importFile").click());
+    document.getElementById("importFile").addEventListener("change", (e) => {
+      const file = e.target.files[0]; if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          if (!data.progress) throw new Error("no progress");
+          if (confirm("Merge imported progress into this device? (Checked items combine; notes are overwritten where present.)")) {
+            done = Object.assign({}, done, data.progress);
+            if (data.notes) notes = Object.assign({}, notes, data.notes);
+            saveDone(); saveNotes(); renderAll();
+          }
+        } catch { alert("That file is not a valid Neurotech export."); }
+      };
+      reader.readAsText(file);
+      e.target.value = "";
+    });
+    document.getElementById("resetBtn").addEventListener("click", () => {
+      if (confirm("Reset all tracked progress on this device? Export first if you want a backup.")) { done = {}; saveDone(); renderAll(); }
+    });
+
+    // scroll progress bar + scroll-spy
+    const spy = document.querySelectorAll(".appnav a[data-spy]");
+    function onScroll() {
+      const h = document.documentElement;
+      const max = h.scrollHeight - h.clientHeight;
+      document.getElementById("scrollbar").style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
+    }
+    window.addEventListener("scroll", onScroll, { passive: true });
+    if ("IntersectionObserver" in window) {
+      const obs = new IntersectionObserver((entries) => {
+        entries.forEach((en) => {
+          if (en.isIntersecting) {
+            spy.forEach((a) => a.classList.toggle("spy-on", a.dataset.spy === en.target.id));
+          }
+        });
+      }, { rootMargin: "-45% 0px -50% 0px" });
+      ["dashboard", "projects", "weeks", "resources"].forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
+    }
 
     function renderAll() {
       renderHero();
@@ -549,9 +795,21 @@
       renderResources();
       updateProgress();
       lucide.createIcons();
+      onScroll();
     }
 
     renderAll();
+
+    // deep link to a week
+    if (/^#week-\d+$/.test(location.hash)) {
+      const el = document.querySelector(location.hash);
+      if (el) { el.querySelector(".accordion-body")?.classList.add("open"); setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 60); }
+    }
+
+    // PWA service worker
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => navigator.serviceWorker.register("sw.js").catch(() => {}));
+    }
   </script>
 </body>
 </html>

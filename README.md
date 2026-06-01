@@ -21,10 +21,26 @@ The **resources** library carries the reference material both halves draw on:
 
 ## What is in here
 
-- **Dashboard** — overall progress ring, current focus week, next hard decision, and the thesis.
+- **Dashboard** — overall progress ring, live summer countdown, current focus week, next hard decision (with days-away), per-owner progress split (Caleb / Mark / Together), the thesis, and a clickable **13-week mini-map** colored by completion.
 - **Projects** — flagship and research projects, each with what it proves vs its honest limits.
-- **Calendar** — the 13 day-based weeks with checkable progress and per-week completion bars.
-- **Resources** — the reference sections described above; checkable where it makes sense (deliverables, reading list, the standard).
+- **Calendar** — the 13 day-based weeks with checkable progress, per-week completion bars, **full-text search**, expand/collapse all, **today highlighting** on the matching weekday, and a free-text **week-notes** field for Friday reports.
+- **Resources** — decision dates, deliverables, honesty rules, the knowledge stack, the neural-memory reading list (with paper links), the biology→ML table, the standard Q&A, what-not-to-learn, and a **References & sources** library.
+
+## Use it on the go
+
+Neurotech is an installable, offline-first PWA:
+
+- **Install** — open the deployed URL on your phone and "Add to Home Screen." It launches full-screen with its own icon.
+- **Offline** — a service worker caches the app shell and assets, so it works with no signal.
+- **Live dates** — the current week, today highlight, and countdown track the real calendar automatically through the summer.
+
+## Sharing progress between Caleb & Mark
+
+Progress lives in your browser's `localStorage` (per device). To sync or back up:
+
+- **Export** downloads a `neurotech-progress-*.json` of your checked items and notes.
+- **Import** merges someone else's export into your copy (checked items combine; notes overwrite where present).
+- **Reset** clears this device after an optional export.
 
 ## Design
 

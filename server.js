@@ -17,6 +17,7 @@ const TYPES = {
   ".jpg": "image/jpeg",
   ".ico": "image/x-icon",
   ".md": "text/markdown; charset=utf-8",
+  ".webmanifest": "application/manifest+json; charset=utf-8",
 };
 
 const server = http.createServer((req, res) => {
@@ -43,9 +44,13 @@ const server = http.createServer((req, res) => {
       return;
     }
     const ext = path.extname(safePath).toLowerCase();
-    res.writeHead(200, {
+    const headers = {
       "Content-Type": TYPES[ext] || "application/octet-stream",
-    });
+    };
+    // The service worker must never be served stale, or updates won't land.
+    if (path.basename(safePath) === "sw.js")
+      headers["Cache-Control"] = "no-cache";
+    res.writeHead(200, headers);
     res.end(data);
   });
 });
