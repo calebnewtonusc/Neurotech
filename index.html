@@ -56,6 +56,10 @@
     .appnav a { color: rgba(255,255,255,0.62); transition: color .15s ease; }
     .appnav a:hover, .appnav a.spy-on { color: #fff; }
     #scrollbar { position: fixed; top: 44px; left: 0; height: 2px; background: var(--blue); width: 0; z-index: 59; transition: width .1s linear; pointer-events: none; }
+    .navlinks { overflow-x: auto; scrollbar-width: none; -ms-overflow-style: none; }
+    .navlinks::-webkit-scrollbar { display: none; }
+    .page { display: none; }
+    .page.active { display: block; }
 
     .pill { display: inline-flex; align-items: center; gap: 8px; background: var(--blue); color: #fff; border-radius: 9999px; padding: 11px 22px; font-size: 17px; letter-spacing: -0.374px; transition: transform .18s ease, background .18s ease; cursor: pointer; border: none; }
     .pill:hover { background: #005bb8; }
@@ -118,24 +122,27 @@
 <body>
 
   <nav class="appnav">
-    <div class="container-x h-full flex items-center justify-between">
-      <a href="#top" class="flex items-center gap-2" style="color:#fff" aria-label="Neurotech home">
+    <div class="container-x h-full flex items-center gap-4">
+      <a href="#/dashboard" class="flex items-center gap-2 shrink-0" style="color:#fff" aria-label="Neurotech home">
         <i data-lucide="brain-circuit" class="w-[18px] h-[18px]" style="color:#fff"></i>
         <span class="t-nav" style="font-weight:600;color:#fff">Neurotech</span>
       </a>
-      <div class="hidden md:flex items-center gap-6 t-nav">
-        <a href="#dashboard" data-spy="dashboard">Dashboard</a>
-        <a href="#projects" data-spy="projects">Projects</a>
-        <a href="#weeks" data-spy="weeks">Calendar</a>
-        <a href="#orientation">Start here</a>
-        <a href="#resources" data-spy="resources">Resources</a>
+      <div class="navlinks flex items-center gap-5 t-nav">
+        <a href="#/dashboard" data-page="dashboard" class="shrink-0">Dashboard</a>
+        <a href="#/start" data-page="start" class="shrink-0">Start here</a>
+        <a href="#/projects" data-page="projects" class="shrink-0">Projects</a>
+        <a href="#/calendar" data-page="calendar" class="shrink-0">Calendar</a>
+        <a href="#/resources" data-page="resources" class="shrink-0">Resources</a>
       </div>
-      <a href="#weeks" class="t-nav" style="color:rgba(255,255,255,0.62)" id="todayChip">Today</a>
+      <span class="t-nav hidden sm:inline shrink-0 ml-auto" id="todayChip" style="color:rgba(255,255,255,0.62)">Today</span>
     </div>
   </nav>
   <div id="scrollbar"></div>
 
-  <!-- Hero -->
+  <main id="app">
+
+  <!-- Page: Dashboard -->
+  <div class="page active" data-page="dashboard">
   <header id="top" class="tile tile-parchment">
     <div class="container-x pad-sec">
       <div class="flex flex-wrap items-center gap-2 mb-6">
@@ -145,8 +152,8 @@
       <h1 class="display t-hero" style="max-width:20ch">Summer 2026 Research Plan</h1>
       <p id="heroSub" class="t-lead mt-5" style="max-width:64ch;color:var(--ink80)"></p>
       <div class="mt-8 flex flex-wrap gap-3">
-        <a href="#weeks" id="openWeekBtn" class="pill"><i data-lucide="play" class="w-4 h-4"></i> Open this week</a>
-        <a href="#dashboard" class="pill-ghost"><i data-lucide="layout-dashboard" class="w-4 h-4"></i> View dashboard</a>
+        <a href="#/calendar" id="openWeekBtn" class="pill"><i data-lucide="play" class="w-4 h-4"></i> Open this week</a>
+        <a href="#/start" class="pill-ghost"><i data-lucide="compass" class="w-4 h-4"></i> Start here</a>
       </div>
     </div>
   </header>
@@ -216,8 +223,15 @@
       </div>
     </div>
   </section>
+  </div><!-- /page dashboard -->
 
-  <!-- Projects -->
+  <!-- Page: Start here -->
+  <div class="page" data-page="start">
+    <div id="startPage"></div>
+  </div>
+
+  <!-- Page: Projects -->
+  <div class="page" data-page="projects">
   <section id="projects" class="tile tile-parchment">
     <div class="container-x pad-sec">
       <h2 class="display t-display-md mb-2">The body of work</h2>
@@ -232,8 +246,10 @@
       </div>
     </div>
   </section>
+  </div><!-- /page projects -->
 
-  <!-- Calendar -->
+  <!-- Page: Calendar -->
+  <div class="page" data-page="calendar">
   <section id="weeks" class="tile tile-white">
     <div class="container-x pad-sec">
       <div class="flex flex-wrap items-end justify-between gap-4 mb-6">
@@ -264,9 +280,14 @@
       <div id="weekList" class="space-y-3"></div>
     </div>
   </section>
+  </div><!-- /page calendar -->
 
-  <!-- Resources -->
-  <div id="resources"></div>
+  <!-- Page: Resources -->
+  <div class="page" data-page="resources">
+    <div id="resources"></div>
+  </div>
+
+  </main>
 
   <!-- Footer -->
   <footer class="tile tile-parchment">
@@ -757,15 +778,19 @@
       return `<ul class="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-2.5">${s.items.map((it) => `<li class="t-caption flex items-start gap-2.5" style="color:var(--ink80)"><span class="dot mt-1.5 shrink-0" style="background:var(--ink48)"></span>${esc(it.text || it.title || "")}</li>`).join("")}</ul>`;
     }
 
+    function renderStart() {
+      document.getElementById("startPage").innerHTML = orientationTile("parchment") + defaultsTile("white");
+      lucide.createIcons();
+      updateProgress();
+    }
+
     function renderResources() {
       const S = (type) => PLAN.sections.find((s) => s.type === type);
       const I = (type) => PLAN.sections.indexOf(S(type)); // stable index keeps checkbox ids consistent
       const sec = (type, variant) => { const s = S(type); return s ? sectionTile(s, I(type), variant) : ""; };
       const tiles = [
-        orientationTile("parchment"),
-        defaultsTile("white"),
-        decisionsTile("parchment"),
-        deliverablesTile("white"),
+        decisionsTile("white"),
+        deliverablesTile("parchment"),
         honestyTile(),
         sec("tiers", "white"),
         sec("reading", "parchment"),
@@ -818,12 +843,8 @@
       }
       const seg = e.target.closest("[data-goto]");
       if (seg) {
-        const n = seg.dataset.goto;
-        const el = document.getElementById(`week-${n}`);
-        const body = el.querySelector(".accordion-body");
-        const chev = el.querySelector(".chev");
-        body.classList.add("open"); if (chev) chev.style.transform = "rotate(180deg)";
-        el.scrollIntoView({ behavior: "smooth", block: "start" });
+        // route to the Calendar page and open the chosen week
+        location.hash = `#/calendar/week-${seg.dataset.goto}`;
       }
     });
 
@@ -884,24 +905,41 @@
       if (confirm("Reset all tracked progress on this device? Export first if you want a backup.")) { done = {}; saveDone(); renderAll(); }
     });
 
-    // scroll progress bar + scroll-spy
-    const spy = document.querySelectorAll(".appnav a[data-spy]");
+    // scroll progress bar (per active page)
     function onScroll() {
       const h = document.documentElement;
       const max = h.scrollHeight - h.clientHeight;
       document.getElementById("scrollbar").style.width = (max > 0 ? (h.scrollTop / max) * 100 : 0) + "%";
     }
     window.addEventListener("scroll", onScroll, { passive: true });
-    if ("IntersectionObserver" in window) {
-      const obs = new IntersectionObserver((entries) => {
-        entries.forEach((en) => {
-          if (en.isIntersecting) {
-            spy.forEach((a) => a.classList.toggle("spy-on", a.dataset.spy === en.target.id));
-          }
-        });
-      }, { rootMargin: "-45% 0px -50% 0px" });
-      ["dashboard", "projects", "weeks", "resources"].forEach((id) => { const el = document.getElementById(id); if (el) obs.observe(el); });
+
+    // ---------- hash router (pages) ----------
+    const PAGES = ["dashboard", "start", "projects", "calendar", "resources"];
+    function parseHash() {
+      const m = location.hash.match(/^#\/([a-z]+)(?:\/([\w-]+))?$/);
+      return m ? { page: m[1], sub: m[2] } : { page: "dashboard" };
     }
+    function setActivePage(page) {
+      if (!PAGES.includes(page)) page = "dashboard";
+      document.querySelectorAll(".page").forEach((p) => p.classList.toggle("active", p.dataset.page === page));
+      document.querySelectorAll(".appnav a[data-page]").forEach((a) => a.classList.toggle("spy-on", a.dataset.page === page));
+      window.scrollTo({ top: 0, behavior: "auto" });
+      onScroll();
+    }
+    function router() {
+      const { page, sub } = parseHash();
+      setActivePage(page);
+      if (page === "calendar" && sub) {
+        const el = document.getElementById(sub);
+        if (el) {
+          el.querySelector(".accordion-body")?.classList.add("open");
+          const chev = el.querySelector(".chev");
+          if (chev) chev.style.transform = "rotate(180deg)";
+          setTimeout(() => el.scrollIntoView({ behavior: "smooth", block: "start" }), 60);
+        }
+      }
+    }
+    window.addEventListener("hashchange", router);
 
     // ---------- live sync (shared boards) ----------
     const API = (board) => `/api/board/${encodeURIComponent(board)}`;
@@ -1023,6 +1061,7 @@
       renderHero();
       renderDashboard();
       renderProjects();
+      renderStart();
       paintFilters();
       renderWeeks();
       renderResources();
@@ -1033,12 +1072,7 @@
 
     renderAll();
     initSync();
-
-    // deep link to a week
-    if (/^#week-\d+$/.test(location.hash)) {
-      const el = document.querySelector(location.hash);
-      if (el) { el.querySelector(".accordion-body")?.classList.add("open"); setTimeout(() => el.scrollIntoView({ behavior: "smooth" }), 60); }
-    }
+    router(); // show the page named in the URL hash (defaults to dashboard)
 
     // PWA service worker
     if ("serviceWorker" in navigator) {
