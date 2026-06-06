@@ -1,95 +1,106 @@
-# Project 1 — Neuroadaptive Assistive Workstation
+# Project 1 - Neuroadaptive Assistive Workstation
 
-> EMG-based closed-loop assistive control system. Measured rigorously. Honest about what it is.
-
-**Status:** Skeleton (Week 1) — structure only, no code yet
+**Status:** Week 1 skeleton
 **Start date:** June 1, 2026
-**Hardware lock:** June 5, 2026 (MindRove EMG armband, primary; simulated fallback)
+**Hardware/input lock:** June 5, 2026
+**Kill-switch:** June 19, 2026
 
----
+## What This Project Is
 
-## What this project is
+The Neuroadaptive Assistive Workstation is a closed-loop computer-control prototype. It starts with simulated low-bandwidth input so the team can build the logger, decoder interface, UI actions, prediction policy, metrics and replay tools immediately. After the loop is instrumented, the same interface can be driven by open surface EMG if hardware clears the June 19 signal-quality gate.
 
-A closed-loop assistive-control system that uses a MindRove forearm EMG armband (8-channel surface electromyography) plus a predictive context model to let a user operate a computer with minimal physical movement.
+The project is BCI-inspired assistive control. It is not an implanted BCI and it does not read brain activity.
 
-The system is tested in repeated sessions against a gesture-only control baseline. Every experiment is pre-registered before running.
+## Locked Input Path
 
-**This is NOT a brain-computer interface. EMG measures muscle activity, not brain activity.**
+| Stage | Input | Purpose |
+|---|---|---|
+| Week 1-2 primary | Simulated low-bandwidth command channels | Build the end-to-end workstation, event logs, labels and metrics before hardware risk can block the project |
+| Real-EMG target | MyoWare 2.0 surface EMG; OpenBCI if multi-channel quality/setup is worth it | Add real muscle-signal noise, electrode-placement sensitivity and fatigue constraints |
+| Fallback | Continue simulated-first if EMG cannot be logged and repeated by June 19 | Preserve the core closed-loop and baseline experiment |
+| Not a dependency | Meta Neural Band or unverified armband SDKs | Only usable if real programmatic access appears |
 
----
+## What It Proves
 
-## What it proves
+- A low-bandwidth control loop can be measured from input event to UI action.
+- Prediction-assisted control can be compared against gesture-only control on the same workflow.
+- Calibration, correction rate, latency and completion time can be logged instead of described vaguely.
+- Real EMG, if added, can be evaluated against the same simulated harness and baselines.
 
-- Real-time closed-loop system design with sub-100ms latency
-- Low-bandwidth (8-ch, ~200 Hz) EMG is sufficient for intent decoding in an assistive context
-- Prediction-assisted control reduces user movement burden vs. gesture-only
-- Calibration improves decoding vs. no-calibration (same participant, same session)
-- Performance is stable across 5+ repeated sessions (no degradation)
+## Honest Limits
 
-## Honest limits
+- Surface EMG measures muscle activation, not cortical activity.
+- Simulated low-bandwidth input is synthetic and must be labeled as simulated in every result.
+- The prototype is not Neuralink hardware, not an implanted device and not a medical device.
+- Single-user results are not population-level evidence.
+- A prediction policy can reduce clicks or corrections without proving that it understands intent.
 
-- EMG measures muscle activity, NOT brain activity
-- NOT an implanted device; NOT Neuralink hardware
-- Simulated input (fallback) is labeled as such in all figures
-- Single-participant validation; generalization requires further study
-- Prediction model is context-aware but not “intelligent” — it pattern-matches task context
+## Planned Directory Structure
 
----
-
-## Planned directory structure
-
-```
+```text
 project-1-emg-workstation/
-├── README.md                    # This file
-├── hardware/
-│   ├── mindrove_setup.md        # MindRove connection + signal verification
-│   └── signal_check.py          # Quick SNR and dropout-rate check
+├── README.md
+├── configs/
+│   ├── command_vocab.yaml
+│   ├── simulated_input.yaml
+│   └── metrics.yaml
 ├── data/
-│   ├── raw/                     # Raw EMG session files (gitignored)
-│   └── processed/               # Windowed + labeled segments
+│   ├── raw/                  # gitignored raw EMG or simulated session exports
+│   ├── processed/            # windowed features and labels
+│   └── examples/             # tiny synthetic examples safe to commit
+├── docs/
+│   ├── protocol.md
+│   ├── hardware_signal_check.md
+│   └── limitations.md
 ├── experiments/
-│   ├── preregistration/         # Hypotheses locked before running
-│   └── results/                 # Figures, tables, outcome files
-├── decoder/
-│   ├── train.py                 # Gesture classifier training
-│   ├── evaluate.py              # Cross-session evaluation
-│   └── models/                  # Saved model checkpoints
-├── system/
-│   ├── loop.py                  # Real-time closed-loop controller
-│   ├── predictor.py             # Context prediction model
-│   └── interface.py             # OS-level input injection
+│   ├── preregistration/
+│   ├── session_logs/
+│   └── results/
+├── src/
+│   ├── input/
+│   │   ├── simulated.py
+│   │   └── emg_reader.py
+│   ├── decoding/
+│   │   ├── features.py
+│   │   ├── train_baseline.py
+│   │   └── evaluate.py
+│   ├── loop/
+│   │   ├── controller.py
+│   │   ├── predictor.py
+│   │   └── logger.py
+│   └── ui/
+│       └── workstation_demo.py
+├── tests/
+│   ├── test_event_schema.py
+│   └── test_metrics.py
 └── requirements.txt
 ```
 
----
+## Primary Metrics and Baselines
 
-## Primary metrics
-
-| Metric | Description | Baseline condition |
+| Metric | Definition | Baseline |
 |---|---|---|
-| Gesture accuracy | % correct gesture class | Chance (1/N gestures) |
-| Completion time | Seconds to complete target task | Gesture-only control |
-| Correction count | Number of input corrections per trial | Gesture-only control |
-| Cross-session accuracy | Accuracy on session N without retraining | Session 1 calibration only |
+| Command accuracy | Percent of input windows assigned to the correct command class | Chance over the command vocabulary |
+| End-to-end latency | p50 and p95 time from input event/window close to UI action | Direct keyboard/mouse trigger latency |
+| Task completion time | Seconds to finish a fixed workstation task | Gesture-only/no-prediction control |
+| Correction rate | User corrections per task trial | Gesture-only/no-prediction control |
+| Calibration time | Minutes/samples needed before the decoder reaches usable accuracy | No-calibration decoder |
+| Burden rating | Post-session effort/fatigue rating | Same workflow without prediction assistance |
 
----
+No metric is reported as a success unless the data source is labeled `simulated` or `real_emg` and the baseline appears in the same table.
 
-## Dependencies (planned)
-
-- `mindrove-sdk` (Python, MindRove official SDK)
-- `numpy`, `scipy` (signal processing)
-- `scikit-learn` or `pytorch` (gesture classifier)
-- `pyautogui` or `pynput` (OS-level input)
-- `matplotlib` (figures)
-
----
-
-## Key dates
+## Key Dates
 
 | Date | Milestone |
 |---|---|
-| Jun 5, 2026 | Hardware locked (MindRove primary) |
-| Jun 19, 2026 | Hardware kill-switch: must show repeatable signal or pivot to simulated |
-| Week 2 | MindRove unboxing, signal SNR check, first raw recording |
-| Week 3 | First gesture classifier, run vs. chance baseline |
-| Week 4 | First closed-loop session, latency measurement |
+| June 5, 2026 | Input path locked: simulated-first, open surface EMG after verification |
+| June 12, 2026 | Protocol, logging schema and first baseline architecture |
+| June 19, 2026 | Hardware/signal kill-switch |
+| June 26, 2026 | Refined protocol and serious baseline benchmark |
+| July 24, 2026 | Closed-loop workstation v1 |
+| August 7, 2026 | Feature freeze |
+| August 21, 2026 | Public package freeze |
+
+## Week 1 Definition of Done
+
+This skeleton is complete when it states the project, claims, limits, directory plan, metrics, baselines and decision dates. Code begins only after the Week 1 decision documents are locked.
