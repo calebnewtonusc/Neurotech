@@ -1,107 +1,112 @@
-# Project 2 — Neural Decoding & Brain-State Modeling Lab
+# Project 2 - Neural Decoding & Brain-State Modeling Lab
 
-> Three public-data sub-studies that hit Neuralink qualifications directly. No hands-on recording. Honest about what we analyzed and what we did not collect.
-
-**Status:** Skeleton (Week 1) — structure only, no analysis yet
+**Status:** Week 1 skeleton
 **Dataset lock:** June 5, 2026
-**Primary-track protection:** July 10, 2026
+**Primary-track protection gate:** July 10, 2026
 
----
+## What This Project Is
 
-## What this project is
+Project 2 is a public-data neural decoding lab. Its protected primary track is longitudinal NHP finger-movement decoding using LINK, the Long-Term Intracortical Neural Activity and Kinematics dataset from the Chestek Lab. The project asks whether learned neural representations improve held-out 2-DOF finger-kinematics decoding and cross-session robustness over simple baselines under limited recalibration.
 
-Three mandatory sub-studies using publicly available neural datasets:
+The project also includes two mandatory supporting tracks: NSD fMRI design/encoding and human intracortical speech decoding using the Willett et al. 2023 Dryad release. These tracks support the broader Neuralink-aligned qualification matrix, but the LINK motor/neural-population track is the first dataset that must stand on its own.
 
-1. **NHP Motor Decoding** — Perich & Miller 2018 (CRCNS MC_Maze): intracortical finger-movement decoding under neural drift, with recalibration analysis.
-2. **Human Speech Decoding** — Willett et al. 2023 (*Nature*): phoneme → word → sentence decoding from intracortical spiking with LLM-assisted correction.
-3. **Human fMRI** — Allen NSD 2022: voxel encoding models and experimental-design reconstruction from 7T BOLD responses.
+## What It Proves
 
-**We did not collect any of this data. We analyzed publicly available datasets. Every figure must cite the original source.**
+- Public intracortical recordings can be loaded, split and decoded reproducibly.
+- Neural drift can be measured through cross-session performance degradation.
+- Recalibration and learned representations can be compared against simple baselines.
+- Modality-specific reporting can distinguish spiking-band activity, BOLD fMRI and language-model-assisted speech output.
 
----
+## Honest Limits
 
-## What it proves
+- The team analyzes public data; it does not collect neural recordings.
+- LINK is NHP motor data from one animal, not human speech or cognition.
+- NSD is fMRI BOLD, an indirect hemodynamic measure, not spiking.
+- Willett speech results must report decoder-only and language-model-assisted errors separately.
+- FALCON H1 should not be described as speech data; official FALCON documentation labels it as human reach-and-grasp motor BCI data.
+- Strong results here do not create hands-on invasive, surgical, clinical or scanner-operation experience.
 
-- Neural drift causes measurable decoding degradation; recalibration recovers it
-- Cross-session manifold alignment reduces drift-related error
-- Intracortical phoneme-level speech decoding is above chance; LLM correction is separable from decoder quality
-- fMRI BOLD encodes image identity in visual cortex; experimental design is reconstructable
+## Locked Datasets
 
-## Honest limits
+| Track | Dataset | Access | Role |
+|---|---|---|---|
+| Primary | LINK, DANDI 001201 | https://chesteklab.github.io/LINK_dataset/ | Longitudinal NHP finger decoding, drift and recalibration |
+| Supporting fMRI | Natural Scenes Dataset | https://naturalscenesdataset.org/ | Experimental-design reconstruction and BOLD encoding/decoding |
+| Supporting speech | Willett et al. 2023 speech neuroprosthesis data | https://doi.org/10.5061/dryad.x69p8czpq | Decoder-only vs language-model-assisted speech analysis |
+| Optional benchmark context | FALCON M2 | https://snel-repo.github.io/falcon/datasets.html | Finger-control benchmark comparison if time allows |
 
-- No hands-on invasive recording — public data only
-- Sub-study 1: NHP (macaque) only; does NOT generalize to humans by default
-- Sub-study 2: Single participant with ALS; does NOT generalize to healthy population
-- Sub-study 3: BOLD ≠ spiking; cannot decode moment-to-moment cognition
-- LLM correction gain must be reported separately from raw neural decoder WER
-- We do NOT have real scanner access; fMRI sub-study is analysis + protocol reconstruction only
+## Planned Directory Structure
 
----
-
-## Planned directory structure
-
-```
+```text
 project-2-neural-decoding/
-├── README.md                        # This file
-├── sub-study-1-nhp-motor/
-│   ├── README.md
-│   ├── data/                        # MC_Maze download (gitignored, large)
-│   ├── notebooks/
-│   │   ├──  01_explore_data.ipynb
-│   │   ├── 02_baseline_decoder.ipynb
-│   │   ├── 03_drift_analysis.ipynb
-│   │   └── 04_recalibration.ipynb
-│   └── results/
-├── sub-study-2-speech/
-│   ├── README.md
-│   ├── data/                        # Willett 2023 download (gitignored)
-│   ├── notebooks/
-│   │   ├── 01_explore_data.ipynb
-│   │   ├── 02_phoneme_decoder.ipynb
-│   │   ├── 03_word_sentence_decoder.ipynb
-│   │   └── 04_llm_correction.ipynb
-│   └── results/
-├── sub-study-3-fmri/
-│   ├── README.md
-│   ├── data/                        # NSD subset (gitignored, very large)
-│   ├── notebooks/
-│   │   ├── 01_explore_nsd.ipynb
-│   │   ├── 02_encoding_model.ipynb
-│   │   └── 03_design_reconstruction.ipynb
-│   └── results/
-└── shared/
-    ├── utils.py                     # Shared preprocessing utilities
-    └── plotting.py                  # Shared figure formatting
+├── README.md
+├── configs/
+│   ├── link_primary.yaml
+│   ├── splits.yaml
+│   └── metrics.yaml
+├── docs/
+│   ├── data_access.md
+│   ├── dataset_provenance.md
+│   ├── leakage_and_splits.md
+│   └── limitations.md
+├── data/
+│   ├── raw/                  # gitignored public dataset downloads
+│   ├── interim/              # gitignored converted arrays
+│   └── metadata/             # small committed shape/provenance outputs
+├── notebooks/
+│   ├── 01_link_explore.ipynb
+│   ├── 02_link_baselines.ipynb
+│   ├── 03_link_drift.ipynb
+│   ├── 04_link_recalibration.ipynb
+│   ├── 05_nsd_design.ipynb
+│   └── 06_speech_decoder_audit.ipynb
+├── src/
+│   ├── data/
+│   │   ├── load_link.py
+│   │   ├── load_nsd.py
+│   │   └── load_speech.py
+│   ├── models/
+│   │   ├── baselines.py
+│   │   ├── gru.py
+│   │   └── latent_model.py
+│   ├── analysis/
+│   │   ├── drift.py
+│   │   ├── recalibration.py
+│   │   └── manifold.py
+│   └── figures/
+│       └── plotting.py
+├── results/
+│   ├── tables/
+│   └── figures/
+├── tests/
+│   ├── test_splits.py
+│   └── test_metrics.py
+└── requirements.txt
 ```
 
----
+## Primary Metrics and Baselines
 
-## Primary metrics by sub-study
+| Track | Metric | Baseline | Required limit |
+|---|---|---|---|
+| LINK within-session | Held-out kinematic R2, RMSE/MAE | Mean/last-value predictor and ridge/Kalman-style decoder | NHP motor decoding only |
+| LINK cross-session | Degradation from source-session decoder to later sessions | Session-1 no-recalibration decoder | Performance drift does not identify a single biological cause by itself |
+| LINK recalibration | Delta after fixed target-session sample budget | No-recalibration and full-retrain reference | Recalibration gain is protocol-specific |
+| LINK learned representations | Gain from GRU/LFADS-lite/autoencoder representations | Ridge/Kalman-style and GRU baselines | No SOTA claim unless benchmarked fairly |
+| NSD fMRI | ROI encoding R2 or category decoding accuracy | Shuffled-label/ROI null | BOLD is indirect and slow |
+| Speech | Decoder-only WER/CER/phoneme error plus post-LM error | Chance/simple decoder and decoder-only output | LM output is not raw neural decoder performance |
 
-| Sub-study | Primary metric | Baseline |
-|---|---|---|
-| NHP motor | Angular decoding error (deg) | No-recalibration decoder from session 1 |
-| Speech | Word error rate (WER), phoneme accuracy | Chance decoder |
-| fMRI | Voxel encoding model R² | Shuffled-label null |
-
----
-
-## Datasets
-
-| Sub-study | Dataset | DOI / Access |
-|---|---|---|
-| NHP motor | Perich & Miller 2018, CRCNS MC_Maze | https://doi.org/10.6080/K0H70CVX |
-| Speech | Willett et al. 2023 | https://doi.org/10.5061/dryad.x69p8czpq (OSF) |
-| fMRI | Allen NSD 2022 | https://naturalscenesdataset.org / AWS Open Data |
-
----
-
-## Key dates
+## Key Dates
 
 | Date | Milestone |
 |---|---|
-| Jun 5, 2026 | Dataset locked |
-| Week 2 | Download NHP + speech data, run shape/metadata check |
-| Week 3 | Baseline NHP decoder (no recalibration) |
-| Week 4 | Drift analysis figure |
-| Jul 10, 2026 | Motor/neural-population track must stand alone before fMRI work expands |
+| June 5, 2026 | LINK primary dataset and single question locked |
+| June 12, 2026 | Data access notes, shape/metadata output and baseline metric definitions |
+| June 19, 2026 | First plotted/measured Project 2 result |
+| July 10, 2026 | LINK motor/neural-population track must stand alone |
+| August 7, 2026 | Feature freeze |
+| August 14, 2026 | Results freeze |
+| August 21, 2026 | Public package freeze |
+
+## Week 1 Definition of Done
+
+This skeleton is complete when it defines the primary dataset, single question, honest limits, planned structure, metrics, baselines and dates. It intentionally does not claim any analysis result before data loading and baseline runs exist.
