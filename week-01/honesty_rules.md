@@ -1,123 +1,142 @@
-# Honesty Rules — Neurotech Summer 2026
+# Honesty Rules - Neurotech Summer 2026
 
-**Date:** June 5, 2026
+**Date locked:** June 5, 2026
 **Author:** Mark Lin
-**Applies to:** All projects, all write-ups, all figures, all external communications
+**Applies to:** Every README, memo, report, figure caption, demo script, resume bullet and interview answer
 
-> These rules exist because one overclaim destroys the credibility of everything else. A skeptical expert reviewer — the only reviewer that matters — will catch it immediately and stop reading.
+These rules are part of the research method. A precise limitation is not a weakness; it is what makes the claim believable.
 
----
+## Rule 1 - Name the Signal Correctly
 
-## Rule 1: Always state what the signal actually measures
+| Signal | What it measures | Honest phrase | Do not write |
+|---|---|---|---|
+| Simulated low-bandwidth input | Synthetic control events or noisy generated channels | "simulated low-bandwidth input" | "recorded EMG" or "neural data" |
+| Surface EMG / sEMG | Muscle electrical activity at the skin | "forearm muscle activation measured by surface EMG" | "brain signal" |
+| EEG | Aggregate scalp-level cortical field potentials | "non-invasive scalp EEG field potentials" | "spikes" |
+| fMRI BOLD | Blood-oxygen hemodynamic response correlated with neural activity | "BOLD response" or "indirect fMRI measure" | "single-neuron activity" |
+| ECoG | Electrical potentials from electrodes on the cortical surface | "cortical surface recording" | "non-invasive recording" |
+| Intracortical array | Threshold crossings, spiking-band power or sorted spikes from implanted electrodes | "public intracortical recordings analyzed from [dataset]" | "our implanted recordings" |
 
-| If you used... | You MUST write... | You must NOT write... |
-|---|---|---|
-| Surface EMG | “EMG measures forearm muscle electrical activity” | “Brain signals”, “neural activity”, “BCI” |
-| EEG | “Scalp EEG measures aggregate cortical field potentials” | “Spiking activity”, “neuron firing” |
-| fMRI BOLD | “BOLD signal reflects hemodynamic response, not spiking” | “Neural activity” without qualifier |
-| Intracortical array | “Threshold crossings from a 96-ch Utah array in M1” | “Full brain activity”, “thoughts decoded” |
+## Rule 2 - Pair Every Claim With Its Limit
 
----
+Use this format in results sections:
 
-## Rule 2: State honest limits next to every claim
-
-Every result section must include a **Limitations** subsection. No exceptions.
-
-Format:
-```
-**Claim:** [What the result shows]
-**Honest limit:** [What it does NOT show; what would need to be true for a stronger claim]
+```text
+Claim: [What the data supports.]
+Honest limit: [What the data does not support yet.]
 ```
 
-Example (correct):
-> **Claim:** The EMG decoder achieves 91% gesture-classification accuracy across 5 sessions.
-> **Honest limit:** This is muscle-activity classification, not intent or neural decoding. Performance was measured on a single participant. Generalization to other users requires separate validation.
+Correct:
 
-Example (incorrect, do not do this):
-> “Our BCI achieves 91% accuracy, demonstrating robust neural decoding.”
+```text
+Claim: The simulated low-bandwidth harness completed the text-entry workflow faster with prediction assistance than with gesture-only control.
+Honest limit: This is a simulated-input result. It does not establish real EMG performance or generalization to other users.
+```
 
----
+Incorrect:
 
-## Rule 3: LLM correction must not hide decoder error
+```text
+Our BCI understands intent and improves computer control.
+```
 
-For sub-study 2 (speech decoding), the pipeline is: neural decoder → phoneme sequence → LLM language-model correction → final word output.
+## Rule 3 - Simulated Data Must Stay Visibly Simulated
 
-**Required reporting:**
-- Neural decoder WER (before LLM correction)
-- Post-LLM WER (after correction)
-- Both numbers must appear in every figure, table, and abstract
-- Delta between them must be explicitly labeled as “LLM correction gain”, NOT as “decoder performance”
+If Project 1 uses simulated input:
 
-**Prohibited:**
-- Reporting only post-LLM numbers as the decoder’s performance
-- Describing LLM-corrected output as “neural decoding accuracy”
+- filenames include `simulated` or `sim`;
+- figures include "(simulated input)" in the caption;
+- tables include a `data_source` column;
+- methods state the noise model, seed and command vocabulary;
+- real and simulated results are never pooled without a visible source split.
 
----
+## Rule 4 - Public Data Is Analyzed, Not Collected
 
-## Rule 4: Simulated data is always labeled as simulated
+Project 2 uses public datasets. Every methods section must say some version of:
 
-If MindRove hardware fails and we fall back to simulated EMG:
-- Every figure caption: “(simulated input)”
-- Every table header: “Sim” column flag
-- Abstract and methods: first paragraph of Data section must state simulation was used
-- No figure or table may mix real and simulated data without explicit visual distinction
+```text
+We analyzed publicly available data from [dataset and citation]. We did not collect these recordings, implant arrays, scan participants or run the original experiment.
+```
 
----
+Correct:
 
-## Rule 5: Public data is not your data
+```text
+We analyzed LINK intracortical recordings and finger kinematics from DANDI 001201.
+```
 
-For Project 2 (NHP motor, speech, fMRI), all datasets are third-party public releases.
+Incorrect:
 
-**Required:**
-- Cite the original paper and dataset DOI in every figure that uses the data
-- Methods section must state: “We analyzed publicly available data from [citation]. We did not collect this data.”
-- Do not use possessive language (“our recordings”, “our participants”)
+```text
+We recorded macaque motor-cortex activity.
+```
 
-**Correct:** “We analyzed intracortical recordings from Perich & Miller 2018 (CRCNS MC_Maze).”
-**Incorrect:** “We recorded spiking activity from macaque motor cortex.”
+## Rule 5 - Baselines Are Required
 
----
-
-## Rule 6: Baselines are mandatory
-
-No decoding result is reportable without a baseline. Required baselines by project:
-
-| Project | Baseline |
+| Workstream | Minimum baseline |
 |---|---|
-| Project 1 (EMG) | Gesture-only control (no EMG decoder) |
-| Project 2 NHP motor | No-recalibration decoder from session 1 |
-| Project 2 Speech | Chance decoder (random phoneme assignment) |
-| Project 2 fMRI | Shuffled-label null model |
-| All continual learning | Naïve fine-tuning (no continual learning method) |
+| Project 1 simulated harness | gesture-only or no-prediction control |
+| Project 1 real EMG | chance classifier plus gesture-only control |
+| LINK NHP movement | mean/last-value predictor plus ridge/Kalman-style decoder |
+| Cross-session drift | session-1 no-recalibration decoder |
+| Speech decoding | decoder-only error before any language model |
+| fMRI NSD | shuffled-label or ROI null model |
+| Continual learning | naive fine-tuning without replay or memory |
 
-A result that beats chance but not a reasonable baseline is a null result and must be reported as such.
+A model that beats chance but not a reasonable baseline is a real result, but it is not an improvement claim.
 
----
+## Rule 6 - Language Models Cannot Hide Neural Decoder Errors
 
-## Rule 7: Do not conflate modalities
+For speech decoding:
 
-These are NOT interchangeable terms:
+- report decoder-only phoneme/character/word error first;
+- report language-model-assisted error second;
+- label the difference as language-model correction gain;
+- show at least several failures where the language model produced plausible text not supported by the neural decoder;
+- never call post-LM text "raw neural decoding performance."
 
-- **Spike** (single action potential, ~1 ms) ≠ **LFP** (local field potential, ~10–100 ms) ≠ **EEG** (~4 ms temporal resolution, scalp) ≠ **BOLD** (~2 s hemodynamic lag)
-- **EMG** (peripheral muscle) ≠ **EEG** (cortical surface) ≠ **intracortical** (implanted)
-- **Brain activity** (requires intracranial measurement) ≠ **muscle activity** (EMG)
+## Rule 7 - Do Not Stretch Experience Claims
 
-If you are unsure which term is correct, leave a `TODO: verify terminology` comment and ask before submitting.
+Allowed:
 
----
+- "Analyzed public intracortical datasets."
+- "Built a closed-loop EMG or simulated-input assistive-control prototype."
+- "Reconstructed an fMRI experimental design from NSD."
+- "Compared baselines and learned representations under held-out splits."
 
-## Rule 8: Pre-register before you run
+Not allowed:
 
-For Project 1 experiments: write the hypothesis, expected effect size, primary metric, and stopping rule BEFORE running the experiment. Save it in `experiments/preregistration/`. Once saved, it cannot be edited retroactively.
+- "Collected invasive neural recordings."
+- "Ran human fMRI scans."
+- "Built an implanted BCI."
+- "Worked with Neuralink hardware."
+- "Decoded thoughts."
 
-Post-hoc analysis is permitted but must be clearly labeled “exploratory” and cannot be listed as a primary result.
+## Rule 8 - Modality Distinctions for Interviews
 
----
+| If asked... | Answer |
+|---|---|
+| "Is Project 1 a brain-computer interface?" | It is BCI-inspired assistive control. The measured input is simulated low-bandwidth input first and surface EMG later; EMG is muscle activity, not brain activity. |
+| "Did you record the NHP data?" | No. We analyzed public intracortical recordings and kinematics, with attribution to the dataset creators. |
+| "Can fMRI decode thoughts?" | NSD supports visual response modeling and some stimulus/feature decoding from BOLD. It does not support moment-to-moment thought reading or spiking claims. |
+| "Does the LLM make the speech decoder better?" | It can improve final text output, but decoder-only and LLM-assisted metrics must be reported separately. |
+| "Does a brain-inspired memory module prove biology?" | No. It tests a computational analogy inspired by memory mechanisms; neuroscience claims require separate biological evidence. |
 
-## Enforcement
+## Rule 9 - Cite Specific Dataset Sources
 
-Before any external submission (paper, application, report):
-1. Both Caleb and Mark must read the relevant sections against these rules
-2. Any violation blocks submission until corrected
-3. “It sounds better” is not justification for an overclaim
-4. When in doubt, understate. A measured honest claim is always defensible.
+Use exact dataset names where possible:
+
+- LINK: Long-Term Intracortical Neural Activity and Kinematics, DANDI 001201.
+- Natural Scenes Dataset, Allen et al., 7T fMRI natural-scene responses.
+- Willett et al. 2023 speech neuroprosthesis data, Dryad DOI 10.5061/dryad.x69p8czpq.
+- FALCON datasets only with the correct task labels: H1 reach-and-grasp, H2 handwriting, M1 reach/grasp EMG, M2 monkey finger control, B1 songbird vocalization.
+
+## Pre-Submission Checklist
+
+Before any external artifact is shared:
+
+- The signal name is correct.
+- The data source is attributed.
+- Simulated and real data are separated.
+- The baseline appears next to the claimed improvement.
+- The limitation appears next to the claim.
+- Decoder-only and language-model-assisted speech metrics are separated.
+- Caleb and Mark can both explain the claim without reading from the page.
