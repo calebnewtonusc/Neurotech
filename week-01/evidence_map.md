@@ -1,95 +1,84 @@
-# Evidence Map — What Each Project Proves and to Whom
+# Evidence Map - Claims, Proof and Limits
 
-**Date:** June 5, 2026
+**Date locked:** June 5, 2026
 **Author:** Mark Lin
-**Purpose:** Maps each project and sub-study to the specific claim it supports, the evidence type, and the audience it addresses (Zoral / Neuralink / general ML).
+**Purpose:** Map each summer artifact to the exact claim it can support, the baseline it must beat and the limit that must stay attached.
 
----
+## Audience Map
 
-## How to read this map
+| Audience | What they care about | Summer evidence |
+|---|---|---|
+| Zoral | Continual learning, memory, interpretability, evaluation discipline | Forgetting curves, online-memory adapter, consolidation ablation, interpretability probe |
+| Neuralink stretch | Neural decoding, population dynamics, closed-loop control, experimental design | LINK movement decoding, NSD fMRI design, speech decoder analysis, Project 1 closed-loop workstation |
+| General ML/research reviewers | Baselines, reproducibility, ablations, limitations | Public repos, frozen configs, reports, figures, failure analysis |
 
-Each row is a **claim** — a falsifiable statement this project is designed to support or refute. The evidence column lists what artifact would constitute proof. The audience column names who finds this claim valuable.
+## Project 1 - Neuroadaptive Assistive Workstation
 
----
-
-## Project 1 — Neuroadaptive Assistive Workstation
-
-| Claim | Evidence required | Evidence type | Audience |
+| Claim | Proof required | Baseline | Honest limit |
 |---|---|---|---|
-| Low-bandwidth EMG enables intent decoding sufficient for assistive computer control | Latency, accuracy, correction rate vs. gesture-only baseline across 5+ sessions | Controlled experiment | Neuralink (systems), assistive tech |
-| Closed-loop real-time prediction reduces user movement burden | Completion time and correction count lower in prediction-assisted vs. gesture-only | Controlled experiment | Neuralink (systems), HCI |
-| Calibration improves decoding vs. no-calibration | Accuracy delta between calibrated and uncalibrated runs, same participant, same day | A/B experiment | Neuralink (systems) |
-| System generalizes across repeated sessions | No significant accuracy degradation across 5 sessions, same participant | Repeated measures | Neuralink (systems) |
+| A closed-loop workstation can be controlled with low-bandwidth input | Runnable demo with event logs, latency table and replayable sessions | Gesture-only/no-prediction control | Simulated input or EMG is not brain activity |
+| Prediction assistance reduces user burden | Lower completion time and correction rate across repeated tasks | Same command vocabulary without prediction | Burden is workflow- and user-specific |
+| Real EMG can drive the same loop if hardware clears the kill-switch | Raw EMG logs, preprocessing notes, held-out classifier results and latency | Chance classifier and simulated harness | EMG measures muscle activation only |
+| Calibration matters | Calibrated vs uncalibrated comparison in same session | No-calibration condition | Single session does not establish generalization |
 
-**What this does NOT prove:**
-- That the system reads brain signals (it does not)
-- That it is equivalent to or a substitute for Neuralink hardware
-- That it generalizes to other users without separate validation
+## Project 2 Primary - LINK NHP Finger-Movement Decoding
 
----
-
-## Project 2, Sub-study 1 — NHP Motor Decoding
-
-| Claim | Evidence required | Evidence type | Audience |
+| Claim | Proof required | Baseline | Honest limit |
 |---|---|---|---|
-| Neural drift causes measurable decoding degradation over days | Decoding error increases monotonically without recalibration across sessions | Longitudinal analysis | Neuralink (neural engineering) |
-| Recalibration recovers decoding accuracy after drift | Error returns to session-1 level after recalibration procedure | Intervention experiment | Neuralink (neural engineering) |
-| Manifold alignment captures drift structure | Latent space alignment reduces cross-session error vs. no alignment | Ablation | Neuralink (neural engineering), ML |
+| Motor-cortex population activity predicts 2-DOF finger kinematics in held-out data | Leakage-safe held-out R2/RMSE table | Mean/last-value predictor and ridge/Kalman-style decoder | NHP motor data does not generalize automatically to humans |
+| Decoding degrades across sessions because neural recordings drift | Source-session decoder applied to later sessions with degradation curve | Session-1 no-recalibration decoder | Drift is inferred from performance/representation changes, not directly "seen" as a single mechanism |
+| Limited recalibration restores some performance | Recalibration-gain plot under fixed sample budgets | No-recalibration and full-retrain reference | Recalibration result is dataset/protocol-specific |
+| Learned representations help only if they beat simple baselines | LFADS-lite/autoencoder or GRU comparison across held-out sessions | Ridge/Kalman-style and GRU baselines | A small gain is not a general SOTA claim |
 
-**What this does NOT prove:**
-- Anything about human motor cortex (NHP only)
-- Anything about speech or cognition
-- That we recorded this data (public dataset, Perich & Miller 2018)
+## Project 2 Supporting - NSD fMRI
 
----
-
-## Project 2, Sub-study 2 — Human Speech Decoding
-
-| Claim | Evidence required | Evidence type | Audience |
+| Claim | Proof required | Baseline | Honest limit |
 |---|---|---|---|
-| Neural activity in speech motor cortex encodes phoneme-level speech intentions | Phoneme classification accuracy > chance from intracortical spikes | Decoding experiment | Neuralink (speech BCI) |
-| LLM post-processing reduces word error rate | WER(post-LLM) < WER(pre-LLM), reported separately | Pipeline ablation | Neuralink (speech BCI), NLP |
-| LLM gain is separable from neural decoder quality | Both WER values reported; delta labeled “LLM correction gain” | Honest reporting | Neuralink, peer review |
+| NSD experimental structure can be reconstructed | Protocol note covering stimuli, timing, task, train/test split and ROIs | Published NSD documentation | This is reconstruction, not scanner operation |
+| Visual BOLD responses support encoding/decoding analysis | ROI encoding R2 or category decoding above null | Shuffled-label/ROI null model | BOLD is indirect and slow; not spiking |
 
-**What this does NOT prove:**
-- Generalization to healthy participants (single ALS participant)
-- That the LLM “understands” speech
-- That we collected this data (public dataset, Willett et al. 2023)
+## Project 2 Supporting - Human Intracortical Speech
 
----
-
-## Project 2, Sub-study 3 — Human fMRI
-
-| Claim | Evidence required | Evidence type | Audience |
+| Claim | Proof required | Baseline | Honest limit |
 |---|---|---|---|
-| Visual cortex BOLD responses encode image identity | Encoding model R² > shuffled-label null | Encoding model | Neuralink (adjacent), vision ML |
-| Experimental design can be reconstructed from public fMRI data | Reproduced stimulus-response structure matches published NSD results | Replication | Neuralink (methodology) |
+| Intracortical attempted-speech data can support phoneme/text decoding analysis | Decoder-only error metrics on held-out data | Chance/simple decoder | Public data from a specific participant/protocol |
+| Language-model correction improves final text output | Decoder-only vs post-LM metrics in the same table | Decoder-only output | The LM may guess plausible language unsupported by neural evidence |
+| Failure analysis is honest | Confusion examples and hallucination/error taxonomy | N/A | Error examples do not establish full causal interpretation |
 
-**What this does NOT prove:**
-- That fMRI is equivalent to spiking neural data (it is not)
-- That we have real scanner access
-- Anything about intracortical signals
+## Zoral-Facing Continual Learning Track
 
----
-
-## Research Projects — Continual Learning Track
-
-| Project | Claim | Evidence required | Audience |
+| Artifact | Claim | Proof required | Honest limit |
 |---|---|---|---|
-| Benchmark Harness | Catastrophic forgetting is measurable and method-dependent | Forgetting rate across naïve FT, replay, LoRA, adapter | Zoral |
-| Memory Adapter | Online memory module reduces forgetting vs. naïve FT | Forgetting rate, retention after correction | Zoral |
-| Sleep Ablation | Consolidation step improves retention beyond replay alone | Ablation across 4 configurations | Zoral |
-| Interpretability Probe | New memories are localized to specific layers | Probe accuracy, activation patching | Zoral, interpretability research |
-| Desktop Agent | Continual learning is safe in a real interactive loop | Action log review, safety gate trigger rate | Zoral, AI safety |
+| Continual-learning benchmark harness | Forgetting differs across methods | Sequential-task metrics for naive fine-tune, replay, LoRA/adapters and memory | Small models; no frontier claim |
+| Brain-inspired memory adapter | Online memory can improve retention under correction | Retention/forgetting curves vs naive and replay baselines | Computational analogy, not biological proof |
+| Consolidation ablation | Offline replay/pruning/consolidation may improve retention | Ablation across online-only, replay, pruning and consolidation | Results scoped to tested tasks |
+| Interpretability probe | New information may become detectable in specific layers/adapters | Linear probes, activation similarity, ablation/patching | Probes are partial evidence, not complete mechanistic proof |
+| Safe desktop learner | A narrow agent can learn from demonstrations under approval gates | Action logs, correction logs, safety-gate counts | Not consequential autonomy |
 
----
+## Neuralink Qualification Matrix
 
-## Summary: Evidence Gaps (as of Week 1)
+| Requirement area | Evidence artifact | Limit that must be stated |
+|---|---|---|
+| Movement decoding | LINK NHP finger decoder and drift/recalibration analysis | Public NHP data analyzed, not collected; not human motor cortex |
+| Speech decoding | Willett speech analysis with decoder-only and LM-assisted metrics | Public human intracortical data; LM output is not raw decoder performance |
+| Human fMRI | NSD protocol reconstruction and encoding/decoding analysis | BOLD is indirect; no scanner operation |
+| Neural population dynamics/manifolds | LINK latent trajectories and cross-session alignment | Manifold analysis is a model of structure, not proof of mechanism by itself |
+| Closed-loop systems | Project 1 workstation with latency/correction/burden metrics | EMG/simulation is not implanted BCI |
+| Experimental design | Pre-registered hypotheses, baselines, ablations and Friday reports | Unmeasured targets stay future work |
+| Python/reproducibility | Loaders, configs, saved metrics, rerunnable notebooks | Code quality must be demonstrated by running it |
+| Exceptional ability | Two coherent public repos plus final report and external review request | Cannot manufacture 2+ years of experience in one summer |
+
+## Current Evidence Gaps After Week 1
 
 | Gap | Status | Resolution path |
 |---|---|---|
-| No Project 1 hardware test yet | Open | MindRove unboxing and signal test, Week 2 |
-| No baseline experiment run | Open | Protocol v0 drafted (Thu task); run Week 3 |
-| No NHP data downloaded | Open | CRCNS account + download, Week 2 |
-| No speech data downloaded | Open | OSF download, Week 2 |
-| No continual learning harness code | Open | Scaffold Week 2, first result Week 3 |
+| No Project 1 signal has been recorded | Open | Week 2 simulated harness plus real-EMG access test |
+| LINK not loaded locally yet | Open | Week 2 data access and shape/metadata output |
+| No decoding baseline run yet | Open | Week 2/3 ridge or Kalman-style baseline |
+| No speech data analysis yet | Open | After LINK loader and baseline are stable |
+| No fMRI analysis yet | Open | Keep NSD to design/encoding lane until primary motor track stands |
+| No continual-learning code yet | Open | Scaffold harness after Week 1 locks |
+
+## Evidence Rule
+
+A project is application evidence only when it has all four parts: a measured result, a baseline, a limitation and a reproducible path. Anything missing one of those parts is still work in progress.
