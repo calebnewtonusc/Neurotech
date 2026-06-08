@@ -1,89 +1,98 @@
-# Weekly Hypothesis - Week 2 Project 1 Baseline
+# Week 2 — Pre-registered Hypothesis
 
-**Date locked:** June 8, 2026  
-**Author:** Mark Lin  
-**Week:** Week 2, Protocol, logging & baseline architecture  
-**Related files:** `week-02/protocol_v1.md`, `week-02/trial_table.md`, `week-02/logging_schema_v1.md`
+**Week:** 2 — Protocol, logging & baseline architecture  
+**Dates:** June 8–12, 2026  
+**Registered by:** Mark Lin  
+**Date registered:** 2026-06-08  
+**Status:** LOCKED. This document must not be edited after the first internal test session runs. Any revision requires a new version with a dated rationale.
 
-## Locked Hypothesis
+---
 
-If Project 1 implements the no-prediction simulated low-bandwidth baseline from `protocol_v1.md`, then the system should be able to complete a 16-trial scored session with complete logs for at least 90% of required event fields and at least 75% task success on the locked trial table.
+## What this document is
 
-This is a logging-and-protocol hypothesis, not a claim about EMG, neural decoding or prediction assistance.
+A pre-registered hypothesis locks a falsifiable prediction before data is collected. Its purpose is to prevent post-hoc rationalization of results. Even for internal developer sessions, writing the prediction first is the discipline.
 
-## Why This Hypothesis Matters
+This week's sessions are internal/developer-only (DEV_SESSION). The hypothesis covers what we expect to observe from baseline-mode runs before any predictive assistance is introduced.
 
-The summer plan depends on measured comparisons. Before prediction assistance can be evaluated, the team needs a baseline that is runnable, boring and well logged. A flashy demo without a stable no-prediction baseline would make later improvement claims weak. A complete Week 2 baseline log gives Caleb and Mark a fixed reference point for latency, completion time, correction rate and effort.
+---
 
-## Primary Outcomes
+## Week 2 primary hypothesis
 
-| Outcome | Success threshold for Week 2 | Why it matters | Honest limit |
-|---|---:|---|---|
-| Required event-field completeness | At least 90% of required fields present across scored trials | Logging must be trustworthy before metrics count | Completeness does not prove the metric is meaningful |
-| Trial success rate | At least 75% of scored trials meet success criteria | Protocol should be usable before adding prediction | Single-user/small-n result does not generalize |
-| Missing timestamp rate | 0 missing `client_timestamp_ms` in scored trials | Latency and sequence analysis require timestamps | Browser timestamps are not hardware timestamps |
-| Correction visibility | 100% of undo/back/restart actions logged | Corrections are central to burden and ambiguity analysis | A logged correction does not reveal intent by itself |
-| Post-trial effort capture | At least 90% of scored trials have all four ratings | User burden is one of the Project 1 outcomes | Self-report is subjective and not clinical fatigue measurement |
+**H1 (Primary — User burden):**  
+In baseline gesture-only mode, completing Domain B (text entry) trials will impose significantly higher self-reported mental effort (Q2) than Domain A (command selection) trials, as measured by post-block effort ratings on the 1–7 Likert scale.
 
-## Secondary Outcomes
+**Predicted direction:** Domain B mean Q2 > Domain A mean Q2.  
+**Predicted magnitude:** At least 1.5 scale points difference, which would be practically meaningful for a 1–7 scale.
 
-| Outcome | Direction expected | Later comparison |
-|---|---|---|
-| Completion time | Stable enough to summarize by domain | Future prediction-assisted condition should reduce it without raising errors |
-| Command count | Higher than future prediction-assisted condition | Prediction should reduce commands only if accuracy stays acceptable |
-| Prompt clarity | Average at least 5 on 1-7 scale | Prompts below 5 must be revised before formal comparison |
-| Domain difference | File triage should be faster than document editing | Later analysis must stratify by domain |
+**Rationale:** Text entry via sequential character selection is cognitively more demanding than discrete command selection from a menu: it requires maintaining the target string in working memory across multiple selection steps, whereas command selection collapses intent to a single decision. This difference in working memory load is expected to be the largest driver of subjective mental burden in the baseline condition.
 
-## Exclusion Rules
+**Honest limit:** With n=2 developers (Caleb and Mark) running internal sessions in Week 2, this hypothesis cannot be tested statistically. Week 2 data will be used to (a) verify the measurement instruments work as intended, (b) generate a directional qualitative observation, and (c) inform the sample size needed for a proper test when external sessions begin.
 
-Exclude a trial from primary metrics only if one of these is true:
+---
 
-- the UI fails to save the trial start or completion event;
-- the prompt displayed does not match `trial_table.md`;
-- the participant stops the session before the trial begins;
-- the session is explicitly labeled `smoke_test`.
+## Week 2 secondary hypothesis
 
-Do not exclude failed trials because they look bad. Wrong actions, corrections, frustration and ambiguity are part of the evidence.
+**H2 (Secondary — Latency):**  
+Domain A command-selection latency will be lower (faster responses) in Block 3 than Block 1, reflecting intra-session practice effects on a fixed command vocabulary.
 
-## Pre-Registered Analysis
+**Predicted direction:** Block 3 mean latency < Block 1 mean latency.  
+**Predicted magnitude:** 10–25% reduction in median latency.
 
-1. Count required event fields across scored trials using the schema in `logging_schema_v1.md`.
-2. Report success rate overall and separately for document editing and file triage.
-3. Report completion time, command count and correction count as median and range, not as a polished performance claim.
-4. Report effort ratings by domain.
-5. List every failed or stopped trial with the logged reason.
-6. Label all Week 2 input as `simulated_low_bandwidth`.
+**Rationale:** Domain A presents the same 10 prompts (in a different pseudorandom order) in both Block 1 and Block 3. Participants are expected to become familiar with the command vocabulary and the interface layout across the session, reducing selection time. This practice effect is expected and not a confound for the baseline measurement — it will be reported and noted so that future multi-session analyses can account for intra-session learning curves.
 
-## Claims Allowed If Thresholds Are Met
+**Honest limit:** Practice effects on this scale are confounded with fatigue for sessions running over 30 minutes. We will log session duration and flag any session exceeding 35 minutes.
 
-- "Project 1 has a runnable no-prediction baseline protocol on simulated low-bandwidth input."
-- "The baseline logger captured the required event fields for the Week 2 protocol."
-- "The locked trial table is usable enough to support a later prediction-assisted comparison."
+---
 
-## Claims Not Allowed
+## Week 2 tertiary (logging validation) hypothesis
 
-- "The system decodes EMG."
-- "The system reads intent from brain activity."
-- "The workstation reduces burden versus baseline."
-- "Prediction assistance improves control."
-- "The protocol generalizes to other users."
+**H3 (Logging check):**  
+Every trial event logged by the system will be reconstructible from the session log file with no missing fields. The logged trial order will match the pseudorandom order recoverable from the session's `trial_order_seed`.
 
-Those claims require later real-EMG verification, a prediction-assisted condition, repeated sessions and additional participants or explicit single-user framing.
+**Predicted outcome:** 100% field completeness for all logged trials in DEV_SESSION runs.
 
-## Stop/Revise Criteria
+**Rationale:** This is a software correctness claim, not a behavioral one. Verifying it now — before any external sessions — ensures the logging schema is trustworthy. A single missing field in a DEV_SESSION is treated as a blocking bug.
 
-Revise the protocol before formal baseline comparison if:
+**Honest limit:** This check covers the fields defined in `week-02/logging-schema-v1.md`. If new fields are added to the schema, this hypothesis does not cover them and must be extended.
 
-- required field completeness is below 90%;
-- prompt clarity averages below 5 in either domain;
-- any trial has more than one reasonable interpretation;
-- the same command causes two or more participant-reported ambiguities;
-- the UI cannot distinguish simulator timing from participant delay.
+---
 
-## Sign-Off
+## What a confirming result looks like
 
-| Person | Status | Meaning |
-|---|---|---|
-| Mark Lin | Signed | Hypothesis, thresholds, exclusions and allowed claims are locked before baseline results exist |
-| Caleb Newton | Pending implementation review | Needs to confirm the runner can compute the primary outcomes from saved logs |
+| Hypothesis | Confirming observation |
+|-----------|----------------------|
+| H1 | Block 2 and Block 4 (Domain B) Q2 ratings both higher than Block 1 and Block 3 (Domain A) Q2 ratings for both developers |
+| H2 | Median latency in Block 3 ≤ median latency in Block 1, across both developers |
+| H3 | Zero missing log fields; trial order matches seed reconstruction for all sessions |
 
+---
+
+## What a disconfirming result looks like
+
+| Hypothesis | Disconfirming observation | Implication |
+|-----------|--------------------------|-------------|
+| H1 | Domain B Q2 ≤ Domain A Q2 | The effort instrument may be too coarse, or the command-selection interface is itself unusually demanding in its current form. Review prompt clarity and menu layout before external sessions. |
+| H2 | Block 3 latency ≥ Block 1 latency | Fatigue or interface friction is outpacing practice gains. Investigate session duration and interface feedback. |
+| H3 | Any missing log field | Treat as a blocker. Do not proceed to external sessions until the logging system is verified. |
+
+---
+
+## Hypotheses explicitly NOT made this week
+
+The following are things one might hypothesize but which are out of scope for Week 2 data:
+
+- **We do not claim** that the baseline accuracy rates observed in DEV_SESSION runs are representative of external participants.
+- **We do not claim** that simulated-input CER estimates will match real EMG CER.
+- **We do not claim** that Block 3 latency improvements will persist across sessions (that is a Week 9 question).
+- **We do not claim** that predictive assistance will reduce effort — that is the Week 5+ hypothesis.
+
+---
+
+## Sign-off
+
+Hypotheses H1, H2, and H3 are locked as of 2026-06-08. The first DEV_SESSION data collected against Protocol v1 will be evaluated against these predictions. Results will be recorded in the Week 2 Friday artifact regardless of whether they confirm or disconfirm the hypotheses.
+
+| Role | Name | Date |
+|------|------|------|
+| Protocol author | Mark Lin | 2026-06-08 |
+| Implementation reviewer | Caleb Newton | (to be signed at first session) |
