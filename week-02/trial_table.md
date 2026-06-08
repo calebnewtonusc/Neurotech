@@ -1,83 +1,104 @@
-# Project 1 Trial Table v1
+# Project 1 — Trial Table v1
 
-**Date locked:** June 8, 2026  
-**Author:** Mark Lin  
-**Protocol:** `week-02/protocol_v1.md`  
-**Input source:** simulated low-bandwidth input for Week 2
+**Version:** 1.0  
+**Date:** 2026-06-08  
+**Linked protocol:** `week-02/protocol-v1.md`  
+**Status:** Locked for Week 2 baseline runs. Changes require a protocol version bump.
 
-## Trial Table Rules
+This table is the canonical reference for all trial types defined in Protocol v1. It specifies every trial's domain, prompt, target response, timing parameters, scoring method, and logging fields. It is intended to be used alongside the logging schema (`week-02/logging-schema-v1.md`) to verify that every trial event is captured correctly.
 
-This table is the locked source for Week 2 no-prediction baseline prompts. The interface may change visual layout, but it may not change the target action, success criterion or prompt meaning without creating a new trial-table version.
+---
 
-All scored trials use simulated low-bandwidth commands. They are not EMG, not neural data and not evidence of brain-computer-interface performance.
+## Domain A — Command Selection Trials
 
-## Practice Trials
+**Scoring:** Binary correct/incorrect per trial. Primary metric is **command-selection accuracy (%)** and **selection latency (ms)** from prompt display to confirmed selection.
 
-| Trial ID | Domain | Prompt shown to participant | Target action | Success criterion | Primary risk being checked |
-|---|---|---|---|---|---|
-| P-A1 | Document editing | "The note says `Dataset: unknown`. Change the dataset label to `LINK`." | Select `replace_label`, choose `LINK`, confirm | Final document shows `Dataset: LINK` | Participant understands label replacement |
-| P-A2 | Document editing | "Move `Limit: simulated input only` above `Claim: baseline run`." | Select line, move up, confirm | Limit appears before claim | Participant understands ordering |
-| P-B1 | File triage | "Item: `session_schema_notes.md`. Put it in the protocol category." | Choose `protocol`, confirm | Item category is `protocol` | Participant understands category grid |
-| P-B2 | File triage | "Item: `raw_emg_unverified.csv`. Put it in defer." | Choose `defer`, confirm | Item category is `defer` | Participant does not treat unverified EMG as ready evidence |
+**Timeout:** 60 seconds. Three consecutive timeouts on a single prompt = BLOCK_TIMEOUT (see protocol §7).
 
-Practice trials are logged but excluded from primary metrics.
+**Distractor count:** 4 per trial (correct option + 4 distractors = 5 options displayed).
 
-## Scored Trials
+| Trial ID | Prompt text | Correct command | Command category | Timeout (s) | Scoring | Notes |
+|----------|------------|-----------------|-----------------|-------------|---------|-------|
+| A-01 | "Open the notes file." | OPEN_NOTES | File operations | 60 | Correct/Incorrect + latency (ms) | Baseline frequency: common task |
+| A-02 | "Go back to the home screen." | NAV_HOME | Navigation | 60 | Correct/Incorrect + latency (ms) | Tests navigation intent decoding |
+| A-03 | "Save the current document." | SAVE_DOC | File operations | 60 | Correct/Incorrect + latency (ms) | High expected accuracy |
+| A-04 | "Copy the selected text." | COPY | Editing | 60 | Correct/Incorrect + latency (ms) | Editing domain, common command |
+| A-05 | "Close the current window." | CLOSE_WIN | Navigation | 60 | Correct/Incorrect + latency (ms) | Potentially confused with DELETE |
+| A-06 | "Undo the last action." | UNDO | Editing | 60 | Correct/Incorrect + latency (ms) | Error-correction intent |
+| A-07 | "Increase font size." | FONT_UP | Formatting | 60 | Correct/Incorrect + latency (ms) | Low frequency; formatting domain |
+| A-08 | "Move to the next field." | NEXT_FIELD | Navigation | 60 | Correct/Incorrect + latency (ms) | Form-navigation context |
+| A-09 | "Submit the form." | SUBMIT | Form actions | 60 | Correct/Incorrect + latency (ms) | Irreversible action — stop condition if accidental |
+| A-10 | "Delete the selected item." | DELETE_SEL | Editing | 60 | Correct/Incorrect + latency (ms) | Potentially confused with CLOSE_WIN |
 
-| Trial ID | Block | Domain | Prompt shown to participant | Target action | Success criterion | Error condition | Honest limit |
-|---|---:|---|---|---|---|---|---|
-| A01 | 1 | Document editing | "Add the label `input_source: simulated_low_bandwidth` to the session note." | Insert label and confirm | Label appears exactly once | Missing label, misspelling or duplicate label | Tests constrained editing only |
-| B01 | 1 | File triage | "Item: `protocol_v1.md`. Put it in protocol." | Select `protocol`, confirm | Category is `protocol` | Any other category | Uses toy items, not real file operations |
-| A02 | 1 | Document editing | "The claim says `EMG result`. Replace it with `simulated-input result`." | Replace phrase and confirm | Text reads `simulated-input result` | Leaves `EMG result` in place | Checks honesty wording, not biological data |
-| B02 | 1 | File triage | "Item: `latency_plot_draft.png`. Put it in figure." | Select `figure`, confirm | Category is `figure` | Any other category | Does not validate figure quality |
-| A03 | 1 | Document editing | "Mark `Trial A03` as done without changing the limitation line." | Mark done and confirm | Done marker added; limitation unchanged | Limitation deleted or edited | Measures careful control in constrained UI |
-| B03 | 1 | File triage | "Item: `participant_effort_notes.md`. Put it in report." | Select `report`, confirm | Category is `report` | Any other category | Triage category is predefined |
-| A04 | 1 | Document editing | "Undo the accidental label `brain_signal: true`." | Select bad label, delete or undo, confirm | Bad label absent | Bad label remains | Reinforces no brain-signal overclaim |
-| B04 | 1 | File triage | "Item: `unverified_mindrove_export.csv`. Put it in defer." | Select `defer`, confirm | Category is `defer` | `data` or `figure` selected | Prevents unverified hardware evidence |
-| A05 | 2 | Document editing | "Add `baseline: no_prediction` under the metric section." | Insert label and confirm | Label appears under metric section | Label missing or inserted elsewhere | Tests section targeting |
-| B05 | 2 | File triage | "Item: `session_001.jsonl`. Put it in data." | Select `data`, confirm | Category is `data` | Any other category | Simulated log category only |
-| A06 | 2 | Document editing | "Move `Honest limit` directly below `Claim`." | Move line and confirm | Limit follows claim | Limit remains separated | Tests claim-limit pairing |
-| B06 | 2 | File triage | "Item: `weekly_hypothesis.md`. Put it in protocol." | Select `protocol`, confirm | Category is `protocol` | Any other category | Protocol category includes prereg docs |
-| A07 | 2 | Document editing | "Replace `BCI demo` with `BCI-inspired demo`." | Replace phrase and confirm | Text reads `BCI-inspired demo` | Text still says `BCI demo` | Tests anti-overclaim wording |
-| B07 | 2 | File triage | "Item: `failed_trial_reason.txt`. Put it in report." | Select `report`, confirm | Category is `report` | Any other category | Failure notes are evidence, not trash |
-| A08 | 2 | Document editing | "Add `stop_reason: none` to the trial summary." | Insert label and confirm | Label appears exactly once | Missing or duplicate label | Ensures stop field exists even when unused |
-| B08 | 2 | File triage | "Item: `openbci_setup_link.md`. Put it in defer." | Select `defer`, confirm | Category is `defer` | `data` selected | Hardware path is not Week 2 evidence yet |
+**Command category distribution:**
+- File operations: 2 trials (A-01, A-03)
+- Navigation: 3 trials (A-02, A-05, A-08)
+- Editing: 3 trials (A-04, A-06, A-10)
+- Formatting: 1 trial (A-07)
+- Form actions: 1 trial (A-09)
 
-## Trial Ordering
+**Confusion pairs to watch:** CLOSE_WIN (A-05) and DELETE_SEL (A-10) share semantic proximity. If error rates on these two are elevated together, note as a design confound in session notes.
 
-Use this exact order for the first full baseline session:
+---
 
-```text
-P-A1, P-B1, P-A2, P-B2,
-A01, B01, A02, B02, A03, B03, A04, B04,
-break,
-A05, B05, A06, B06, A07, B07, A08, B08
-```
+## Domain B — Text Entry Trials
 
-The alternating order controls for one domain becoming easier only because it is clustered. If a smoke test is needed, run `P-A1`, `P-B1`, `A01`, `B01`, `A02`, `B02` and label the session `smoke_test`.
+**Scoring:** Character error rate (CER) = (substitutions + insertions + deletions) / (number of characters in target string). Secondary metric: **time-to-completion (ms)** from prompt display to confirmed final character.
 
-## Required Trial Summary Columns
+**No timeout per character selection** (text entry is self-paced). A block-level timeout of 5 minutes applies to the full trial (TRIAL_TIMEOUT_TEXT).
 
-| Column | Meaning |
-|---|---|
-| `trial_id` | One of the IDs in this table |
-| `domain` | `document_editing` or `file_triage` |
-| `block_index` | `practice`, `1` or `2` |
-| `input_source` | `simulated_low_bandwidth` for Week 2 |
-| `success` | `true` only if the success criterion is met |
-| `error_type` | `none`, `wrong_action`, `wrong_category`, `prompt_ambiguity`, `ui_error`, `missing_log` or `participant_stop` |
-| `completion_time_ms` | Time from trial start to complete event |
-| `command_count` | Count of non-idle commands |
-| `correction_count` | Count of undo/back/restart recovery actions |
-| `physical_effort_1_7` | Participant rating after trial |
-| `mental_effort_1_7` | Participant rating after trial |
-| `frustration_1_7` | Participant rating after trial |
-| `prompt_clarity_1_7` | Participant rating after trial |
+| Trial ID | Prompt text | Target string | Char count | Includes punctuation | Domain notes | CER baseline expectation |
+|----------|------------|--------------|------------|---------------------|--------------|--------------------------|
+| B-01 | "Enter: open report" | open report | 11 | No | Common command phrase | Low (<0.10) |
+| B-02 | "Enter: save and close" | save and close | 14 | No | Two-word action | Low (<0.10) |
+| B-03 | "Enter: hello world" | hello world | 11 | No | Classic entry; minimal ambiguity | Very low (<0.05) |
+| B-04 | "Enter: file: notes.txt" | file: notes.txt | 15 | Yes (colon, period) | Filename with punctuation | Moderate (0.10–0.20) |
+| B-05 | "Enter: go to line 42" | go to line 42 | 13 | No | Mixed text and number | Moderate (0.10–0.20) |
+| B-06 | "Enter: search: neural" | search: neural | 14 | Yes (colon) | Domain vocabulary + punctuation | Moderate (0.10–0.20) |
+| B-07 | "Enter: undo last edit" | undo last edit | 13 | No | Three-word phrase | Low (<0.10) |
+| B-08 | "Enter: mark as done" | mark as done | 12 | No | Task-management phrasing | Low (<0.10) |
+| B-09 | "Enter: attach: log.csv" | attach: log.csv | 15 | Yes (colon, period) | Filename with extension | Moderate (0.10–0.20) |
+| B-10 | "Enter: run baseline" | run baseline | 12 | No | Domain-specific command | Low (<0.10) |
 
-## Sign-Off
+**CER baseline expectations are rough priors based on comparable scanning / switch-access literature.** They are NOT pre-registered targets. They are recorded here so that Week 2 internal sessions can be compared qualitatively to known prior work. If actual CER differs substantially, that is a finding — not a failure.
 
-| Person | Status | Meaning |
-|---|---|---|
-| Mark Lin | Signed | Trial prompts, target actions, success criteria and honesty constraints are locked for Week 2 baseline implementation |
-| Caleb Newton | Pending implementation review | Needs to confirm UI can render these prompts and save every required field |
+**Honest limit:** CER expectations for simulated-input sessions may differ from real EMG sessions. All CER values from simulated sessions are labeled SIM in analysis tables.
 
+---
+
+## Full session trial ordering
+
+Blocks alternate A–B–A–B. Within each block, the 10 trials are pseudorandomly ordered using a session-specific seed (logged in session header). The table below shows the **canonical unshuffled order** — the actual order in any session is recovered from the log's `trial_order_seed`.
+
+| Block | Domain | Trials (canonical order) |
+|-------|--------|--------------------------|
+| 1 | A | A-01, A-02, A-03, A-04, A-05, A-06, A-07, A-08, A-09, A-10 |
+| 2 | B | B-01, B-02, B-03, B-04, B-05, B-06, B-07, B-08, B-09, B-10 |
+| 3 | A | A-01, A-02, A-03, A-04, A-05, A-06, A-07, A-08, A-09, A-10 |
+| 4 | B | B-01, B-02, B-03, B-04, B-05, B-06, B-07, B-08, B-09, B-10 |
+
+Total: 40 trials per session. Blocks 1 and 3 present the same Domain A trial set (different seed per block so prompt order differs). Same for Blocks 2 and 4.
+
+---
+
+## Primary metrics summary
+
+| Metric | Domain | Unit | Captured per | Notes |
+|--------|--------|------|-------------|-------|
+| Selection accuracy | A | % correct | Trial | Binary correct/incorrect |
+| Selection latency | A | ms | Trial | Prompt display → confirmed selection |
+| Character error rate (CER) | B | ratio (0–1) | Trial | (subs+ins+del) / target length |
+| Time-to-completion | B | ms | Trial | Prompt display → confirmed last char |
+| Effort — physical | Both | 1–7 Likert | Block | Post-block self-report |
+| Effort — mental/frustration | Both | 1–7 Likert | Block | Post-block self-report |
+| Re-request count | A | integer | Trial | Times participant asked for prompt re-read |
+| Input modality | Both | categorical | Session | SIMULATED / MYOWARE_EMG / MINDROVE_EMG |
+
+---
+
+## Known limits of this trial table
+
+- **Domain order not counterbalanced:** A–B–A–B is fixed in v1. Order effects are not controlled; this will be noted in any analysis report.
+- **No external participants in Weeks 2–4:** All sessions are DEV_SESSION (Caleb or Mark). External participant data will differ in ways that cannot be predicted from internal sessions.
+- **Simulated input ≠ real EMG:** CER and latency from SIM sessions cannot be directly compared to EMG sessions. They are reported separately with a SIM label.
+- **Trial count per domain is small (n=20 per domain per session):** Sufficient for internal validation; not sufficient for robust inferential statistics. A power analysis is planned for Week 4 before any external data collection is scheduled.
