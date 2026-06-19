@@ -2792,3 +2792,12 @@ PLAN.orientation.minimumViable = [
   "One continual-learning + memory artifact for the Zoral side (forgetting curves + a small online-memory adapter).",
   "Honest report + 3-5 min demo + a qualification matrix + external review, and both of you able to explain every result.",
 ];
+
+// Link the actual built artifacts (the no-hardware portfolio code) into the tracker.
+PLAN.references.push({
+  group: "Built this summer (code)",
+  items: [
+    { label: "summer-neuro-portfolio (GitHub)", note: "Runnable no-hardware modules: control workstation, continual learning, memory adapter, decoding scaffolds.", url: "https://github.com/calebnewtonusc/summer-neuro-portfolio" },
+    { label: "Evidence map (requirement → artifact)", note: "Each Neuralink/Zoral requirement mapped to a real artifact + number.", url: "https://github.com/calebnewtonusc/summer-neuro-portfolio/blob/main/docs/application/evidence_map.md" },
+  ],
+});
